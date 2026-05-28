@@ -4,151 +4,188 @@
   "cards": [
     {
       "front": "Financial Objective vs Financial Goal",
-      "back": "A financial objective is just a life event that needs money — 'I want to buy a house.' A financial goal is when you put a number and a deadline on it. Without the amount and timeline, it's a wish, not a plan."
+      "back": "A financial objective is just a life event that needs money — 'I want to buy a house.' A financial goal is when you put a number and a deadline on it. Without the amount and timeline, it's a wish, not a plan.",
+      "cardType": "concept"
     },
     {
       "front": "Inflation (in Goal Planning)",
-      "back": "The cost of your goal in the future is not what it costs today. A college that costs ₹40 lakhs now will cost ₹86 lakhs in 10 years at 8% inflation. Always plan for the future price — not today's price."
+      "back": "The cost of your goal in the future is not what it costs today. A college that costs ₹40 lakhs now will cost ₹86 lakhs in 10 years at 8% inflation. Always plan for the future price — not today's price.",
+      "cardType": "concept"
     },
     {
       "front": "Pool Approach",
-      "back": "Keeping all savings in one big pot and funding goals from it as they come. The problem is you don't know what investment horizon to plan for — so you can't choose the right investments. Goal-wise planning is always better."
+      "back": "Keeping all savings in one big pot and funding goals from it as they come. The problem is you don't know what investment horizon to plan for — so you can't choose the right investments. Goal-wise planning is always better.",
+      "cardType": "concept"
     },
     {
       "front": "Saving vs Investing",
-      "back": "Saving comes first — it's what you do when you spend less than you earn. Investing is what you do with that surplus. They're not the same thing and not alternatives. You save first, then invest. One enables the other."
+      "back": "You can't invest what you haven't saved. Saving is step one — spending less than you earn. Investing is step two. One enables the other.",
+      "cardType": "wisdom"
     },
     {
       "front": "Factors to Evaluate an Investment",
-      "back": "Safety, liquidity, returns, convenience, ticket size, taxability of income, and tax deduction. No single factor should be looked at in isolation — a product with great tax benefits might have terrible liquidity. Always weigh all of them together."
+      "back": "Seven factors: safety, liquidity, returns, convenience, ticket size, taxability, and tax deduction. Never look at just one — great tax benefits with terrible liquidity is still a bad deal. Always weigh them together.",
+      "cardType": "quick_recall"
     },
     {
       "front": "Liquidity",
-      "back": "How quickly and easily you can convert an investment to cash without losing significant value. Real estate — very illiquid. Listed equity — liquid but volatile. Liquidity matters most when life throws surprises at you."
+      "back": "How quickly and easily you can convert an investment to cash without losing significant value. Real estate — very illiquid. Listed equity — liquid but volatile. Liquidity matters most when life throws surprises at you.",
+      "cardType": "concept"
     },
     {
       "front": "Divisibility",
-      "back": "Can you sell part of your investment, or do you have to sell all of it? You can sell 10 units of a mutual fund. You can't sell 30% of your flat. Real estate is indivisible — that's a liquidity problem hiding in plain sight."
+      "back": "You can sell 10 units of a mutual fund. You can't sell 30% of your flat. Real estate is indivisible — that's a liquidity problem hiding in plain sight.",
+      "cardType": "wisdom"
     },
     {
       "front": "Current Income vs Capital Appreciation",
-      "back": "Current income is money you receive without selling — rent, dividends, interest. Capital appreciation is profit you only realise when you sell. Gold gives you only capital appreciation — nothing while you hold it."
+      "back": "Current income is money you receive without selling — rent, dividends, interest. Capital appreciation is profit you only realise when you sell. Gold gives you only capital appreciation — nothing while you hold it.",
+      "cardType": "concept"
     },
     {
       "front": "Nominal Rate vs Real Rate of Return",
-      "back": "Nominal rate is what your investment says it's earning. Real rate is what you're actually gaining in purchasing power after inflation. Earning 7% when inflation is 8% means a real return of −1%. You're getting poorer even though your balance is growing."
+      "back": "Nominal rate is what your investment says it's earning. Real rate is what you're actually gaining in purchasing power after inflation. Earning 7% when inflation is 8% means a real return of −1%. You're getting poorer even though your balance is growing.",
+      "cardType": "concept"
     },
     {
       "front": "Equity (Asset Class)",
-      "back": "You become a part-owner of a business. Returns are uncertain — prices move, dividends aren't guaranteed. But historically, equity has beaten inflation over long periods better than any other asset class. It's risk capital — own it, but understand what you own."
+      "back": "You become a part-owner of a business. Returns are uncertain — prices move, dividends aren't guaranteed. But historically, equity has beaten inflation over long periods better than any other asset class. It's risk capital — own it, but understand what you own.",
+      "cardType": "concept"
     },
     {
       "front": "Fixed Income (Asset Class)",
-      "back": "You're the lender. The borrower promises to pay interest and return principal on a fixed schedule. Government bonds are the safest — lowest default risk, lowest yield. Corporate bonds offer more yield for more risk. More predictable than equity, but not risk-free."
+      "back": "You're the lender. The borrower promises to pay interest and return principal on a fixed schedule. Government bonds are the safest — lowest default risk, lowest yield. Corporate bonds offer more yield for more risk. More predictable than equity, but not risk-free.",
+      "cardType": "concept"
     },
     {
       "front": "Real Estate (Asset Class)",
-      "back": "High transaction costs, illiquid, indivisible, and highly location-dependent. Can generate rent and capital appreciation. A self-occupied home is NOT an investment — you can't sell it without disrupting your life. Don't count it as an investable asset."
+      "back": "High transaction costs, illiquid, indivisible, and highly location-dependent. Can generate rent and capital appreciation. A self-occupied home is NOT an investment — you can't sell it without disrupting your life. Don't count it as an investable asset.",
+      "cardType": "concept"
     },
     {
       "front": "Commodities (Asset Class)",
-      "back": "Gold and silver are the main investment-grade commodities. No current income — only capital appreciation. Commodity derivatives are leveraged and short-term — not suitable for long-term investors. Physical gold and Gold ETFs are two very different things."
+      "back": "Gold and silver are the main investment-grade commodities. No current income — only capital appreciation. Commodity derivatives are leveraged and short-term — not suitable for long-term investors.",
+      "cardType": "concept"
     },
     {
       "front": "Ownership Assets vs Lending Assets",
-      "back": "Equity, real estate, gold — you own something. Returns are uncertain. Bonds, FDs, PPF — you've lent money. Returns are pre-agreed. Ownership assets have more upside potential; lending assets give you more predictable cash flows."
+      "back": "Equity, real estate, gold — you own something. Returns are uncertain. Bonds, FDs, PPF — you've lent money. Returns are pre-agreed. Ownership assets have more upside potential; lending assets give you more predictable cash flows.",
+      "cardType": "concept"
     },
     {
       "front": "Inflation Risk",
-      "back": "The risk that your returns don't keep up with rising prices. Earning 7% when inflation is 8% means you're losing purchasing power even though your money is growing. Safe, low-return investments are the biggest victims of inflation risk over long periods."
+      "back": "The risk that your returns don't keep up with rising prices. Earning 7% when inflation is 8% means you're losing purchasing power even though your money is growing. Safe, low-return investments are the biggest victims over long periods.",
+      "cardType": "concept"
     },
     {
       "front": "Liquidity Risk",
-      "back": "The risk that you can't access your money when you need it — or can only do so at a penalty. A 5-year FD is safe but illiquid. Real estate is the classic example: great asset, but you may wait months to sell it when you need the cash."
+      "back": "The risk that you can't access your money when you need it — or can only do so at a penalty. A 5-year FD is safe but illiquid. Real estate is the classic example: great asset, but you may wait months to sell it when you need the cash.",
+      "cardType": "concept"
     },
     {
       "front": "Credit Risk",
-      "back": "The risk that the borrower won't repay — either because they can't (ability) or won't (intention). Government bonds have the lowest credit risk. Higher credit risk means higher interest demanded by investors. That extra yield is called the credit spread."
+      "back": "The risk that the borrower won't repay — either because they can't (ability) or won't (intention). Government bonds have the lowest credit risk. Higher credit risk means investors demand higher interest. That extra yield is called the credit spread.",
+      "cardType": "concept"
     },
     {
       "front": "Credit Spread",
-      "back": "The extra yield a risky bond offers over a government bond. If a government bond yields 7% and a corporate bond yields 10%, the credit spread is 3%. It's the market pricing the extra risk you're taking on. Wider spread means riskier borrower."
+      "back": "The extra yield a risky bond must offer over a government bond to compensate for higher default risk. If government bonds yield 7% and a corporate bond yields 10%, the spread is 3%. Wider spread means riskier borrower.",
+      "cardType": "quick_recall"
     },
     {
       "front": "Market Risk vs Price Risk",
-      "back": "Market risk is when the whole economy tanks and everything falls together — a war, a recession. Price risk is company-specific — bad earnings, a scandal. You can diversify away price risk. You cannot diversify away market risk."
+      "back": "Market risk (also called systematic risk) is when the whole economy falls — war, recession — and drags everything down together. Price risk (also called unsystematic or company-specific risk) is one company's problem. Diversification eliminates price risk. It cannot touch market risk.",
+      "cardType": "concept"
     },
     {
       "front": "Interest Rate Risk",
-      "back": "When interest rates rise, existing bond prices fall — your old bond now offers a lower rate than the market. The longer the bond's maturity, the bigger the price swing. Long-duration bonds hurt a lot more than short-duration ones."
+      "back": "When interest rates rise, existing bond prices fall — your old bond now offers a lower rate than the market. The longer the bond's maturity, the bigger the price swing. Long-duration bonds hurt a lot more than short-duration ones.",
+      "cardType": "concept"
     },
     {
       "front": "Risk Management — Avoid",
-      "back": "Simply don't invest in things you don't understand or don't want the risk of. You might miss some opportunities, but you also avoid nasty surprises. If you can't explain what you own and why — you probably shouldn't own it."
+      "back": "If you can't explain what you own and why — you probably shouldn't own it. Avoiding what you don't understand is not timidity. It's discipline.",
+      "cardType": "wisdom"
     },
     {
       "front": "Risk Management — Take a Position",
-      "back": "Actively shift your portfolio based on your market view. Expect rates to fall? Buy long-duration bonds. Rewarding if you're right — painful if you're wrong. Requires superior market knowledge. Not recommended for most investors."
+      "back": "Actively shift your portfolio based on your market view. Expect rates to fall? Buy long-duration bonds. Rewarding if you're right — painful if you're wrong. Requires superior market knowledge. Not recommended for most investors.",
+      "cardType": "concept"
     },
     {
       "front": "Risk Management — Diversify",
-      "back": "Spread across different, unrelated investments so one falling doesn't sink everything. Reduces unsystematic (company/sector) risk effectively. Cannot eliminate systematic (market-wide) risk. For most investors, it's the most practical tool available."
+      "back": "Spread across different, unrelated investments so one falling doesn't sink everything. Reduces unsystematic (company/sector) risk effectively. Cannot eliminate systematic (market-wide) risk. For most investors, it's the most practical tool available.",
+      "cardType": "concept"
     },
     {
       "front": "Availability Heuristic",
-      "back": "Relying on whatever example pops into your head most easily. 'I remember someone losing money in stocks' — so you avoid all equity. It's a mental shortcut that leads to missing important information, especially risks you haven't personally experienced."
+      "back": "Relying on whatever example pops into your head most easily. 'I remember someone losing money in stocks' — so you avoid all equity. It's a mental shortcut that leads to missing important information, especially risks you haven't personally experienced.",
+      "cardType": "concept"
     },
     {
       "front": "Confirmation Bias",
-      "back": "You decide first, then look for evidence to back it up. You only read reports that support your view and ignore the ones that don't. You build a blind spot around the very information that might save you from a bad investment."
+      "back": "You decide first, then look for evidence to back it up. You read reports that support your view and dismiss the ones that don't. You build a blind spot around the very information that might save you from a bad investment.",
+      "cardType": "concept"
     },
     {
       "front": "Familiarity Bias",
-      "back": "Investing only in what you know — your own sector, your own company, your own country. Feels safe, but it leads to dangerous concentration risk. Understanding something doesn't mean it will outperform. Diversification is not the enemy of knowledge."
+      "back": "Investing only in what you know — your sector, your company, your country. Feels safe, but creates dangerous concentration risk. Understanding something doesn't mean it will outperform.",
+      "cardType": "concept"
     },
     {
       "front": "Herd Mentality",
-      "back": "Following the crowd because everyone else is doing it. In investing, the crowd is often wrong at the worst times — buying at the top, selling at the bottom. Being against the herd has historically been more profitable than following it."
+      "back": "Following the crowd because everyone else is doing it. In investing, the crowd is often wrong at the worst times — buying at the top, selling at the bottom. Being against the herd has historically been more profitable than following it.",
+      "cardType": "concept"
     },
     {
       "front": "Loss Aversion",
-      "back": "The pain of losing ₹10,000 feels worse than the pleasure of gaining ₹10,000 — even though the amount is identical. This makes people hold losing investments too long and sell winners too early. Both habits quietly destroy long-term returns."
+      "back": "The pain of losing ₹10,000 feels worse than the pleasure of gaining ₹10,000 — even though the amount is identical. This makes people hold losing investments too long and sell winners too early. Both habits quietly destroy long-term returns.",
+      "cardType": "concept"
     },
     {
       "front": "Overconfidence",
-      "back": "Believing you're better at investing than you actually are. Makes you skip research and take risks you haven't properly assessed. Very common after a few winning investments in a row. Markets are very good at humbling overconfident investors."
+      "back": "A few winning investments can feel like skill. They're often luck. Markets are very good at distinguishing between the two.",
+      "cardType": "wisdom"
     },
     {
       "front": "Recency Bias",
-      "back": "Whatever happened recently feels like it will keep happening. Markets rose for 8 months? They'll keep rising. Crashed last week? They'll keep falling. It makes investors buy at peaks and sell at troughs — the exact opposite of good investing."
+      "back": "Whatever happened recently feels like it will keep happening. Markets rose for 8 months? They'll keep rising. It makes investors buy at peaks and sell at troughs — the exact opposite of good investing.",
+      "cardType": "concept"
     },
     {
       "front": "Risk Profiling — Need, Ability, Willingness",
-      "back": "Need: what return do your goals require? Ability: what does your time horizon and financial situation allow? Willingness: how much volatility can you stomach? When all three conflict — and they often do — a good distributor finds the balance, not just picks one."
+      "back": "Need: what return do your goals require? Ability: what does your time horizon and finances allow? Willingness: how much volatility can you stomach? When all three conflict — find the balance. Don't just pick one and override the others.",
+      "cardType": "concept"
     },
     {
       "front": "Strategic Asset Allocation",
-      "back": "Setting a target percentage for each asset class based on your goals, time horizon, and risk profile — then sticking to it. Not based on what the market is doing right now. Based on what you need. Think of it as your investment constitution."
+      "back": "A target percentage for each asset class based on your goals, time horizon, and risk profile — then stick to it. Not based on what the market is doing right now. Based on what you need. Think of it as your investment constitution.",
+      "cardType": "concept"
     },
     {
       "front": "Tactical Asset Allocation",
-      "back": "Deliberately shifting allocation percentages to take advantage of market opportunities. Also called dynamic asset allocation. Needs superior market judgment — if you're wrong, you can do real damage. Not recommended for most individual investors."
+      "back": "Actively shifting allocation based on market views — also called dynamic asset allocation. Rewarding if you're right, damaging if you're wrong. Needs superior judgment. Not recommended for most investors.",
+      "cardType": "concept"
     },
     {
       "front": "Rebalancing",
-      "back": "Restoring your portfolio back to the target allocation after market movements cause it to drift. The magic is you don't need a market view — it automatically makes you sell what has risen and buy what has fallen. Discipline over judgment."
+      "back": "Discipline over judgment. When equity rises above its target share, you sell it. When it falls below, you buy it. No market view required — the process does the thinking for you.",
+      "cardType": "wisdom"
     },
     {
       "front": "Passive Breach (Rebalancing Rule)",
-      "back": "When your portfolio drifts from the SID's mandated allocation because of market movements — not a fund manager decision. SEBI gives most schemes 30 business days to rebalance. Index Funds, ETFs, and Overnight Funds are exempt from this rule."
+      "back": "When a fund's portfolio drifts from its SID mandate due to market movements — not a fund manager decision. SEBI gives most schemes 30 business days to rebalance. Index Funds, ETFs, and Overnight Funds are exempt.",
+      "cardType": "quick_recall"
     },
     {
       "front": "DIY vs Professional Help",
-      "back": "People compare a mutual fund's 2% fee to 'zero cost' DIY. But DIY has hidden costs: the time spent researching, the administration, and most importantly — the cost of emotional mistakes. For most investors, those hidden costs exceed the fund management fee."
+      "back": "Comparing a mutual fund's 2% fee to 'zero cost' DIY is misleading. DIY has hidden costs: research time, administration, and the price of emotional mistakes. For most investors, those hidden costs exceed the fund management fee.",
+      "cardType": "concept"
     },
     {
       "front": "Role of an MFD or RIA",
-      "back": "More than product selection — their real job is to help you detach emotions from investment decisions. Behavioural biases quietly destroy returns. An objective third person who understands your goals and keeps you disciplined is often worth more than any specific fund recommendation."
+      "back": "Their real job isn't picking funds. It's keeping you from making expensive emotional mistakes. Behavioural biases destroy more wealth than bad fund selection ever will.",
+      "cardType": "wisdom"
     }
   ]
 }
