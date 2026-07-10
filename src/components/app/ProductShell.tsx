@@ -26,15 +26,17 @@ export default function ProductShell({ children }: { children: React.ReactNode }
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 border-b border-line bg-cream/90 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2" aria-label="ARNReady home">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-3 sm:px-6">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-6">
+            <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="ARNReady home">
               <Image src="/favicon.png" alt="" width={28} height={28} className="rounded-lg" />
               <span className="hidden text-lg font-black tracking-tight text-purple sm:inline">
                 ARNReady
               </span>
             </Link>
-            <nav className="flex items-center gap-4" aria-label="Product">
+            {/* min-w-0 + overflow-x-auto: on narrow phones the nav scrolls inside
+                the header instead of widening the whole page. */}
+            <nav className="flex min-w-0 items-center gap-3 overflow-x-auto sm:gap-4" aria-label="Product">
               {NAV.map((item) => {
                 const active = item.exact
                   ? pathname === item.href
@@ -43,7 +45,8 @@ export default function ProductShell({ children }: { children: React.ReactNode }
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`text-sm font-bold transition-colors hover:text-purple ${
+                    aria-current={active ? 'page' : undefined}
+                    className={`whitespace-nowrap text-sm font-bold transition-colors hover:text-purple ${
                       active ? 'text-purple' : 'text-muted'
                     }`}
                   >
@@ -53,7 +56,7 @@ export default function ProductShell({ children }: { children: React.ReactNode }
               })}
             </nav>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             {user ? (
               <Link
                 href="/app/account"

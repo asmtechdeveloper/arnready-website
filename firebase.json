@@ -4,7 +4,30 @@
     "cleanUrls": true,
     "trailingSlash": false,
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "redirects": [
+      { "regex": "^/chapter-1(\\.html)?$", "destination": "/chapters/1-investment-landscape", "type": 301 },
+      { "regex": "^/chapter-2(\\.html)?$", "destination": "/chapters/2-concept-and-role-of-a-mutual-fund", "type": 301 },
+      { "regex": "^/chapter-3(\\.html)?$", "destination": "/chapters/3-legal-structure-of-mutual-funds-in-india", "type": 301 },
+      { "regex": "^/chapter-4(\\.html)?$", "destination": "/chapters/4-legal-and-regulatory-framework", "type": 301 },
+      { "regex": "^/chapter-5(\\.html)?$", "destination": "/chapters/5-scheme-related-information", "type": 301 },
+      { "regex": "^/chapter-6(\\.html)?$", "destination": "/chapters/6-fund-distribution-and-channel-management", "type": 301 },
+      { "regex": "^/chapter-7(\\.html)?$", "destination": "/chapters/7-nav-total-expense-ratio-and-pricing", "type": 301 },
+      { "regex": "^/chapter-8(\\.html)?$", "destination": "/chapters/8-taxation", "type": 301 },
+      { "regex": "^/chapter-9(\\.html)?$", "destination": "/chapters/9-investor-services", "type": 301 },
+      { "regex": "^/chapter-10(\\.html)?$", "destination": "/chapters/10-risk-return-and-performance-of-funds", "type": 301 },
+      { "regex": "^/chapter-11(\\.html)?$", "destination": "/chapters/11-mutual-fund-scheme-performance", "type": 301 },
+      { "regex": "^/chapter-12(\\.html)?$", "destination": "/chapters/12-mutual-fund-scheme-selection", "type": 301 }
+    ],
     "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+          { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        ]
+      },
       {
         "source": "/_next/static/**",
         "headers": [

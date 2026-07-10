@@ -32,7 +32,10 @@ export default function QuestionCard({
         {question.question}
       </h2>
 
-      <div className="mt-6 space-y-2.5" role="radiogroup" aria-label="Answer options">
+      {/* Plain toggle buttons, not role="radio": we don't implement the
+          radiogroup roving-tabindex/arrow-key contract, so claiming radio
+          semantics would mislead screen readers. */}
+      <div className="mt-6 space-y-2.5" role="group" aria-label="Answer options">
         {question.options.map((opt, i) => {
           const isPicked = picked === i;
           const isCorrect = i === question.correctIndex;
@@ -50,8 +53,7 @@ export default function QuestionCard({
             <button
               key={i}
               type="button"
-              role="radio"
-              aria-checked={isPicked}
+              aria-pressed={isPicked}
               disabled={revealed}
               onClick={() => onSelect(i)}
               className={`flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left text-sm leading-relaxed transition-colors ${cls}`}

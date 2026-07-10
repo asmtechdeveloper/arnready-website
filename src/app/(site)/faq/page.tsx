@@ -48,7 +48,7 @@ const arnreadyFaqs = (totalFlashcards: number): Array<{ q: string; a: string }> 
   },
   {
     q: 'Why does my ARNReady score look lower than other apps?',
-    a: 'Because it is honest. Skipped questions count against you and percentages are calculated against a real question set, not just the ones you answered. The number is designed to predict your exam result, not to make you feel good.',
+    a: 'Because it is honest. Free scores never divide by fewer than ten questions — answering 4 of 4 correctly is not 100% until you have earned it across a real set. With the full unlock, every question served counts, skipped ones included. The number is designed to predict your exam result, not to make you feel good.',
   },
   {
     q: `What does the ${CONFIG.UNLOCK_PRICE_DISPLAY} unlock include?`,

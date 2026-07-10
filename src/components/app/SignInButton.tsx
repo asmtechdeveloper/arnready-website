@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { LogIn } from '@/components/Icon';
-import { isFirebaseConfigured, signInWithGoogle } from '@/lib/firebase';
+import { isFirebaseConfigured, SignInCancelled, signInWithGoogle } from '@/lib/firebase';
 
 export default function SignInButton({ label = 'Sign in' }: { label?: string }) {
   const [note, setNote] = useState<string | null>(null);
@@ -13,10 +13,14 @@ export default function SignInButton({ label = 'Sign in' }: { label?: string }) 
       return;
     }
     try {
+      setNote(null);
       await signInWithGoogle();
-    } catch {
-      // Popup dismissed or blocked — cancelling is always fine (locked
-      // access model: cancel → keep studying free).
+    } catch (err) {
+      // Cancelling is always fine (locked access model: cancel → keep
+      // studying free) — but a REAL failure must not look like nothing.
+      if (!(err instanceof SignInCancelled)) {
+        setNote('Sign-in hit a snag — try again in a moment.');
+      }
     }
   }
 

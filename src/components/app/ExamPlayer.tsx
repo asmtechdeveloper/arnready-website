@@ -93,9 +93,10 @@ export default function ExamPlayer({
   );
 
   useEffect(() => {
-    if (phase !== 'results' || recordedRef.current || !pool) return;
+    // The !user check must precede the recorded guard: a guest who signs in
+    // FROM the results screen ("sign in to save this") gets exactly one save.
+    if (phase !== 'results' || recordedRef.current || !pool || !user) return;
     recordedRef.current = true;
-    if (!user) return;
     recordExamSession({
       chapterNumber: chapter,
       correct,

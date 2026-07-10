@@ -28,11 +28,17 @@ import {
 } from './progressShapes';
 import { updateMistakesFromRun } from './mistakesService';
 
-const cacheKey = (n: number) => `arnready_examResults_${n}`;
-
 function uid(): string | null {
   return getFirebaseAuth()?.currentUser?.uid ?? null;
 }
+
+// Cache keys are UID-scoped so one account's data can never surface for —
+// or be written back as — another account on a shared machine. Unsigned
+// visitors get no cache at all (locked access model: nothing persisted).
+const cacheKey = (n: number) => {
+  const u = uid();
+  return u ? `arnready_examResults_${u}_${n}` : null;
+};
 
 /** Replace shape sentinels with real Firestore FieldValues. */
 function materialise<T extends Record<string, unknown>>(shape: T): Record<string, unknown> {
@@ -45,7 +51,9 @@ function materialise<T extends Record<string, unknown>>(shape: T): Record<string
 
 function readCache(n: number): ProgressBlob | null {
   try {
-    const raw = localStorage.getItem(cacheKey(n));
+    const key = cacheKey(n);
+    if (!key) return null;
+    const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -54,7 +62,8 @@ function readCache(n: number): ProgressBlob | null {
 
 function writeCache(n: number, blob: ProgressBlob): void {
   try {
-    localStorage.setItem(cacheKey(n), JSON.stringify(blob));
+    const key = cacheKey(n);
+    if (key) localStorage.setItem(key, JSON.stringify(blob));
   } catch {}
 }
 

@@ -53,7 +53,7 @@ export default function QuestionsPage() {
             },
             {
               title: 'Chapter exams',
-              body: `${CONFIG.EXAM_QUESTIONS} questions under exam conditions, scored honestly. Fresh variations drawn each attempt, so memorising answers gets you nowhere (which is the point).`,
+              body: `Timed, exam conditions, scored honestly. With the full unlock: ${CONFIG.EXAM_QUESTIONS} questions with fresh variations every attempt, so memorising answers gets you nowhere (which is the point). Free tier: the same exam format over your chapter's free questions.`,
             },
             {
               title: 'The full mock',

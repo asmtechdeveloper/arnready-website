@@ -15,6 +15,7 @@ import {
   getAuth,
   setPersistence,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
   type Auth,
 } from 'firebase/auth';
@@ -49,14 +50,42 @@ export function getDb(): Firestore | null {
   return a ? getFirestore(a) : null;
 }
 
+/** Thrown when the user dismissed the popup — cancelling is always fine. */
+export class SignInCancelled extends Error {}
+
 export async function signInWithGoogle(): Promise<void> {
   const auth = getFirebaseAuth();
   if (!auth) throw new Error('Sign-in is not available yet.');
   await setPersistence(auth, browserLocalPersistence);
-  await signInWithPopup(auth, new GoogleAuthProvider());
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch (err) {
+    const code = (err as { code?: string })?.code ?? '';
+    if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+      throw new SignInCancelled();
+    }
+    // Popup blocked (or an environment that can't host one): fall back to
+    // the full-page redirect flow (architecture §5 requirement).
+    if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+      await signInWithRedirect(auth, new GoogleAuthProvider());
+      return;
+    }
+    throw err;
+  }
+}
+
+/** Remove every per-user cache this site writes (all keys are UID-scoped). */
+export function clearUserCaches(): void {
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('arnready_')) localStorage.removeItem(key);
+    }
+  } catch {}
 }
 
 export async function signOutEverywhere(): Promise<void> {
   const auth = getFirebaseAuth();
   if (auth) await signOut(auth);
+  clearUserCaches();
 }

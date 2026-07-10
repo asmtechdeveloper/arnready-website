@@ -49,6 +49,10 @@ export default function MockPlayer({
   const recordedRef = useRef(false);
   const phaseRef = useRef<Phase>('question');
   phaseRef.current = phase;
+  // Wall-clock deadline: background throttling/suspension can starve
+  // intervals, so remaining time is always recomputed from the clock —
+  // backgrounding the tab never grants extra time.
+  const deadlineRef = useRef(Date.now() + TOTAL_SECONDS * 1000);
 
   const total = questions.length;
   const attempted = answers.filter((a) => a != null).length;
@@ -69,25 +73,44 @@ export default function MockPlayer({
       answers,
       questions,
     }).catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answers, questions, total, remaining]);
 
-  // Countdown — auto-submit at zero.
+  const submitRef = useRef(submit);
+  submitRef.current = submit;
+
+  const finished = phase === 'results';
+
+  // Countdown — auto-submit at zero. submitRef keeps the interval stable
+  // across answer changes; visibilitychange resyncs immediately on return.
   useEffect(() => {
-    if (phase === 'results') return;
-    const t = setInterval(() => {
-      setRemaining((r) => {
-        if (r <= 1) {
-          clearInterval(t);
-          if (phaseRef.current !== 'results') submit();
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-    return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase === 'results', submit]);
+    if (finished) return;
+    const tick = () => {
+      const left = Math.max(
+        0,
+        Math.round((deadlineRef.current - Date.now()) / 1000),
+      );
+      setRemaining(left);
+      if (left <= 0 && phaseRef.current !== 'results') submitRef.current();
+    };
+    const t = setInterval(tick, 1000);
+    document.addEventListener('visibilitychange', tick);
+    tick();
+    return () => {
+      clearInterval(t);
+      document.removeEventListener('visibilitychange', tick);
+    };
+  }, [finished]);
+
+  // A two-hour attempt should not die to an accidental tab close. The
+  // locked discard-on-abandon rule is untouched — this only asks first.
+  useEffect(() => {
+    if (finished) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [finished]);
 
   function select(optionIndex: number) {
     setAnswers((prev) => {
@@ -233,11 +256,18 @@ export default function MockPlayer({
             className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-black ${
               low ? 'bg-red-soft text-red' : 'bg-white text-ink shadow-card'
             }`}
-            aria-live={low ? 'polite' : 'off'}
           >
             <Clock size={15} />
             {fmt(remaining)}
           </p>
+          {/* Milestone announcements only — a per-second live region floods
+              screen readers. */}
+          <span className="sr-only" aria-live="polite" role="status">
+            {remaining === 1800 && '30 minutes remaining'}
+            {remaining === 600 && '10 minutes remaining'}
+            {remaining === 300 && '5 minutes remaining'}
+            {remaining === 60 && '1 minute remaining'}
+          </span>
         </div>
 
         <QuestionCard question={q} picked={answers[index]} onSelect={select} />

@@ -141,7 +141,17 @@ export function buildNextBlob(
 /** chapterProgress doc read → blob — mirrors app docToBlob exactly. */
 export function docToBlob(data: Record<string, unknown> | undefined | null): ProgressBlob | null {
   if (!data) return null;
-  const d = data as Record<string, any>;
+  const d = data as {
+    lastExamScore?: number;
+    lastExamTotal?: number;
+    lastExamAttempted?: number;
+    lastExamPct?: number;
+    bestExamScore?: number;
+    bestExamTotal?: number;
+    examAttempts?: number;
+    practiceAttempted?: number;
+    lastExamWrong?: unknown;
+  };
   const lastScore = d.lastExamScore ?? 0;
   const lastTotal = d.lastExamTotal ?? 0;
   return {
@@ -154,7 +164,7 @@ export function docToBlob(data: Record<string, unknown> | undefined | null): Pro
     bestTotal: d.bestExamTotal ?? lastTotal,
     attempts: d.examAttempts ?? (lastTotal > 0 ? 1 : 0),
     practiced: d.practiceAttempted ?? 0,
-    wrong: Array.isArray(d.lastExamWrong) ? d.lastExamWrong : [],
+    wrong: Array.isArray(d.lastExamWrong) ? (d.lastExamWrong as WrongEntry[]) : [],
   };
 }
 

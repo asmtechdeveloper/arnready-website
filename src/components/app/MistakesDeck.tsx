@@ -9,6 +9,7 @@
  * question reads stay inside the deployed rules.
  */
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import Arnie from '@/components/Arnie';
 import QuestionCard from '@/components/app/QuestionCard';
 import SignInButton from '@/components/app/SignInButton';
@@ -117,12 +118,12 @@ export default function MistakesDeck() {
             you&apos;ve retired everything. Both are respectable. Go get some
             questions wrong and I&apos;ll collect them for you.
           </p>
-          <a
+          <Link
             href="/app/practice"
             className="mt-6 inline-block rounded-full bg-purple px-6 py-2.5 text-sm font-black text-white hover:bg-purple-dark"
           >
             Go practise
-          </a>
+          </Link>
         </div>
       </div>
     );

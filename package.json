@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build && node scripts/check-paid-leak.mjs",
     "start": "npx serve out",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "export-content": "node scripts/export-content.mjs",
@@ -22,10 +22,13 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^15.5.20",
     "firebase-admin": "^13.0.0",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.0",

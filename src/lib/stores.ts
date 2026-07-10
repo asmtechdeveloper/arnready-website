@@ -9,7 +9,7 @@
  */
 import { useEffect } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, type Unsubscribe } from 'firebase/firestore';
 import { create } from 'zustand';
 import { getDb, getFirebaseAuth, isFirebaseConfigured } from './firebase';
 
@@ -82,34 +82,54 @@ export const useEntitlement = create<EntitlementState>()(() => ({
   known: false,
 }));
 
+let entitlementUnsub: Unsubscribe | null = null;
+
 export function resetEntitlement(): void {
   epoch += 1;
+  entitlementUnsub?.();
+  entitlementUnsub = null;
   useEntitlement.setState({ isPaid: false, known: false });
 }
 
-export async function hydrateEntitlement(uid: string): Promise<boolean> {
+/**
+ * Live entitlement subscription (architecture §5: server state is
+ * authoritative and revocations/purchases land while the page is open).
+ * The UID-scoped cache is only a fast first paint for a RETURNING user —
+ * `known` stays false until the server answers, so ad surfaces and the
+ * mock gate never act on cache alone.
+ */
+export function hydrateEntitlement(uid: string): void {
   const started = epoch;
+  let cachedHint: boolean | null = null;
   try {
     const cached = localStorage.getItem(`${IS_PAID_CACHE}_${uid}`);
     if (cached != null && started === epoch) {
-      useEntitlement.setState({ isPaid: cached === 'true', known: true });
+      cachedHint = cached === 'true';
+      useEntitlement.setState({ isPaid: cachedHint, known: false });
     }
   } catch {
-    // cache miss is fine — the fresh read settles it
+    // cache miss is fine — the snapshot settles it
   }
   const db = getDb();
-  if (!db) return false;
-  try {
-    const snap = await getDoc(doc(db, 'users', uid));
-    const fresh = snap.data()?.isPaid === true;
-    if (started === epoch) {
+  if (!db) return;
+  entitlementUnsub = onSnapshot(
+    doc(db, 'users', uid),
+    (snap) => {
+      if (started !== epoch) return;
+      const fresh = snap.data()?.isPaid === true;
       useEntitlement.setState({ isPaid: fresh, known: true });
       try {
         localStorage.setItem(`${IS_PAID_CACHE}_${uid}`, String(fresh));
       } catch {}
-    }
-    return fresh;
-  } catch {
-    return useEntitlement.getState().isPaid;
-  }
+    },
+    () => {
+      // Listener failure (offline, rules): fail toward the cached hint for
+      // DISPLAY, but never mark a paid state known without the server.
+      if (started !== epoch) return;
+      useEntitlement.setState({
+        isPaid: cachedHint === true,
+        known: cachedHint === false, // "free" is safe to settle; "paid" is not
+      });
+    },
+  );
 }

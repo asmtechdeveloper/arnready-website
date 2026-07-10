@@ -144,8 +144,9 @@ export default function HomePage() {
             </p>
             <ul className="mt-6 space-y-3">
               {[
-                'Skipped questions count against you, like the real exam',
-                'Chapter exams draw fresh variations every time',
+                'Free scores are measured against at least a ten-question set — 4/4 is not 100%',
+                'With the full unlock, every question served counts, skipped ones included',
+                'Paid chapter exams draw fresh variations every attempt',
                 'The mock uses official chapter weightage',
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3 text-sm font-bold text-ink">
