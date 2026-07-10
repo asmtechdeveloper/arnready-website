@@ -4,12 +4,15 @@ The arnready.com codebase. Two lives:
 1. **Today:** static compliance site (pre-Play-submission stopgap).
 2. **Next:** ARNReady Web — the full app in the browser, Next.js.
 
-**Repository reality (10 Jul 2026):** the root contains the static HTML
-pages, chapter redirect stubs, `CNAME`, Arnie Lottie source files, and one
-legacy Chapter 1 flashcard JSON. It does **not** yet contain a Next.js app,
-`package.json`, `firebase.json`, or `.firebaserc`; `/support` also does not
-exist yet. Firebase Hosting is the decided target, but the deployable hosting
-configuration still has to be established in one canonical repo location.
+**Repository reality (10 Jul 2026, evening):** the root contains the static
+HTML pages (now including `/support`), chapter redirect stubs, `CNAME`,
+`robots.txt`/`sitemap.xml`, Arnie Lottie source files, and one legacy
+Chapter 1 flashcard JSON. `firebase.json` + `.firebaserc` exist (project
+`arnready`) but Firebase Hosting is NOT yet the live host. **The live host is
+GitHub Pages, auto-deploying from `main` — every push to `main` is a
+production deploy** (verified via server headers, 10 Jul). The Firebase
+cutover (`firebase login` + DNS switch) is a deliberate later step; until
+then a push IS the deploy.
 
 **Repo:** `github.com/asmtechdeveloper/arnready-website` (separate from
 the app repo). See `CLAUDE.md` for locked rules and
@@ -29,6 +32,13 @@ the app repo). See `CLAUDE.md` for locked rules and
    them when you're ready (or ask Claude to).
 
 ### Step 1 — finish the compliance site (this is what blocks Play submission)
+
+**Status (10 Jul evening):** items 1, 2, 4 and 5 below are code-complete and
+LIVE on arnready.com (all three URLs verified 200); support email decided =
+`asmtechdeveloper@gmail.com`. Remaining before Play Console paste: Anusha's
+voice/legal pass on privacy + delete-account, device QA of in-app deletion on
+a throwaway account (app repo), and item 7 itself. DNS (item 6) is only
+needed at Firebase cutover — GitHub Pages already serves the domain.
 
 The static site already exists (`index.html`, `privacy.html`,
 `delete-account.html`, chapter redirect stubs, `CNAME`). What's left:
