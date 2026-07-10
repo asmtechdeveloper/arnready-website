@@ -186,6 +186,17 @@ with Web-1.
   WEBSITE_COPY_SCAFFOLD.md`) is canonical; every public artefact ships
   WORKING until her voice pass.
 
+## Model policy (10 Jul, Anusha)
+
+"Opus moment" / "Opus session" throughout this doc set is a SEVERITY
+label, not a model booking. It marks the highest-stakes work — the kind
+that gets the strongest available model, a dedicated session, and
+Anusha's explicit sign-off. Current policy: **every session, Opus
+moments included, runs on Fable for as long as Fable access lasts.**
+When that access goes away, flagged moments fall back to the best
+available model (Opus-class). Do not downgrade a session because a doc
+says "Opus" — the flag governs care and sign-off, not model selection.
+
 ## Process rules
 
 1. Read this file + the execution plan + the app repo's CLAUDE.md before

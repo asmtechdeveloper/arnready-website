@@ -86,7 +86,9 @@ test payment/refund/idempotency paths, then configure live secrets.
 ### Step 3 — kick off Web-1 (the real product)
 
 Only after Steps 1 + 2 are underway. First engineering task is the
-**shared-core extraction** — an **Opus session** because it touches
+**shared-core extraction** — an **Opus session** (a severity flag, not
+a model booking: everything runs on Fable while access lasts, see
+CLAUDE.md "Model policy") because it touches
 app imports (`../ARNReady-App/services/quizEngine.ts`,
 `progressService.js`, `mockService.js`). Tell Claude:
 
