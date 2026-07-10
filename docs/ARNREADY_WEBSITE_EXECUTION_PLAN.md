@@ -56,7 +56,9 @@ get the FULL free tier; sign-in buys persistence, not access.
       site's primary conversion; provider: Razorpay)
 - [ ] **Play policy review** (arch §10) done against the CURRENT policy text — human eyes
 - [ ] App paywall audited: zero web-checkout mentions/links anywhere in the app
-- [ ] Razorpay onboarding (Anusha — KYC in progress, started 9 Jul)
+- [x] Razorpay onboarding — KYC APPROVED 10 Jul (account activated;
+      test-mode keys available; live-mode webhook secret generated
+      when the CF is deployed)
 - [ ] Webhook CF designed: signature verification, idempotency, uid binding,
       asia-south1 — **Opus moment** (writes isPaid; the CF lives in the app
       repo's `functions/` workspace alongside verifyPurchase)
