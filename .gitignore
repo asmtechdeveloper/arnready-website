@@ -19,3 +19,9 @@ next-env.d.ts
 # `npm run export-content`. Firestore is the single content source (locked);
 # content is never duplicated in this repo.
 content/
+
+# Superseded static scaffold moved here from the app repo (10 Jul cleanup).
+# Kept on disk for the README step-5 consolidation, but NEVER committed:
+# every push to main is a production deploy, and these skeleton pages must
+# not go live at arnready.com.
+legacy-app-scaffold/

@@ -9,11 +9,11 @@ models: follow the templates, respect the invariants.
 
 **Cross-project references** (updated 9 Jul when the tracks separated):
 - App content pipeline / bank source lives in `../ARNReady-App/`
-  (question bank in `book/`, uploader in `scripts/`, review runbook in
-  `docs/CONTENT_REVIEW_AND_UPLOAD_RUNBOOK.md`).
+  (question bank in `scripts/data/`, uploader in `scripts/`, review
+  runbook in `docs/CONTENT_REVIEW_AND_UPLOAD_RUNBOOK.md`).
 - Video templates and course arch live in
   `../../ARNReady-YouTube/docs/`.
-- Book source + export notes live in `../ARNReady-App/book/`; book
+- Book source + export notes live in `../../ARNReady-Book/book/`; book
   planning in `../../ARNReady-Book/docs/`.
 - Prompts split across `ARNREADY_WEBSITE_PROMPT_LIBRARY.md` (this
   folder) and `../../ARNReady-YouTube/docs/ARNREADY_YOUTUBE_PROMPT_LIBRARY.md`.
