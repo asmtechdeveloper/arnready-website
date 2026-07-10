@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delete Your Account — ARNReady</title>
-  <meta name="description" content="How to delete your ARNReady account and all your data, in the app or by email." />
-  <link rel="canonical" href="https://arnready.com/delete-account" />
+  <title>Support — ARNReady</title>
+  <meta name="description" content="Get help with ARNReady. One developer, honest answers, within 48 hours." />
+  <link rel="canonical" href="https://arnready.com/support" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -60,11 +60,6 @@
       margin-bottom: 6px;
     }
 
-    .page-meta {
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-
     .content {
       background: var(--white);
       border-radius: 20px;
@@ -112,38 +107,6 @@
       margin: 4px 0;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      font-size: 0.9rem;
-    }
-
-    th {
-      background: var(--purple);
-      color: var(--white);
-      text-align: left;
-      padding: 10px 14px;
-      font-weight: 700;
-    }
-
-    td {
-      padding: 10px 14px;
-      border-bottom: 1px solid #E5E7EB;
-      color: var(--muted);
-    }
-
-    .note {
-      background: #FFF7E6;
-      border-left: 3px solid #F59E0B;
-      border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
-      font-size: 0.9rem;
-      color: #5C4A1E;
-      margin: 20px 0 0;
-      line-height: 1.6;
-    }
-
     footer {
       margin-top: 48px;
       font-size: 0.8rem;
@@ -170,52 +133,22 @@
   </nav>
 
   <div class="page-header">
-    <h1 class="page-title">Delete your ARNReady account</h1>
-    <p class="page-meta">Last updated: July 2026</p>
+    <h1 class="page-title">Support</h1>
   </div>
 
   <div class="content">
 
-    <h2>In the app (fastest)</h2>
-    <p>Open ARNReady and go to <strong>Profile &rarr; Delete Account</strong>,
-    then confirm. This immediately and permanently deletes your sign-in
-    record and all your study data &mdash; chapter progress, scores, mock
-    test history, and your mistakes deck.</p>
-
-    <h2>By email</h2>
-    <p>If you can no longer access the app, email us from the Google
-    account you used to sign in, with the subject
-    &ldquo;Delete my ARNReady account&rdquo;:</p>
+    <!-- WORKING: copy pending Anusha's voice pass -->
+    <h2>Email</h2>
+    <p>ARNReady is built and supported by one developer, so you'll get a
+    real answer from a real person &mdash; usually within 48 hours.</p>
     <p><a class="email-box" href="mailto:asmtechdeveloper@gmail.com">asmtechdeveloper@gmail.com</a></p>
-    <p>We aim to complete deletion within 48 hours and will confirm by
-    reply.</p>
+    <p>Include your app version and, for account issues, the Gmail you
+    sign in with.</p>
 
-    <h2>What is deleted, and what isn't</h2>
-    <table>
-      <tr><th>Data</th><th>Deleted?</th></tr>
-      <tr><td>Your sign-in record (name, email)</td><td>Yes, permanently</td></tr>
-      <tr><td>Chapter progress, scores, mock test history</td><td>Yes, permanently</td></tr>
-      <tr><td>Mistakes deck and study data</td><td>Yes, permanently</td></tr>
-      <tr><td>Premium unlock on the account</td><td>Yes &mdash; see the note below</td></tr>
-      <tr><td>Payment audit records</td><td>Retained where required for tax and accounting compliance</td></tr>
-      <tr><td>Google Play purchase records</td><td>Held by Google under its own policies</td></tr>
-    </table>
-
-    <!-- WORKING [VERIFY]: permanence/restoration wording pending device QA
-         on a throwaway account (app repo). CF behaviour verified in code:
-         recursive delete of users/{uid}, Auth user deleted, purchase-audit
-         docs retained, idempotent. -->
-    <div class="note">
-      <strong>Deleting your account is final.</strong> Your progress cannot
-      be recovered, and premium access cannot be restored to a deleted
-      account &mdash; even if you sign in again with the same Google
-      account. Deleting your account does not entitle you to a refund.
-    </div>
-
-    <h2>Questions?</h2>
-    <p>Anything about your data or this process:
-    <a href="mailto:asmtechdeveloper@gmail.com">asmtechdeveloper@gmail.com</a>
-    or see <a href="/support">Support</a>.</p>
+    <h2>Common requests</h2>
+    <p>Deleting your account and data: <a href="/delete-account">Delete account</a>.</p>
+    <p>How your data is handled: <a href="/privacy">Privacy policy</a>.</p>
 
   </div>
 
