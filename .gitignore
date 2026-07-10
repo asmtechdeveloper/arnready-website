@@ -1,1 +1,21 @@
 .DS_Store
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Credentials must NEVER live in this repo (approved constraint, 10 Jul)
+*serviceAccount*
+*.pem
+.env
+.env.*
+!.env.example
+
+# Paid-ID manifest for the leak gate — derived, never committed
+.leakcheck/
+
+# Build-time Firestore export (free content only) — derived, regenerate with
+# `npm run export-content`. Firestore is the single content source (locked);
+# content is never duplicated in this repo.
+content/
