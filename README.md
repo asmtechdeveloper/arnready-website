@@ -4,6 +4,13 @@ The arnready.com codebase. Two lives:
 1. **Today:** static compliance site (pre-Play-submission stopgap).
 2. **Next:** ARNReady Web — the full app in the browser, Next.js.
 
+**Repository reality (10 Jul 2026):** the root contains the static HTML
+pages, chapter redirect stubs, `CNAME`, Arnie Lottie source files, and one
+legacy Chapter 1 flashcard JSON. It does **not** yet contain a Next.js app,
+`package.json`, `firebase.json`, or `.firebaserc`; `/support` also does not
+exist yet. Firebase Hosting is the decided target, but the deployable hosting
+configuration still has to be established in one canonical repo location.
+
 **Repo:** `github.com/asmtechdeveloper/arnready-website` (separate from
 the app repo). See `CLAUDE.md` for locked rules and
 `docs/ARNREADY_WEBSITE_EXECUTION_PLAN.md` for the current plan.
@@ -26,38 +33,45 @@ the app repo). See `CLAUDE.md` for locked rules and
 The static site already exists (`index.html`, `privacy.html`,
 `delete-account.html`, chapter redirect stubs, `CNAME`). What's left:
 
-1. **Privacy policy** — the current file is a skeleton. Finish the
-   text (drafted via a reputable generator + a human pass); remove its
-   `noindex`. Draft this with a Claude session using the copy scaffold
-   §12 spec.
-2. **Delete-account page** — the copy claims must match what the actual
-   `deleteAccount` Cloud Function does (already deployed in the app
-   repo, asia-south1). A Claude session cross-checks the CF behaviour
-   against the copy.
+1. **Privacy policy** — a substantive draft exists and already has no
+   `noindex`, but it still needs a human/legal accuracy pass against the
+   app's real data collection, AdMob setup, Firebase services, the current
+   Formspree email-signup processor/consent, and future Razorpay use. It must
+   link `/delete-account` and use the canonical footer before it is final.
+2. **Delete-account page** — rewrite the current email-only flow so the
+   deployed in-app deletion path is primary. Cross-check every claim against
+   the deployed `deleteAccount` Cloud Function: it recursively deletes
+   `users/{uid}`, deletes the Firebase Auth user, and retains purchase-audit
+   records. Device QA on a throwaway account is still pending in the app repo.
+   Decide and document the email fallback separately.
 3. **Support email** — decide: dev Gmail (`asmtechdeveloper@gmail.com`)
    or `support@arnready.com` forwarding. This is ANUSHA-DECIDE.
-4. **Deploy** — Firebase Hosting from this repo. Never bare
-   `firebase deploy` (the app's `verifyPurchase` deploy is embargoed);
-   always `firebase deploy --only hosting`.
-5. **DNS** — connect `arnready.com` in Firebase Console → Hosting.
+4. **Support page** — create the permanent `/support` route using the chosen
+   email and the response-time wording Anusha approves.
+5. **Hosting config + deploy** — consolidate the app repo's old
+   `website/public/` scaffold and this repo into ONE source, then add/confirm
+   the Firebase Hosting configuration here. Never run a bare
+   `firebase deploy`; it would broaden scope to the app's live Functions.
+   Always use `firebase deploy --only hosting`.
+6. **DNS** — connect `arnready.com` in Firebase Console → Hosting.
    Update your domain registrar's records as Firebase instructs.
-6. **Paste the three URLs into Play Console** —
+7. **Paste the three URLs into Play Console** —
    `arnready.com/privacy`, `arnready.com/delete-account`,
    support email.
 
-Once these six items are done, this repo has done its
+Once these seven items are done, this repo has done its
 launch-gating job for the APP.
 
-### Step 2 — Razorpay onboarding (you own this — start early, KYC takes days)
+### Step 2 — Razorpay onboarding (external gate cleared 10 Jul)
 
-Kicked off 9 Jul. This is independent of the code — the outputs are
-API keys + webhook secrets that Claude will need at Web-3 build time.
+KYC was approved and the account activated on 10 Jul. Test-mode keys are
+available. Live keys and the production webhook secret are created/confirmed
+when the Web-3 integration is deployed; they never belong in client code or
+this repository's documentation.
 
-1. Sign up at razorpay.com with the ASM Tech business identity.
-2. Complete KYC (PAN, business proof, bank details). Days, not hours.
-3. Enable UPI, cards, netbanking, wallets in the dashboard.
-4. When approved, share test keys with the next Claude session so
-   webhook CF work can begin.
+Remaining work is engineering and policy-gated: design the order + webhook
+Cloud Functions, configure test secrets, complete the Play-policy review,
+test payment/refund/idempotency paths, then configure live secrets.
 
 ### Step 3 — kick off Web-1 (the real product)
 
@@ -75,18 +89,7 @@ After that, Web-1 build sessions follow the execution plan §2
 (Days 3–14 track): Next.js shell → auth → unsigned free access →
 flashcards → practice.
 
-### Step 4 — the ARNREADY_WEB_ARCHITECTURE.md v2 pass
-
-`docs/ARNREADY_WEB_ARCHITECTURE.md` predates the 9 Jul corrections and
-carries a v2-pass flag at the top. It needs a rewrite before Web-1
-coding starts so it doesn't send a future session down the wrong path.
-Tell Claude:
-
-> "Rewrite `docs/ARNREADY_WEB_ARCHITECTURE.md` to v2, using the flag at
-> the top for the known stale spots. PRD/IA/execution plan win any
-> conflict."
-
-### Step 5 — first content sessions
+### Step 4 — first content sessions
 
 Public pages (Firestore-sourced) — start with the workhorses:
 `/chapters/[n]` × 12, `/mock-test`, `/syllabus`, `/nism-series-v-a`.

@@ -1,8 +1,9 @@
 # ARNReady Web — Architecture
 
-**Status:** ARCHITECTURE v2 (9 July 2026). Full rewrite on Anusha's
-9 Jul corrections — v1's "post-launch, static-baked content, fenced
-payments" model is retired. This doc pairs with `ARNREADY_WEB_PRODUCT_
+**Status:** ARCHITECTURE v2.1 (10 July 2026). Full rewrite on Anusha's
+9 Jul corrections, with a 10 Jul current-state consistency pass — v1's
+"post-launch, static-baked content, fenced payments" model is retired. This
+doc pairs with `ARNREADY_WEB_PRODUCT_
 PRD.md` (WHAT), `ARNREADY_WEBSITE_INFORMATION_ARCHITECTURE.md` (WHERE),
 `ARNREADY_WEBSITE_EXECUTION_PLAN.md` (WHEN), and the sibling app
 repo's `CLAUDE.md` (locked product canon — always wins).
@@ -47,7 +48,8 @@ chapter pages, book QR, and YouTube descriptions build.
   `/chapters`, `/chapters/[chapter]`, `/mock-test`, `/flashcards`,
   `/questions`, `/pricing`, `/book`, `/youtube-course`, `/about`,
   `/faq`, `/privacy`, `/delete-account`, `/support`.
-- **Authenticated (client):** `/app`, `/app/flashcards`,
+- **Product (client; Google identity required only for account-bound
+  surfaces):** `/app`, `/app/flashcards`,
   `/app/practice`, `/app/practice/[chapter]`, `/app/exam/[chapter]`,
   `/app/mock`, `/app/mock/[attempt]`, `/app/results/[session]`,
   `/app/mistakes`, `/app/progress`, `/app/account`, `/app/upgrade`.
@@ -65,9 +67,9 @@ web product AND the public pages from one place. Content review /
 upload pipeline (`../../ARNReady-App/docs/CONTENT_REVIEW_AND_UPLOAD_
 RUNBOOK.md`) is unchanged and stays the ONLY way content ships.
 
-**Public pages are pre-rendered FROM Firestore.** Two supported
-implementations (either is fine — pick at Web-1 build time based on how
-often content changes vs how fast the build must be):
+**Public pages are pre-rendered FROM Firestore.** Two supported rendering
+implementations remain open for the Web-1 architecture decision; choose based
+on how often content changes versus acceptable build/read cost:
 
 1. **Build-time SSG with revalidation.** `generateStaticParams` +
    Next.js `revalidate` (ISR). Fresh at build; refreshes on a schedule
@@ -81,24 +83,23 @@ Marketing copy stays in page files (per the copy scaffold rules).
 
 ### 3.1 Unsigned reads — the real problem
 
-Client-side Firebase reads from a public page fail today because
-deployed rules require auth for `questions` (§4). Two supported
-solutions (Opus decision — rules semantics are LOCKED, mirror-edit
-discipline only):
+Client-side Firebase reads from a public page fail today because deployed
+rules require auth for `questions` (§4). Two supported unsigned-delivery
+solutions remain open (Opus decision — rules semantics are LOCKED,
+mirror-edit discipline only):
 
-- **Firebase anonymous auth.** Each unsigned visitor gets an anon uid
+- **Firebase anonymous auth.** Each visitor gets an anonymous Firebase uid
   that satisfies the "signed-in" rules and upgrades cleanly to Google
-  sign-in when they choose. Cleanest for a client-heavy Next.js app;
-  matches the IA doc §1 access model.
+  sign-in when they choose. The experience is still "no sign-in required"
+  from the visitor's perspective. Cleanest for a client-heavy Next.js app.
 - **Server-side delivery with the Admin SDK.** Public pages render on
   the server with elevated credentials; the client never touches
   Firestore for public content. No client SDK for public routes at all.
 
-The IA doc §1 access model wins the tie unless the shared-core
-extraction (§7) surfaces a reason to prefer the other. Per-account
-surfaces still require sign-in (progress, mistakes deck, baseline,
-`isPaid`, one-free-mock-EVER counter — those are per-account by locked
-rule).
+The IA doc §1 access model is fixed regardless of implementation: no mandatory
+Google prompt for free study, and cancellation never blocks free access.
+Per-account surfaces require a Google-linked identity (saved progress,
+mistakes deck, baseline, `isPaid`, and the one-free-mock-EVER counter).
 
 ## 4. Data model assumptions (web consumes, never redefines)
 
@@ -115,9 +116,12 @@ rule).
 
 - **Google provider** (parity with the app), via `signInWithPopup`
   with a `signInWithRedirect` fallback.
-- **Anonymous auth** for unsigned visitors (§3.1 option 1), upgraded
-  to Google via `linkWithPopup` when they sign in — same uid
-  survives, so any progress the anon user accumulated persists.
+- **If anonymous auth is selected in §3.1:** upgrade it to Google via
+  `linkWithPopup` when the visitor chooses to sign in. Define collision
+  handling for an existing Google account before implementation; do not assume
+  linking always succeeds.
+- **If server-side delivery is selected in §3.1:** no anonymous Firebase
+  identity is created; unsigned study remains unpersisted until Google sign-in.
 - Same uid appears on both platforms once signed in — sync is free.
 - Web sign-out clears the Firebase session and any cached local state
   (mirroring the app's both-sessions discipline in spirit).
@@ -170,18 +174,19 @@ FIRST inside the Web-1 build), not a launch prerequisite.
 ## 8. Paid entitlement model
 
 Unchanged and non-negotiable: `users/{uid}.isPaid`,
-**server-write-only**, written exclusively by verification Cloud
+**server-write-only**, written exclusively by trusted purchase-state Cloud
 Functions:
-- Today: `verifyPurchase` (Play Billing) — written, held on Play
-  Console setup.
-- Web-3: a Razorpay webhook CF (see §10) — the ONLY other allowed
-  writer.
+- Today: the deployed, device-proven Play chain — `verifyPurchase` grants;
+  `handlePlayNotification` and `reconcileVoidedPurchases` revoke/refuse
+  restoration after refund, revoke, or chargeback.
+- Web-3: Razorpay verification/refund Functions (see §10) join that same
+  allow-list and recompute the shared entitlement projection.
 
 The web client reads `isPaid` via a store mirroring `entitlementStore`.
 No web code path may write `isPaid`. No second entitlement flag may
 exist. Any change here is an **Opus moment** requiring Anusha's
-explicit sign-off. Both CFs live in the app repo's `functions/`
-workspace — one deploy pipeline for all `isPaid` writers.
+explicit sign-off. All purchase-state Functions live in the app repo's
+`functions/` workspace — one deploy pipeline for all `isPaid` writers.
 
 ## 9. Mock engine reuse
 
@@ -226,7 +231,7 @@ Incomplete web attempts are silently discarded, same as the app.
 | Option | Verdict |
 |---|---|
 | **Razorpay → webhook → CF writes `isPaid`** | **DECIDED.** Built for exactly this: self-serve merchant onboarding in days, modern REST APIs + signed webhooks, hosted checkout with UPI/cards/netbanking/wallets native, solid docs, standard for Indian solo devs. |
-| Cashfree | Runner-up if Razorpay onboarding ever stalls. |
+| Cashfree | Runner-up if Razorpay integration or live activation stalls. |
 | BillDesk | Enterprise/bank-oriented, sales-led onboarding, older integration surface — no. Its slowness on the Play payout approval for this account is itself the argument. |
 | Stripe | Weaker UPI story for Indian consumers — no. |
 | Payment links (no integration) + manual flip | Breaks server-write-only discipline with human hands in prod data — no. |
@@ -239,6 +244,13 @@ validates → writes `isPaid = true` + a purchase record `{source:
 "razorpay", orderId, paymentId, at, price}` → client `isPaid` listener
 flips → user sees premium immediately.
 
+`isPaid` is a projection of all active verified purchase sources, not a field
+that one provider owns. A Razorpay refund must therefore recompute entitlement
+from active Play + Razorpay purchase records; it must never blindly set
+`isPaid = false` while a valid Play purchase (or another valid web purchase)
+still exists. The exact cross-source record model and recomputation transaction
+are part of the webhook Opus design gate.
+
 **Non-negotiable properties of the webhook CF (Opus moment):**
 - HMAC signature verification with the webhook secret from Functions
   config (never in client code).
@@ -247,14 +259,15 @@ flips → user sees premium immediately.
   double-recording.
 - Region `asia-south1` (parity with `verifyPurchase`, `deleteAccount`).
 - Secrets in Functions config, rotated on schedule.
-- Refund path: webhook handles `refund.processed` → sets `isPaid =
-  false` + logs the refund; the same idempotency rule applies.
+- Refund path: webhook handles `refund.processed`, marks that purchase
+  refunded, recomputes entitlement across all verified sources, and logs the
+  refund; the same idempotency rule applies.
 - Error paths log to Cloud Logging with the `paymentId` for support
   reconciliation.
 
-The webhook CF lives in the app repo's `functions/` workspace
-alongside `verifyPurchase` — one CF codebase, one deploy pipeline for
-all `isPaid` writers (§8).
+The Razorpay Functions live in the app repo's `functions/` workspace
+alongside the Play verification/revocation chain — one Functions codebase,
+one deploy pipeline for all `isPaid` writers (§8).
 
 ### 10.3 The V2 fence
 
@@ -302,11 +315,13 @@ ships**, when purchase-attribution actually pays for the complexity.
 
 ## 14. Deployment
 
-- **Stopgap (now):** the static site in the root of this repo
-  (`index.html`, `privacy.html`, `delete-account.html`, chapter
-  redirect stubs) on Firebase Hosting — `firebase deploy --only
-  hosting` (NEVER bare `firebase deploy`; the app repo's
-  `verifyPurchase` deploy is embargoed).
+- **Stopgap (now):** static files exist in the root of this repo
+  (`index.html`, `privacy.html`, `delete-account.html`, chapter redirect
+  stubs), but this repo does not yet contain `firebase.json` or `.firebaserc`;
+  `/support` is also missing. Consolidate the app repo's old
+  `website/public/` scaffold into this canonical repo, establish Firebase
+  Hosting config, then deploy with `firebase deploy --only hosting` (NEVER a
+  bare `firebase deploy`, which would broaden the deployment scope).
 - **Web-1 onwards:** Next.js on Firebase Hosting (web-frameworks
   support). Same command, richer output. Preview channels for review
   (`firebase hosting:channel:deploy`).
@@ -329,9 +344,9 @@ content-review + QA critical path still owns Anusha's own hours.
 | 0 | Finish + deploy static compliance pages (privacy, delete-account, support) | before Play submission (this is the only APP-launch-gating web work) |
 | 1 | **Shared-core package extraction** (`quizEngine`, scoring, mock assembly, record shape builders) + fixture tests | Opus session; touches app imports; do FIRST inside Web-1 |
 | 2 | Next.js shell: public pages (IA doc MVP set), migrate compliance URLs 1:1 | step 1 not required (public pages don't touch the engine) |
-| 3 | Auth (Google + anonymous) + `/app` + flashcards | steps 1–2 |
+| 3 | Google auth + chosen unsigned-delivery implementation + `/app` + flashcards | steps 1–2 |
 | 4 | Chapter practice + progress writes + `isPaid` read (app-paid users get web) | step 3 + fixture tests green |
 | 5 | Exam mode + laptop mock + results | step 4 |
-| 6 | Web checkout | Razorpay onboarding done (Anusha) + §10 policy review done (Opus + Anusha) |
+| 6 | Web checkout | merchant KYC done 10 Jul + §10 policy review + webhook/order design + test-mode E2E proof (Opus + Anusha) |
 
 *ARNReady · ASM Tech · arnready.com*

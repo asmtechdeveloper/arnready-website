@@ -1,7 +1,8 @@
 # ARNReady Website — Lower-Model Prompt Library
 
-**Status:** v3 (9 July 2026). The WEBSITE half of the retired combined
-`ARNREADY_WEB_AND_YOUTUBE_LOWER_MODEL_PROMPTS.md` (v2), split when the
+**Status:** v3.1 (10 July 2026 — current-state consistency pass). The
+WEBSITE half of the retired combined `ARNREADY_WEB_AND_YOUTUBE_LOWER_MODEL_PROMPTS.md`
+(v2), split when the
 projects separated. The YouTube half lives in
 `../../ARNReady-YouTube/docs/ARNREADY_YOUTUBE_PROMPT_LIBRARY.md`.
 Usage: paste the CONTEXT BLOCK (§0), then one prompt, then the inputs it
@@ -39,13 +40,16 @@ THE ECOSYSTEM (four pillars, one account):
    and does not unlock anything digital.
 
 Premium: one-time ₹250 (never a subscription) = full question bank,
-unlimited mocks, answer review. Pay ONCE, anywhere — on the website or
-in the app — and both unlock together, forever. On the WEBSITE, the web
-checkout is the primary conversion CTA. The MOBILE APP pays only via
-Google Play and never mentions or links to web checkout (store policy).
+unlimited mocks, answer review. The app's Google Play purchase is live. Web
+checkout is planned for Web-3 and is NOT live yet; once shipped, pay ONCE on
+either platform and both unlock together, forever. On the WEBSITE, web
+checkout becomes the primary conversion CTA only when Web-3 is enabled;
+until then the primary CTA is Start free. The MOBILE APP pays only via Google
+Play and never mentions or links to web checkout (store policy).
 
 Product facts: 12 syllabus chapters. Free: real practice questions per
-chapter, ONE full mock, ALL flashcards, the mistakes deck. Mock: 100
+chapter, ONE full mock per Google-linked account, ALL flashcards, the mistakes
+deck (identity-required because it persists). Mock: 100
 questions, 120 minutes, weighted like the real exam. Scoring is
 deliberately strict/honest — ARNReady never inflates readiness.
 Arnie is the PANDA mascot (a panda — never call him a red panda). He
@@ -305,7 +309,9 @@ DO NOT: chain-message energy; false scarcity; "Dear friends" openers.
   Prompt numbering kept from v2 (E-6 lives in the YouTube library).
 - v2 (7 Jul 2026): corrected direction — four-pillar ecosystem context.
 - Pending unlocks: delete [VERIFY] instruction from §0 when Anusha
-  confirms exam facts (date: ___); unlock billing FAQ answers after
-  billing QA (date: ___).
+  confirms exam facts (date: ___). App Play Billing purchase + refund/revoke
+  were device-proven 10 Jul; billing FAQ copy may now be drafted only from
+  that tested app flow. Web-checkout FAQ claims remain locked until Web-3 E2E
+  payment/refund testing passes.
 
 *ARNReady · ASM Tech · arnready.com*

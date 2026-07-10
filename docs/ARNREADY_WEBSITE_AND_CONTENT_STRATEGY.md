@@ -1,7 +1,8 @@
 # ARNReady — Ecosystem & Content Strategy
 
-**Status:** v2.1 (9 July 2026 — doc map updated when the tracks became
-separate projects; sequencing superseded, see the §3 note). v2 (7 Jul)
+**Status:** v2.2 (10 July 2026 — current-state consistency pass). v2.1
+updated the doc map when the tracks became separate projects; sequencing is
+superseded by §3. v2 (7 Jul)
 corrected v1's framing: **ARNReady Web is a product; YouTube is a free
 course.** This doc is the strategic overview for the WHOLE ecosystem —
 it lives in the Website project (the hub at arnready.com) and is
@@ -11,7 +12,7 @@ per-project execution sets:
 | Doc | Where | Owns |
 |---|---|---|
 | `ARNREADY_WEB_PRODUCT_PRD.md` | here | ARNReady Web as a product: journeys, sync, scope ladder |
-| `ARNREADY_WEB_ARCHITECTURE.md` | here | stack, shared engine, entitlement, payments + the Play-policy gate (carries a v2-pass warning) |
+| `ARNREADY_WEB_ARCHITECTURE.md` | here | stack, shared engine, entitlement, payments + the Play-policy gate (v2 rewrite complete) |
 | `ARNREADY_WEBSITE_INFORMATION_ARCHITECTURE.md` | here | every route, phased |
 | `ARNREADY_WEBSITE_COPY_SCAFFOLD.md` | here | copy rules, wire copy, claims blacklist |
 | `ARNREADY_WEBSITE_EXECUTION_PLAN.md` | here | web gates + time-boxed plans |
@@ -29,7 +30,7 @@ Locked product rules stay in the app repo (`../ARNReady-App/CLAUDE.md`).
 | Pillar | Job | Money |
 |---|---|---|
 | **Mobile app** | daily practice, flashcards, mocks, mistakes deck, nudges | ₹250 once, Play Billing |
-| **ARNReady Web** | the same study product in a browser — laptop mocks are the flagship — plus the SEO/course hub | same single ₹250 entitlement; web checkout (Razorpay) is the site's PRIMARY conversion — Web-3 phase |
+| **ARNReady Web** | the same study product in a browser — laptop mocks are the flagship — plus the SEO/course hub | same single ₹250 entitlement; web checkout (Razorpay) becomes the site's PRIMARY conversion in Web-3 |
 | **YouTube** | the FREE complete NISM V-A course — chapter lectures (30–60 min where earned), explainers, revision, Shorts | none; trust + funnel |
 | **Book** | physical question bank + revision companion (KDP) | book sale |
 

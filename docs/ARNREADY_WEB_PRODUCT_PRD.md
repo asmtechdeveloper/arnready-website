@@ -1,7 +1,7 @@
 # ARNReady Web — Product PRD
 
-**Status:** PRD v2 (9 July 2026 — Anusha's corrections). ARNReady Web is
-a **product**, not a landing page: the app in the browser — flashcards,
+**Status:** PRD v2.1 (10 July 2026 — consistency/current-state pass).
+ARNReady Web is a **product**, not a landing page: the app in the browser — flashcards,
 practice, exam mode, laptop mock tests, and web purchase of the same
 premium entitlement the app uses. This doc defines WHAT; the HOW is
 `ARNREADY_WEB_ARCHITECTURE.md`; page-level detail is
@@ -44,7 +44,7 @@ Why it earns its build cost:
 | Pillar | Job | Monetisation |
 |---|---|---|
 | **Mobile app** | Daily practice, flashcards, mocks, streaks/nudges | ₹250 unlock via Play Billing (in-app purchases are Play-only — policy) |
-| **ARNReady Web** | THE FULL APP IN THE BROWSER: practice + exam modes, laptop mocks, flashcards, mistakes deck — same free/paid rules and gates as the app — plus the SEO/course hub | same ₹250 entitlement via **web checkout — the primary conversion CTA** (better margin: gateway ~2% vs Play ~15%) |
+| **ARNReady Web** | THE FULL APP IN THE BROWSER: practice + exam modes, laptop mocks, flashcards, mistakes deck — same free/paid rules and gates as the app — plus the SEO/course hub | same ₹250 entitlement via **web checkout — the primary conversion CTA once Web-3 ships** (better margin: gateway ~2% vs Play ~15%) |
 | **YouTube** | The free, detailed, chapter-by-chapter V-A course | none — trust + funnel |
 | **Book** | Physical question bank + revision companion | KDP sale — **outside the entitlement** |
 
@@ -68,13 +68,16 @@ browser.
 
 ### 4.1 Free web user (discovery → practice)
 Search/YouTube → public chapter page → "practise this chapter free" →
-Google sign-in → `/app/practice/{chapter}` → free questions with
-explanations → hits the free cap → sees upgrade + "get the app for daily
-practice". Success = a signed-in account with progress, on any platform.
+`/app/practice/{chapter}` without a mandatory Google prompt → free questions
+with explanations → natural, cancellable sign-in prompt for persistence →
+hits the free cap → sees upgrade + "get the app for daily practice".
+Success at the access layer = meaningful free study; conversion success = a
+Google-linked account with progress that follows the candidate across devices.
 
 ### 4.2 Paid user journey (web)
-Free user hits cap or finishes the free mock → `/app/upgrade` → pays ₹250
-(web checkout — the site's primary conversion) → `isPaid` flips server-side → full bank,
+Once Web-3 is live: free user hits cap or finishes the free mock →
+`/app/upgrade` → pays ₹250 (web checkout — the site's primary conversion) →
+`isPaid` flips server-side → full bank,
 unlimited mocks, exam review — on web AND in the app, same account,
 immediately. One purchase, both platforms, forever (locked model).
 
@@ -122,8 +125,9 @@ architecture doc §10, which any payments work must read first).
   `isPaid`). Web reads and writes the SAME schema — no parallel "web
   progress" collections, ever.
 - **One entitlement:** `users/{uid}.isPaid`, server-write-only, written
-  only by verification Cloud Functions (Play verifier today; web-payment
-  webhook later). Web client reads it exactly like the app does.
+  only by trusted purchase-state Cloud Functions (the deployed Play
+  verification/revocation chain today; web payment/refund handling later).
+  The web client reads it exactly like the app does.
 - Conflict model: last-write-wins per session record is acceptable — a
   user isn't practising on two devices simultaneously; aggregates are
   recomputed at write time by the single write path (§6).
@@ -181,10 +185,10 @@ Only two categories may legitimately differ:
 ### Web-3: "the second till" — FENCE LIFTED 9 Jul (Anusha)
 - **Web checkout — the primary conversion CTA** (Razorpay → webhook CF →
   same `isPaid`; provider decided, see §10.2). No longer gated on app
-  launch. Real gates: Razorpay onboarding (Anusha), the arch §10 Play
-  policy review (the app must never link to or mention web checkout),
-  webhook CF design (**Opus moment** — writes isPaid), pricing page live,
-  refund policy written.
+  launch. Merchant KYC was approved 10 Jul. Remaining gates: the arch §10
+  Play policy review (the app must never link to or mention web checkout),
+  webhook CF design (**Opus moment** — writes entitlement state), pricing
+  page live, refund policy written, and test-mode end-to-end proof.
 - Exam review on web, progress insights, Today's-Focus port (per §7
   parity, these are catch-up items, not optional extras).
 
@@ -215,7 +219,7 @@ count.
    onboarding, older integration surface, built for banks and billers, not
    solo SaaS — and this account's BillDesk experience (weeks sitting on
    the Play payout approval) is itself the argument. Runner-up if Razorpay
-   onboarding ever stalls: Cashfree. Reduced-fee Play Account Group
+   integration or live activation stalls: Cashfree. Reduced-fee Play Account Group
    enrolment stays tied to the Play payments profile (war room §4) — it is
    about Play's cut, unrelated to web checkout.
 3. ~~Web-1 before/after YouTube course~~ — **SETTLED (9 Jul): web build
@@ -226,7 +230,10 @@ count.
    keeps public-page → practice links same-site, and means one hosting
    deploy, one cert, no cross-subdomain auth fuss.
 
-**The DECIDE list is now EMPTY.** Remaining external dependency: Razorpay
-KYC/onboarding (Anusha, in progress).
+**All four product-shape decisions in this section are resolved.** Operational
+decisions still open elsewhere in the doc set: support email, refund policy,
+GA4-or-nothing, unsigned-delivery implementation, and the web rewarded-ad
+equivalent. Razorpay merchant KYC was approved 10 Jul; integration, test/live
+secrets, policy review, and end-to-end payment/refund testing remain.
 
 *ARNReady · ASM Tech · arnready.com — one account, one unlock, every screen.*

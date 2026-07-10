@@ -1,7 +1,8 @@
 # ARNReady — Website Copy Scaffold
 
-**Status:** ALL COPY HERE IS WORKING — nothing ships to a linked page until
-Anusha's voice pass (same rule as appCopy.js). This is a *scaffold*: wire
+**Status (10 July 2026 consistency pass):** ALL COPY HERE IS WORKING —
+nothing ships to a linked page until Anusha's voice pass (same rule as
+appCopy.js). This is a *scaffold*: wire
 copy, skeletons, and rules so a lower model can draft final copy without
 inventing claims. Slots to fill are marked `[SLOT]`; facts awaiting Anusha's
 verification are marked `[VERIFY]`.
@@ -63,7 +64,7 @@ formula]. The goal isn't to make you feel ready. It's to make you ready.
 [FREE TIER — plain facts]
 H2: Free means actually free.
 - 20 real questions per chapter, practice and exam mode
-- One full mock test
+- One full mock test per Google-linked account
 - Every flashcard, forever
 - No card details, no trial clock — on the web, not even a sign-in to start
 Then: the full bank, unlimited mocks, and answer review cost ₹250. Once.
@@ -90,13 +91,14 @@ Updated date + source line
 FAQ block (3–5 questions) where natural
 ```
 
-## 4. CTA hierarchy (CORRECTED 9 Jul, Anusha — web checkout is the
-primary conversion)
+## 4. CTA hierarchy (CORRECTED 10 Jul — web checkout becomes the primary
+conversion in Web-3)
 
-**The conversion CTA everywhere on the site is the WEB unlock:** pay ₹250
-on the website itself, which unlocks the website AND the app together
+**Once Web-3 ships, the conversion CTA everywhere on the site is the WEB
+unlock:** pay ₹250 on the website itself, which unlocks the website AND the app together
 (higher margin than a Play purchase — this is deliberate business
-strategy, never stated in public copy).
+strategy, never stated in public copy). Before Web-3, "Start free" is the
+primary CTA and checkout remains a labelled placeholder.
 
 - **Entry CTA** (new visitors, top of funnel): "Start free — no sign-in
   needed" / "Practise this chapter free". Free access first, always.
@@ -153,9 +155,9 @@ product story stays consistent:
    website and in the app, same Google account, pay on either.
 7. **How do I delete my account?** — In the app: Profile → Delete Account.
    Details: /delete-account.
-8. **I paid but premium isn't showing.** — [Restore-purchases steps from the
-   app's own flow + support email fallback. Write AFTER billing QA, not
-   before — the flow must be tested truth.]
+8. **I paid but premium isn't showing.** — [Use the device-proven app
+   restore-purchases flow (proved 10 Jul) + support email fallback. Do not
+   describe web-payment recovery until Web-3 E2E testing passes.]
 9. **Is there an iOS version?** — [SLOT: Anusha's honest current answer.]
 10. **Who built this?** — Anusha Murthy (ASM Tech). See /about.
 
@@ -218,20 +220,30 @@ Privacy · Delete account · Support · © {year} ASM Tech
 
 ## 12. Compliance pages copy skeletons
 
+**Current-file note (10 Jul):** `privacy.html` is already a substantive draft
+and has no `noindex`; it is not final. `delete-account.html` is currently an
+email-only flow and does not yet describe the deployed in-app deletion path.
+The following are the target specs, not descriptions of current completion.
+
 **/privacy** — sections: what we collect (Google account basics, study
-progress, purchase state), where it lives (Firebase, India-adjacent region
+progress, purchase state, and the current launch-notification email form),
+processors (including Formspree while that form exists), where product data
+lives (Firebase, India-adjacent region
 asia-south1), what we DON'T do (sell data, third-party marketing), ads
-(AdMob for free users — cookies/ad-ID note), payments (Google Play Billing;
-we never see card details), data deletion (link /delete-account), contact,
-dated. Draft via a reputable generator, then human pass — [VERIFY by Anusha].
+(AdMob in the Android app; the eventual web-ad vendor/cookie treatment must be
+named only after the web format is chosen), payments (Google Play Billing now;
+Razorpay only once Web-3 is live; we never see card details), data deletion
+(link /delete-account), contact, dated. Draft via a reputable generator, then
+human/legal accuracy pass — [VERIFY by Anusha].
 
 **/delete-account** — H1 "Delete your ARNReady account". Primary: in-app
-steps (Profile → Delete Account → confirm). What's deleted: sign-in record,
-all study data and progress, immediately and permanently. What isn't:
-Google Play purchase records (Google holds those; premium is restorable
-only while an account exists — deleting is truly final [VERIFY phrasing
-against actual CF behaviour before publishing]). Fallback: email
-{support} from the account's Gmail. Response within 48 hours.
+steps (Profile → Delete Account → confirm). Deployed behaviour: the callable
+recursively deletes `users/{uid}` and the Firebase Auth user; the app then
+wipes local ARNReady keys and signs out Google + Firebase. Purchase-audit
+records are retained. Device QA on a real throwaway account is still pending,
+so final permanence/restoration wording remains [VERIFY]. Fallback: email
+{support} from the account's Gmail, with the process and response-time promise
+approved before publication.
 
 **/support** — H1 "Support". Email, honest one-developer note, 48-hour aim,
 link to /delete-account and (once live) /faq.

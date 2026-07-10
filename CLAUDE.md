@@ -21,10 +21,11 @@
 ## What this is
 
 The arnready.com website. Two lives:
-1. **Today (pre-Web-1):** a static compliance site — privacy /
-   delete-account / support / chapter redirect stubs — served on
-   Firebase Hosting. Its only launch-gating job is making three URLs
-   real for Play Console.
+1. **Today (pre-Web-1):** a static stopgap — homepage, privacy draft,
+   delete-account draft, and chapter redirect stubs. `/support` and the
+   Firebase Hosting config are not yet present in this repo. Its only
+   launch-gating job is making the required compliance URLs final and real
+   for Play Console.
 2. **Next (Web-1 onwards):** the ARNReady WEB PRODUCT — the same app in
    the browser (practice, exam, flashcards, laptop mocks) plus the
    public SEO/course hub. Web checkout (Razorpay) is the primary
@@ -38,9 +39,12 @@ folder IS the git repo — separate from the app repo).
 
 Plain HTML, no build step. `index.html`, `privacy.html`,
 `delete-account.html`, chapter redirect stubs (`chapter-1.html` …
-`chapter-12.html`), plus `chapters/`, `flashcards/`, `questions/`
-folders for future expansion. `CNAME` file for domain. Deployed via
-Firebase Hosting.
+`chapter-12.html`), plus empty `chapters/`, `flashcards/`, `questions/`
+folders for future expansion. `CNAME` declares the domain. There is no
+`package.json`, `firebase.json`, or `.firebaserc` here yet; Firebase Hosting
+is the decided target, not a currently reproducible deployment from this
+folder. The old scaffold in the app repo must be consolidated into this repo
+before hosting is configured.
 
 ## Architecture — WHAT'S PLANNED (ARNReady Web product)
 
@@ -50,7 +54,8 @@ static scaffold when Web-1 starts. Route groups:
   `/syllabus`, `/chapters`, `/chapters/[chapter]`, `/mock-test`,
   `/flashcards`, `/questions`, `/pricing`, `/book`, `/youtube-course`,
   `/about`, `/faq`, `/privacy`, `/delete-account`, `/support`.
-- **Authenticated (client-rendered):** `/app`, `/app/flashcards`,
+- **Product (client-rendered; not every route requires Google sign-in):**
+  `/app`, `/app/flashcards`,
   `/app/practice`, `/app/practice/[chapter]`, `/app/exam/[chapter]`,
   `/app/mock`, `/app/mock/[attempt]`, `/app/results/[session]`,
   `/app/mistakes`, `/app/progress`, `/app/account`, `/app/upgrade`.
@@ -59,8 +64,7 @@ Auth: Firebase Web SDK, Google provider — same Firebase project as the
 app, same uid, same Firestore documents. NOT `@react-native-firebase`.
 State: zustand (matches app's `entitlementStore` pattern). Hosting:
 Firebase Hosting. Full arch detail:
-`docs/ARNREADY_WEB_ARCHITECTURE.md` — but it carries a v2-pass warning
-because it predates 9 Jul corrections; the PRD and IA docs win.
+`docs/ARNREADY_WEB_ARCHITECTURE.md` (Architecture v2, rewritten 9 Jul).
 
 ## LOCKED web-side rules (9 Jul)
 
@@ -94,8 +98,9 @@ The web mimics the app in ALL respects:
 - **Ads**: free users see ads; paid users see none; no ads on the
   upgrade/paywall page.
 - **isPaid**: `users/{uid}.isPaid`, SERVER-WRITE-ONLY. Web reads it
-  via a store mirroring `entitlementStore`. Only a verification CF
-  writes it — today the Play verifier, later the Razorpay webhook CF.
+  via a store mirroring `entitlementStore`. Only trusted purchase-state
+  Cloud Functions write it: today the deployed Play verification/revocation
+  chain; later the Razorpay verification/refund chain too.
 
 Only two categories may differ from the app: **web-additive** surfaces
 (SEO/course pages, keyboard mocks, question palette on big screens)
@@ -131,11 +136,12 @@ sign-in) OR server-side delivery with admin credentials.
 ### Web checkout (Web-3)
 Provider: **Razorpay** (decided 9 Jul). Flow: `/app/upgrade` →
 Razorpay order (CF creates order, binds uid) → hosted checkout → signed
-webhook → CF validates → writes `isPaid` + purchase record (source:
-"razorpay") → client listener flips. Signature verification, idempotent
+webhook → CF validates → writes purchase state and recomputes `isPaid`
+(source: "razorpay") → client listener flips. Signature verification, idempotent
 writes, region asia-south1, secrets in Functions config. This CF is an
 **Opus moment** and lives in the app repo's `functions/` workspace
-alongside `verifyPurchase` — one repo for all CFs, one deploy.
+alongside the Play verification/revocation Functions — one repo for all
+entitlement writers, one deploy pipeline.
 Runner-up if Razorpay ever stalls: Cashfree.
 
 ### The single-write-site invariant (the hardest problem)

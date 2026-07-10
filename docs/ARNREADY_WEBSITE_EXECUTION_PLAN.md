@@ -1,6 +1,6 @@
 # ARNReady Website — Execution Plan
 
-**Status:** v1 (9 July 2026) — the website track extracted from the
+**Status:** v1.1 (10 July 2026) — the website track extracted from the
 retired combined `ARNREADY_WEB_YOUTUBE_EXECUTION_ROADMAP.md` when the
 three tracks (website / YouTube / book) became separate projects.
 Sequencing truth (Anusha, 9 Jul): **the website builds NOW and launches
@@ -10,7 +10,7 @@ here.** The app's critical path owns ANUSHA'S OWN HOURS; this track is
 the sanctioned parallel track for build sessions.
 
 Doc set (this folder): `ARNREADY_WEB_PRODUCT_PRD.md` (WHAT) ·
-`ARNREADY_WEB_ARCHITECTURE.md` (HOW — carries a v2-pass warning) ·
+`ARNREADY_WEB_ARCHITECTURE.md` (HOW — v2 rewrite complete 9 Jul) ·
 `ARNREADY_WEBSITE_INFORMATION_ARCHITECTURE.md` (every route) ·
 `ARNREADY_WEBSITE_COPY_SCAFFOLD.md` (copy rules + wire copy) ·
 `ARNREADY_WEBSITE_PROMPT_LIBRARY.md` (lower-model prompts) ·
@@ -21,7 +21,7 @@ The APP repo (`../ARNReady-App`) owns: locked product rules (CLAUDE.md),
 config values, the content pipeline, Firestore rules, Cloud Functions.
 
 **Decisions locked 9 Jul:** web checkout = **Razorpay**, the site's
-primary conversion CTA · domain shape = **`arnready.com/app`** (path,
+primary conversion CTA once Web-3 ships · domain shape = **`arnready.com/app`** (path,
 not subdomain) · web mimics the app in ALL respects (PRD §7) · Firestore
 is the single content source, public pages included · unsigned visitors
 get the FULL free tier; sign-in buys persistence, not access.
@@ -31,11 +31,17 @@ get the FULL free tier; sign-in buys persistence, not access.
 ## 1. Gate checklists
 
 ### Play-submission duties (the only APP-launch-gating web work)
-- [ ] `/privacy` finished (skeleton → real policy) + Anusha review; remove its noindex
-- [ ] `/delete-account` claims verified against the actual deleteAccount CF behaviour
+- [ ] `/privacy` substantive draft reconciled with real data flows (including
+      the current Formspree signup) + Anusha/legal accuracy pass (it already
+      has no `noindex`)
+- [ ] `/delete-account` rewritten to make the deployed in-app flow primary;
+      claims verified against the actual deleteAccount CF behaviour and
+      device QA completed on a throwaway account
 - [ ] Support email decided (dev Gmail vs support@arnready.com forwarding)
-- [ ] Hosting deploy path decided (this repo is the live static site; the
-      app repo also holds a `website/public/` scaffold — consolidate to ONE)
+- [ ] `/support` page created with approved contact/SLA wording
+- [ ] Hosting deploy path decided (this repo is the canonical static source; the
+      app repo also holds a `website/public/` scaffold — consolidate to ONE),
+      then `firebase.json` / `.firebaserc` established in the canonical repo
 - [ ] arnready.com DNS connected (Anusha, registrar + hosting console)
 - [ ] The three URLs pasted into Play Console fields
 - [ ] Privacy policy re-check when real AdMob IDs go in
@@ -60,8 +66,9 @@ get the FULL free tier; sign-in buys persistence, not access.
       test-mode keys available; live-mode webhook secret generated
       when the CF is deployed)
 - [ ] Webhook CF designed: signature verification, idempotency, uid binding,
-      asia-south1 — **Opus moment** (writes isPaid; the CF lives in the app
-      repo's `functions/` workspace alongside verifyPurchase)
+      asia-south1, and cross-source refund/revocation semantics — **Opus
+      moment** (writes entitlement state; the CF lives in the app repo's
+      `functions/` workspace alongside verifyPurchase)
 - [ ] /pricing live; refund policy written (ANUSHA-DECIDE)
 
 ## 2. Time-boxed plan
@@ -69,9 +76,9 @@ get the FULL free tier; sign-in buys persistence, not access.
 ### 2 weeks (the app-approval window)
 | When | What | Who |
 |---|---|---|
-| Days 1–3 | Finish privacy + delete-account copy; support email; deploy; DNS; URLs into Play Console | lower model drafts + one session + Anusha |
+| Days 1–3 | Reconcile privacy + delete-account copy; support email/page; establish hosting config; deploy; DNS; URLs into Play Console | lower model drafts + one session + Anusha |
 | Days 3–14 | Web-1 build: shared-core extraction plan (**Opus session** first), then Next.js shell → auth → unsigned free access → flashcards → practice | sessions |
-| When ready | Razorpay onboarding progresses (KYC lead time) | Anusha |
+| Done 10 Jul | Razorpay merchant KYC approved; test mode available | Anusha |
 
 ### 30 days
 Website launched independently (before or regardless of app approval):
@@ -95,8 +102,8 @@ architecture doc.
 
 **Anusha personally:** verify exam facts ([VERIFY] set); voice pass on
 every public page before it's linked; DECIDE support email, refund
-policy, GA4 or not; own Razorpay onboarding, all Play-policy calls, and
-anything near isPaid.
+policy, GA4 or not; own Razorpay production activation/secrets, all
+Play-policy calls, and anything near isPaid.
 
 **Code sessions, in order:** compliance-page finish + deploy (small) →
 static chapter/SEO page additions (small) → shared-core extraction

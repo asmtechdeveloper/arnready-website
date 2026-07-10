@@ -1,7 +1,8 @@
 # ARNReady — Content Repurposing Playbook
 
-**Status:** PLAYBOOK LOCKED-DRAFT (7 July 2026, Fable). The gearbox of the
-flywheel: how ONE authored unit of exam knowledge becomes app content, a
+**Status:** PLAYBOOK LOCKED-DRAFT (10 July 2026 consistency pass;
+originally 7 July 2026, Fable). The gearbox of the flywheel: how ONE
+authored unit of exam knowledge becomes app content, a
 website page, videos, posts, book material, and (later) an update message —
 without re-researching or re-explaining anything. Written for lower-context
 models: follow the templates, respect the invariants.
@@ -87,11 +88,15 @@ Anusha's review.
 {Hook question, one line — the trap as a dare}
 {2–4 lines: the truth, the trap, the takeaway}
 {One practical exam tip}
-Preparing for NISM V-A? The ARNReady app is free to start: {link}
+Preparing for NISM V-A? Practise this free at arnready.com: {matching link}
 ```
 WhatsApp variant: shorter, no hashtags, written to be FORWARDED (the reader
 shares it to a study group — that's the distribution). LinkedIn variant may
 add one line of professional framing for the banker/IFA audience.
+The CTA is channel-appropriate: normally link the matching arnready.com
+chapter/practice page so the reader can start in the same tab; mention the app
+as the daily-practice companion when useful. Never route the Android app itself
+to web checkout.
 Example (from the locked fact):
 > Quick check: SEBI's portfolio rebalancing window — 30 days or 30 business
 > days? It's 30 BUSINESS days, and the exam loves this distinction. If a
@@ -99,8 +104,10 @@ Example (from the locked fact):
 
 ### 3.3 YouTube Short (grain: fact)
 Beat sheet: hook question on screen (3 s) → 15 s timer with the options →
-reveal → one-line why → last-frame overlay CTA ("free in the ARNReady
-app"). Reuse the §3.2 post as the script — they're the same 60 words.
+reveal → one-line why → last-frame overlay CTA ("practise this free at
+arnready.com"). Reuse the §3.2 post as the script — they're the same 60
+words. An app-companion variant is allowed, but public discovery should land
+on the matching web page when one exists.
 
 ### 3.4 Website article section (grain: concept → sections; chapter → page)
 Units slot into the cornerstone-page skeleton (copy scaffold §3) as H2
@@ -116,7 +123,7 @@ COLD OPEN: the trap, posed as a question to the viewer (≤20 s)
 BEAT 1: the concept, plainly (slides: 1–2 lines each)
 BEAT 2: where the exam hides the trick — walk ONE isFree question aloud
 BEAT 3: the takeaway rule, said twice
-CTA: "this chapter's free in the app" + endcard
+CTA: "practise this chapter free at arnready.com" + endcard
 ```
 Title/desc/thumbnail via the prompt library; description template in
 `ARNREADY_YOUTUBE_COURSE_ARCHITECTURE.md` §11; long-form structures in
@@ -173,7 +180,9 @@ gracefully to "one forwarded WhatsApp message" and that's fine.
    `docs/content-units/` folder of these capture files IS the tracking
    system; create it when the first real unit is captured).
 4. Voice: Anusha's, per the copy scaffold rules; models draft, she passes.
-5. No channel exists for its own sake — every derivative CTA points at the
-   app's free tier.
+5. No channel exists for its own sake — every derivative uses one
+   channel-appropriate CTA into the free ecosystem. Prefer the matching web
+   chapter/practice route for public discovery; the app is the daily-practice
+   companion. The Android app itself never mentions or links to web checkout.
 
 *ARNReady · ASM Tech · arnready.com*
