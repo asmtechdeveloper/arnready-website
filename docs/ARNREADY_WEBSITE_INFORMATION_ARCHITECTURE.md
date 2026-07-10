@@ -74,13 +74,13 @@ one-free-mock-ever counter.
 | Route | Purpose | Access | Primary CTA | Data | Phase |
 |---|---|---|---|---|---|
 | `/app` | Signed-in home: continue studying, chapter grid, progress glance | free+paid | Continue where you left off | progress aggregates, isPaid | MVP |
-| `/app/flashcards` | Chapter → subtopic decks, keyboard flip/grade | unsigned + signed; all free (locked) | next deck | flashcards collection | MVP |
+| `/app/flashcards` | Chapter picker (card counts) | unsigned + signed; all free (locked) | pick chapter | build-time flashcard export | MVP |
+| `/app/flashcards/[chapter]` | Subtopic decks, keyboard flip/grade, shuffle; finite static route (12 chapters) | unsigned + signed; all free (locked) | next deck | build-time flashcard export; session log with identity | MVP |
 | `/app/practice` | Chapter picker for practice | unsigned + signed free/paid | pick chapter | progress per chapter when signed in | MVP |
 | `/app/practice/[chapter]` | Practice session, explanations after answers, engine rules verbatim | unsigned + signed; free tier caps apply (PRD §7) | at cap: upgrade / get-the-app | questions (rules-gated), session writes only with identity | MVP |
 | `/app/exam/[chapter]` | Exam mode: no explanations mid-run, strict scoring | free = isFree set; paid = full draw | see results | questions, session writes | W2 |
-| `/app/mock` | Pre-mock instructions → 100Q/120min laptop mock, palette + keyboard | free = ONE ever (cross-platform); paid unlimited | begin mock | mock assembly, mock history | W2 |
-| `/app/mock/[attempt]` | The running attempt (navigate/flag/change until submit) | as above | submit | attempt state (local until submit) | W2 |
-| `/app/results/[session]` | Score, delta, weak areas; paid exam-mode review where the locked rules allow (mocks NEVER reviewable) | unsigned local result or signed session; free/paid views differ | free: upgrade · paid: next step | local state or session record | MVP (practice) / W2 (exam+mock) |
+| `/app/mock` | Pre-mock gate (sign-in + eligibility + rules) → the running 100Q/120min attempt, palette + keyboard, all client state on the ONE static route; attempt state is local until submit (locked: abandon discards, doesn't consume) | free = ONE ever (cross-platform); paid unlimited | begin mock | mock assembly, mock history | W2 |
+| Results | **Route-shape change (10 Jul, approved static-export design):** no `/app/mock/[attempt]` or `/app/results/[session]` dynamic routes. Results render inline in each player (practice/exam/mock) from local state; past mocks appear on `/app/progress`. If a linkable results view ever ships, it is `/app/results?session=…` — query param on a static route, per the approved constraint | as the players | free: upgrade · paid: next step | local state or session record | shipped inline (W2) |
 | `/app/mistakes` | The mistakes deck, same join/advance/retire rules | free+paid (conversion surface) | clear your deck | mistakes collection | W2 |
 | `/app/progress` | Cross-platform progress: per-chapter bars, mock history; the "it knew me" page | free+paid | app cross-link (calm, once) | aggregates, mock history | MVP-lite → W2 |
 | `/app/account` | Profile, sign-out, delete-account link, entitlement status (payment-agnostic wording) | free+paid | — | user doc | MVP |

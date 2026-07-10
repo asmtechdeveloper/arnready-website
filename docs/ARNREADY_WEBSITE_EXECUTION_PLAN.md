@@ -28,6 +28,39 @@ get the FULL free tier; sign-in buys persistence, not access.
 
 ---
 
+## 0. Build status — `web-product` branch (10 Jul, approved design)
+
+The full web product is BUILT on the `web-product` branch under the
+approved constraints (SSG static export on classic Firebase Hosting;
+finite static routes + query params for runtime IDs; build-time leak
+gate; no deploy; GitHub Pages stays live; no Firebase Web App
+registration). **Do not merge to main** — pushes to main auto-deploy
+GitHub Pages. What exists:
+
+- Public SEO pages (Firestore-sourced at build), the compliance pages
+  ported 1:1, sitemap/robots/JSON-LD.
+- Product surfaces: practice + chapter exam (locked gates), 100Q/120min
+  laptop mock (palette/timer/flags/keyboard, free-mock-ever gate),
+  flashcards (app deck rules), mistakes deck, progress, account,
+  upgrade. All copy WORKING pending Anusha's voice pass + E-1/E-2.
+- **Engine strategy:** interim option 2 from the single-write-site rule
+  — a TypeScript port of the pure engine + progress-record shapes,
+  pinned to the app by shared fixture tests (30 passing). The
+  shared-core package extraction remains the flagged Opus session.
+- **Ad gate (WORKING default, pending Anusha):** timed break + ad-slot
+  placeholder at the LOCKED gate points (Q11/Q16, flashcard cadence).
+  The gate order is untouched; only the surface inside is swappable
+  when the rewarded-web-ad question is answered.
+- **Purchase claims:** `/pricing` and `/app/upgrade` say checkout is
+  coming soon — update the day Web-3 ships, never before.
+- Auth/entitlement flows are built and fixture-tested but NOT
+  integration-tested: no Firebase Web App is registered (stop-and-ask,
+  Anusha decision). Unsigned free-tier flows are fully testable.
+- Hosting config + approval-gated runbook:
+  `docs/FIREBASE_HOSTING_PREVIEW.md`. Route-shape changes are recorded
+  in the IA (`/app/mock` single route; results inline; flashcards
+  per-chapter static routes).
+
 ## 1. Gate checklists
 
 ### Play-submission duties (the only APP-launch-gating web work)
