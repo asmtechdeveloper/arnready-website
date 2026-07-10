@@ -13,10 +13,15 @@ import { CONFIG } from '@/lib/config';
 
 export default function BreakGate({
   questionNumber,
+  message,
+  continueLabel,
   onContinue,
 }: {
   /** 1-based number of the question this gate unlocks (11 or 16). */
-  questionNumber: number;
+  questionNumber?: number;
+  /** Override body copy (e.g. the flashcard deck's gate). */
+  message?: string;
+  continueLabel?: string;
   onContinue: () => void;
 }) {
   const [remaining, setRemaining] = useState(CONFIG.BREAK_GATE_SECONDS);
@@ -36,9 +41,8 @@ export default function BreakGate({
           Quick breather
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          You&apos;ve earned questions {questionNumber}&ndash;
-          {questionNumber + 4}. Take a moment — the next set unlocks in a few
-          seconds.
+          {message ??
+            `You've earned questions ${questionNumber}–${(questionNumber ?? 0) + 4}. Take a moment — the next set unlocks in a few seconds.`}
         </p>
 
         {/* Ad slot placeholder — the web rewarded-ad format is an open
@@ -60,7 +64,9 @@ export default function BreakGate({
               : 'bg-purple text-white hover:bg-purple-dark'
           }`}
         >
-          {remaining > 0 ? `Continue in ${remaining}…` : `Continue to question ${questionNumber}`}
+          {remaining > 0
+            ? `Continue in ${remaining}…`
+            : (continueLabel ?? `Continue to question ${questionNumber}`)}
         </button>
       </div>
     </div>
