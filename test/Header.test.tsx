@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { ComponentProps } from 'react';
 import { render, screen, within, fireEvent } from '@testing-library/react';
-import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
 import { Header } from '@/components/Header';
 
 // usePathname is mocked via this module-level variable so tests can drive
@@ -10,19 +10,29 @@ vi.mock('next/navigation', () => ({
   usePathname: () => mockPathname,
 }));
 
-// next/link only calls preventDefault (and takes over navigation) when it
-// finds a RouterContext provider above it; without one it falls back to a
-// native anchor click, which jsdom can't perform and logs a stderr error.
-// Supplying a stub router keeps the click entirely inside React/jsdom.
-const stubRouter = { push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() };
-
-function renderHeader() {
-  return render(
-    <RouterContext.Provider value={stubRouter as never}>
-      <Header />
-    </RouterContext.Provider>,
-  );
-}
+// next/link's real click handling depends on an internal, undocumented
+// RouterContext that only takes over (and calls preventDefault) once a
+// full app router is mounted; without one it falls through to a native
+// anchor click, which jsdom doesn't implement and logs a stderr error.
+// Rather than depend on that internal, unversioned Next.js path, replace
+// next/link with a plain anchor that always prevents the browser's
+// default navigation itself before invoking the real onClick — this is
+// the only thing under test here (does Header's own onClick fire and
+// close the menu), so a real router has nothing to add.
+vi.mock('next/link', () => ({
+  default: ({ href, onClick, children, ...rest }: ComponentProps<'a'>) => (
+    <a
+      href={href}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick?.(e);
+      }}
+      {...rest}
+    >
+      {children}
+    </a>
+  ),
+}));
 
 function openMenu() {
   fireEvent.click(screen.getByRole('button', { name: /^menu$/i }));
@@ -35,7 +45,7 @@ function menuIsOpen() {
 describe('Header mobile menu closes correctly (M0-R6 regression coverage)', () => {
   it('closes when the already-active primary CTA is clicked (same route)', () => {
     mockPathname = '/pricing';
-    renderHeader();
+    render(<Header />);
     openMenu();
     expect(menuIsOpen()).toBe(true);
 
@@ -46,7 +56,7 @@ describe('Header mobile menu closes correctly (M0-R6 regression coverage)', () =
 
   it('closes when the already-active mobile navigation link is clicked (same route)', () => {
     mockPathname = '/pricing';
-    renderHeader();
+    render(<Header />);
     openMenu();
     const mobileNav = screen.getByRole('navigation', { name: 'Primary (mobile)' });
     expect(within(mobileNav).getByRole('link', { name: 'Pricing' })).toBeInTheDocument();
@@ -58,16 +68,12 @@ describe('Header mobile menu closes correctly (M0-R6 regression coverage)', () =
 
   it('closes on a cross-route pathname change (belt-and-braces fallback)', () => {
     mockPathname = '/';
-    const { rerender } = renderHeader();
+    const { rerender } = render(<Header />);
     openMenu();
     expect(menuIsOpen()).toBe(true);
 
     mockPathname = '/syllabus';
-    rerender(
-      <RouterContext.Provider value={stubRouter as never}>
-        <Header />
-      </RouterContext.Provider>,
-    );
+    rerender(<Header />);
 
     expect(menuIsOpen()).toBe(false);
   });

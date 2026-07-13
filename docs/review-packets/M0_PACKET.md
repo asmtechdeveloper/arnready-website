@@ -1,5 +1,27 @@
 # M0 Evidence Packet — Fresh scaffold
 
+## Remediation log (M0-r4)
+
+M0-r3's fix for M0-R6 used a stub `RouterContext.Provider` (imported from
+`next/dist/shared/lib/router-context.shared-runtime`, an internal,
+unversioned Next.js path) to get `next/link` to call `preventDefault()`.
+That worked in this session's environment but Codex's independent re-run
+still observed the jsdom "navigation not implemented" stderr errors on
+both link-click tests — most plausibly because relying on an internal,
+undocumented module path is inherently environment/version-fragile, not
+something to depend on for deterministic test output.
+
+**Fixed properly:** `test/Header.test.tsx` now mocks `next/link` itself
+(`vi.mock('next/link', ...)`) with a plain anchor that unconditionally
+calls `event.preventDefault()` before invoking the real `onClick` —
+guaranteed to prevent jsdom's native anchor navigation regardless of any
+Next.js router-context internals, because the real `next/link` component
+is no longer in the render tree at all. Re-run 5 times in a row plus once
+inside the full 23-test suite with zero stderr output every time (checked
+with `grep -iE "error|not implemented|fail"` after each run).
+
+---
+
 ## Remediation log (M0-r3)
 
 Closes the two items Codex left open after the M0-r2 re-review
@@ -8,7 +30,7 @@ targeted-verification follow-ups:
 
 | ID | Finding | Outcome |
 |---|---|---|
-| M0-R6 | No automated Header test covered the mobile-menu close behavior, so a future refactor could silently reintroduce the same-route bug; the first attempt at adding tests worked but emitted jsdom "navigation not implemented" errors to stderr because `next/link` had no `RouterContext` to call `preventDefault()` against | **Fixed** — added `test/Header.test.tsx` (3 tests: same-route primary-CTA close, same-route mobile-nav-link close, cross-route pathname-fallback close); wrapped the test render in a stub `RouterContext.Provider` so `next/link` takes over the click instead of falling through to a native anchor navigation jsdom can't perform. All 23 tests pass with a clean stderr. |
+| M0-R6 | No automated Header test covered the mobile-menu close behavior, so a future refactor could silently reintroduce the same-route bug; the first attempt at adding tests worked but emitted jsdom "navigation not implemented" errors to stderr because `next/link` had no `RouterContext` to call `preventDefault()` against | **Fixed, then hardened in M0-r4** — added `test/Header.test.tsx` (3 tests: same-route primary-CTA close, same-route mobile-nav-link close, cross-route pathname-fallback close). The original fix (a stub `RouterContext.Provider`) was replaced in M0-r4 with a `next/link` mock — see above. |
 | M0-R12 | Packet's file-list inventory omitted the (at-the-time uncommitted) `test/Header.test.tsx` while calling itself the final-commit inventory | **Fixed** — file list below regenerated via `git diff --name-status` against the pre-M0 baseline immediately before this commit, so it includes `test/Header.test.tsx` and every other path actually in the tree at commit time |
 
 ---
@@ -306,11 +328,16 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
       Tests  23 passed (23)
 ```
 
-Clean stderr — no jsdom "navigation not implemented" noise. `test/Header.test.tsx`
-wraps its renders in a stub `next/link` `RouterContext.Provider`, which lets
-`next/link` call `preventDefault()` and take over the click itself instead of
-falling through to a native anchor navigation (which jsdom doesn't
-implement and which was previously logging harmless-but-noisy errors).
+Clean stderr — no jsdom "navigation not implemented" noise, confirmed
+deterministic across 5 consecutive runs (M0-r4). `test/Header.test.tsx`
+mocks `next/link` itself with a plain anchor that always calls
+`event.preventDefault()` before invoking the real `onClick`, so the
+native `<a>` element jsdom can't navigate is never in the render tree in
+the first place — no dependency on `next/link`'s internal router-context
+plumbing (M0-r3's first attempt at this used a stub `RouterContext.Provider`
+from an internal, unversioned Next.js path, which worked locally but
+Codex's independent re-run still saw the stderr noise, most plausibly
+from that internal-path fragility).
 
 No unhandled-exception warnings (M0-r2 fixed a flaky `window is not
 defined` teardown issue by adding `afterEach(cleanup)` to `vitest.setup.ts`).
