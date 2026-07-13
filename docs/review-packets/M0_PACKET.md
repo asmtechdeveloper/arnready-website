@@ -342,10 +342,11 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
 Focused runs of `test/Header.test.tsx` alone produce empty stderr,
 confirmed deterministic across 5 consecutive runs (M0-r4). The full suite
 above has no unexpected or jsdom-navigation-related stderr either — the
-`PAID-CONTENT LEAK GATE FAILED` lines visible in the full-suite output
-(§2's `npm run test` block) are `test/check-paid-leak.test.ts`'s expected
-diagnostic output from its deliberately-failing fixture scenarios, not an
-error or a regression; they're unrelated to `test/Header.test.tsx`.
+`PAID-CONTENT LEAK GATE FAILED` lines emitted on stderr by the full suite
+(not shown in §2's `npm run test` block above, which is stdout only) are
+`test/check-paid-leak.test.ts`'s expected diagnostic output from its
+deliberately-failing fixture scenarios, not an error or a regression;
+they're unrelated to `test/Header.test.tsx`.
 
 The mock `next/link` still renders a real `<a href>` element (it has to,
 for the click and role-based test queries to work) — the real `next/link`
