@@ -2,26 +2,34 @@
 
 ## Remediation log (M0-r4)
 
-M0-r3's fix for M0-R6 used a stub `RouterContext.Provider` (imported from
+**Robustness hardening for M0-R6's test fix**, not a response to any
+specific confirmed reproduction: M0-r3's `test/Header.test.tsx` used a
+stub `RouterContext.Provider` (imported from
 `next/dist/shared/lib/router-context.shared-runtime`, an internal,
-unversioned Next.js path) to get `next/link` to call `preventDefault()`.
-The jsdom "navigation not implemented" stderr noise on both link-click
-tests was observed during a pre-commit test iteration of that approach —
-not from an approved independent review of the already-committed
-`bc70605` state — and relying on an internal, undocumented module path is
-inherently environment-fragile regardless, so it wasn't something to keep
-depending on for deterministic test output. (An earlier draft of this log
-entry mis-attributed that noise as coming from a post-commit review of
-`bc70605`; corrected here.)
+unversioned Next.js path) to get `next/link` to call `preventDefault()`
+during the two link-click tests. That internal path is undocumented and
+environment/version-fragile by nature, which is reason enough on its own
+to replace it, independent of whether any particular run reproduced jsdom
+"navigation not implemented" stderr noise from it.
 
-**Fixed properly:** `test/Header.test.tsx` now mocks `next/link` itself
-(`vi.mock('next/link', ...)`) with a plain anchor that unconditionally
-calls `event.preventDefault()` before invoking the real `onClick` —
-guaranteed to prevent jsdom's native anchor navigation regardless of any
-Next.js router-context internals, because the real `next/link` component
-is no longer in the render tree at all. Re-run 5 times in a row plus once
-inside the full 23-test suite with zero stderr output every time (checked
-with `grep -iE "error|not implemented|fail"` after each run).
+**Fixed:** `test/Header.test.tsx` now mocks `next/link` itself
+(`vi.mock('next/link', ...)`) with a component that still renders a real
+`<a href>` element — the mock anchor is present, only the real `next/link`
+component (and its internal router-context plumbing) is absent from the
+render tree — but the mock's `onClick` unconditionally calls
+`event.preventDefault()` before invoking Header's own `onClick`. That
+stops the browser's default navigation synchronously, so jsdom never
+schedules the deferred native-navigation attempt that produces the stderr
+noise, regardless of any `next/link` internals.
+
+**Verified:** `npx vitest run test/Header.test.tsx` in isolation, run 5
+times in a row, produced empty stderr every time. The full 23-test suite
+(`npm run test`) also produces no unexpected or jsdom-navigation-related
+stderr — it does intentionally print several `PAID-CONTENT LEAK GATE
+FAILED` lines to stderr from `test/check-paid-leak.test.ts`'s
+deliberately-failing fixture scenarios (see §2); those are expected
+diagnostic output from a passing test asserting the gate fails closed,
+not evidence of a problem, and are unrelated to `test/Header.test.tsx`.
 
 ---
 
@@ -331,19 +339,26 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
       Tests  23 passed (23)
 ```
 
-Clean stderr — no jsdom "navigation not implemented" noise, confirmed
-deterministic across 5 consecutive runs (M0-r4). The mock `next/link`
-still renders a real `<a href>` element (it has to, for the click and
-role-based test queries to work) — the fix is not that the anchor is
-absent. It's clean because the mock's `onClick` calls
-`event.preventDefault()` synchronously, before invoking Header's own
+Focused runs of `test/Header.test.tsx` alone produce empty stderr,
+confirmed deterministic across 5 consecutive runs (M0-r4). The full suite
+above has no unexpected or jsdom-navigation-related stderr either — the
+`PAID-CONTENT LEAK GATE FAILED` lines visible in the full-suite output
+(§2's `npm run test` block) are `test/check-paid-leak.test.ts`'s expected
+diagnostic output from its deliberately-failing fixture scenarios, not an
+error or a regression; they're unrelated to `test/Header.test.tsx`.
+
+The mock `next/link` still renders a real `<a href>` element (it has to,
+for the click and role-based test queries to work) — the real `next/link`
+component and its internal router-context plumbing are what's absent from
+the render tree, not the anchor. It's clean because the mock's `onClick`
+calls `event.preventDefault()` synchronously, before invoking Header's own
 `onClick`, which stops the browser's default navigation before jsdom ever
-schedules the deferred native-navigation attempt that was previously
-producing the stderr noise. This has no dependency on `next/link`'s
-internal router-context plumbing (M0-r3's first attempt used a stub
-`RouterContext.Provider` from an internal, unversioned Next.js path,
-which the real, undocumented internals of `next/link` decide whether to
-honor — see the M0-r4 log above for why that proved unreliable).
+schedules the deferred native-navigation attempt that produces the stderr
+noise. This has no dependency on `next/link`'s internal router-context
+plumbing — M0-r3's first attempt used a stub `RouterContext.Provider` from
+an internal, unversioned Next.js path instead, which is undocumented and
+inherently environment/version-fragile regardless of any single run's
+result (see the M0-r4 log above).
 
 No unhandled-exception warnings (M0-r2 fixed a flaky `window is not
 defined` teardown issue by adding `afterEach(cleanup)` to `vitest.setup.ts`).
