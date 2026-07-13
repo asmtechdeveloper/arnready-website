@@ -18,6 +18,7 @@ import { readFileSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { canon, fingerprint } from './lib/canon.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const KEY_PATH =
@@ -26,18 +27,6 @@ const KEY_PATH =
 
 const CONTENT_DIR = path.join(ROOT, 'content');
 const LEAK_DIR = path.join(ROOT, '.leakcheck');
-
-/** Canonical form used for fingerprint matching: alphanumerics only. */
-const canon = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, '');
-
-/**
- * Fingerprint = question + options, canonicalised, first 120 chars. Question
- * text alone is too generic ("Which of the following…" collides across
- * unrelated questions); including options makes accidental collision between
- * genuinely different questions practically impossible.
- */
-const fingerprint = (q) =>
-  canon(String(q.question) + (Array.isArray(q.options) ? q.options.join('') : '')).slice(0, 120);
 
 async function main() {
   const key = JSON.parse(readFileSync(KEY_PATH, 'utf8'));
@@ -106,26 +95,40 @@ async function main() {
     );
   }
 
-  // ── Flashcards (always free — rules-enforced) ──────────────────────────
+  // ── Flashcards + chapter/subtopic teaching (always free — rules-enforced,
+  // and public per manual §1: chapter/subtopic teaching + a 10-card sampler
+  // are allowed on the unsigned public site) ─────────────────────────────
+  // The 'flashcards' collection carries TWO doc shapes sharing one chapter
+  // query, mirroring the app's fetchChapterFlashcardDocs boundary exactly:
+  //   - subtopic docs: { chapter, subtopic, cards: [...] }        (docType-less)
+  //   - ONE teaching doc per chapter: { docType: 'chapterTeaching', ... }
+  // We export the RAW per-chapter doc array unmodified — normalization
+  // (src/lib/teaching.ts, src/lib/flashcardDeck.ts, ported from the app's
+  // services/flashcardTeaching.js + flashcardDeck.js) runs at page-build
+  // time from this raw array, so the website never re-derives or
+  // hand-rolls what counts as "malformed" or "canonical order".
   const fSnap = await db.collection('flashcards').get();
-  const cardsByChapter = new Map();
+  const rawByChapter = new Map();
   fSnap.forEach((doc) => {
     const d = doc.data();
     const ch = Number(d.chapter);
     if (!Number.isFinite(ch)) return;
-    const list = cardsByChapter.get(ch) ?? [];
+    const list = rawByChapter.get(ch) ?? [];
     list.push(d);
-    cardsByChapter.set(ch, list);
+    rawByChapter.set(ch, list);
   });
 
-  let flashcardTotals = new Map();
-  for (const [ch, groups] of cardsByChapter) {
-    groups.sort((a, b) => String(a.subtopic).localeCompare(String(b.subtopic)));
-    const cardCount = groups.reduce((n, g) => n + (g.cards?.length ?? 0), 0);
+  const flashcardTotals = new Map();
+  for (const [ch, rawDocs] of rawByChapter) {
+    // Card count for chapter-stats excludes teaching-metadata docs — a
+    // docType doc has no `cards` array and must never inflate the count.
+    const cardCount = rawDocs
+      .filter((d) => d.docType == null)
+      .reduce((n, d) => n + (d.cards?.length ?? 0), 0);
     flashcardTotals.set(ch, cardCount);
     writeFileSync(
-      path.join(CONTENT_DIR, 'flashcards', `ch${String(ch).padStart(2, '0')}.json`),
-      JSON.stringify(groups, null, 1),
+      path.join(CONTENT_DIR, 'flashcards', `ch${String(ch).padStart(2, '0')}.raw.json`),
+      JSON.stringify(rawDocs, null, 1),
     );
   }
 
@@ -168,6 +171,23 @@ async function main() {
       ids: paidManifest.map((m) => m.id).filter(Boolean),
       fps: scannable.map((m) => m.fp),
     }),
+  );
+
+  // Free-question manifest: manual §0.6 requires ZERO question text — free
+  // or paid — in the public/static export (the free 20 are delivered only
+  // to signed-in clients, never SSG'd). check-paid-leak.mjs scans out/ for
+  // these ids/fingerprints exactly as it does for the paid manifest.
+  const freeManifestIds = [];
+  const freeManifestFps = [];
+  for (const list of freeByChapter.values()) {
+    for (const q of list) {
+      freeManifestIds.push(q.id);
+      freeManifestFps.push(fingerprint(q));
+    }
+  }
+  writeFileSync(
+    path.join(LEAK_DIR, 'free-question-manifest.json'),
+    JSON.stringify({ ids: freeManifestIds.filter(Boolean), fps: freeManifestFps }),
   );
 
   const freeTotal = [...freeByChapter.values()].reduce((n, l) => n + l.length, 0);

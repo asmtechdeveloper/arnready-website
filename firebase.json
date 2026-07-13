@@ -5,6 +5,7 @@
     "trailingSlash": false,
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "redirects": [
+      { "regex": "^/questions(\\.html)?$", "destination": "/chapters", "type": 301 },
       { "regex": "^/chapter-1(\\.html)?$", "destination": "/chapters/1-investment-landscape", "type": 301 },
       { "regex": "^/chapter-2(\\.html)?$", "destination": "/chapters/2-concept-and-role-of-a-mutual-fund", "type": 301 },
       { "regex": "^/chapter-3(\\.html)?$", "destination": "/chapters/3-legal-structure-of-mutual-funds-in-india", "type": 301 },

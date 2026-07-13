@@ -409,6 +409,40 @@ export const support = {
   },
 };
 
+// ── /chapters ───────────────────────────────────────────────────────────
+export const chapters = {
+  index: {
+    meta: {
+      title: 'Chapters',
+      description: 'All 12 NISM Series V-A chapters — free teaching and sampler flashcards, no sign-in needed.',
+    },
+    h1: 'All 12 NISM Series V-A chapters',
+    intro: 'Every chapter’s teaching is free to read, with 10 sampler flashcards to try — no sign-in needed. Sign in for the complete flashcard deck, practice questions, and your progress.',
+    emptyNote: 'Chapters appear here as their teaching copy is approved. Check back soon.',
+    cta: { href: '/pricing', label: 'See free vs. premium' },
+  },
+  hub: {
+    subtopicsHeading: 'What’s inside this chapter',
+    samplerHeading: 'Try 10 flashcards from this chapter',
+    signIn: {
+      label: 'Sign in — coming soon',
+      title: 'Google sign-in is coming soon. In the meantime, see pricing or get the app.',
+      body: 'Sign in (coming soon) to unlock every flashcard, 20 practice questions, and your progress for this chapter.',
+    },
+    pricingLink: { href: '/pricing', label: 'See what sign-in unlocks' },
+  },
+  spoke: {
+    titleSuffix: 'NISM Series V-A',
+    backToChapter: 'Back to chapter',
+    prevLabel: 'Previous',
+    nextLabel: 'Next',
+    noCards: 'No sampler cards from this topic yet — check back as more are added.',
+  },
+  breadcrumbs: {
+    chaptersLabel: 'Chapters',
+  },
+};
+
 // ── /syllabus ───────────────────────────────────────────────────────────
 export const syllabus = {
   meta: {
