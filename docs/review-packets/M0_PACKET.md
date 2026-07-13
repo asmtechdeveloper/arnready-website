@@ -5,11 +5,14 @@
 M0-r3's fix for M0-R6 used a stub `RouterContext.Provider` (imported from
 `next/dist/shared/lib/router-context.shared-runtime`, an internal,
 unversioned Next.js path) to get `next/link` to call `preventDefault()`.
-That worked in this session's environment but Codex's independent re-run
-still observed the jsdom "navigation not implemented" stderr errors on
-both link-click tests — most plausibly because relying on an internal,
-undocumented module path is inherently environment/version-fragile, not
-something to depend on for deterministic test output.
+The jsdom "navigation not implemented" stderr noise on both link-click
+tests was observed during a pre-commit test iteration of that approach —
+not from an approved independent review of the already-committed
+`bc70605` state — and relying on an internal, undocumented module path is
+inherently environment-fragile regardless, so it wasn't something to keep
+depending on for deterministic test output. (An earlier draft of this log
+entry mis-attributed that noise as coming from a post-commit review of
+`bc70605`; corrected here.)
 
 **Fixed properly:** `test/Header.test.tsx` now mocks `next/link` itself
 (`vi.mock('next/link', ...)`) with a plain anchor that unconditionally
@@ -117,7 +120,7 @@ already assigns it.
 
 ## 1. Scope
 
-**Milestone:** M0 [SONNET] — Fresh scaffold (`docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` §2), remediated per Codex's review (M0-r, M0-r2).
+**Milestone:** M0 [SONNET] — Fresh scaffold (`docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` §2), remediated per Codex's review across four passes (M0-r, M0-r2, M0-r3, M0-r4).
 
 **Summary:** Scaffolded a clean Next.js App Router + TypeScript + Tailwind
 site configured for static export, with vitest + ESLint (0-warning policy)
@@ -138,7 +141,7 @@ pages import and render it. The eight standard/compliance pages each end
 with exactly one primary CTA.
 
 **Full file list, as it exists in the final commit** (every path touched
-across M0 → M0-r → M0-r2 → M0-r3, relative to the pre-M0 baseline
+across M0 → M0-r → M0-r2 → M0-r3 → M0-r4, relative to the pre-M0 baseline
 `bb09ee0`; nothing on `main` touched; produced by `git diff --name-status`
 against that baseline, not hand-maintained):
 
@@ -329,15 +332,18 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
 ```
 
 Clean stderr — no jsdom "navigation not implemented" noise, confirmed
-deterministic across 5 consecutive runs (M0-r4). `test/Header.test.tsx`
-mocks `next/link` itself with a plain anchor that always calls
-`event.preventDefault()` before invoking the real `onClick`, so the
-native `<a>` element jsdom can't navigate is never in the render tree in
-the first place — no dependency on `next/link`'s internal router-context
-plumbing (M0-r3's first attempt at this used a stub `RouterContext.Provider`
-from an internal, unversioned Next.js path, which worked locally but
-Codex's independent re-run still saw the stderr noise, most plausibly
-from that internal-path fragility).
+deterministic across 5 consecutive runs (M0-r4). The mock `next/link`
+still renders a real `<a href>` element (it has to, for the click and
+role-based test queries to work) — the fix is not that the anchor is
+absent. It's clean because the mock's `onClick` calls
+`event.preventDefault()` synchronously, before invoking Header's own
+`onClick`, which stops the browser's default navigation before jsdom ever
+schedules the deferred native-navigation attempt that was previously
+producing the stderr noise. This has no dependency on `next/link`'s
+internal router-context plumbing (M0-r3's first attempt used a stub
+`RouterContext.Provider` from an internal, unversioned Next.js path,
+which the real, undocumented internals of `next/link` decide whether to
+honor — see the M0-r4 log above for why that proved unreliable).
 
 No unhandled-exception warnings (M0-r2 fixed a flaky `window is not
 defined` teardown issue by adding `afterEach(cleanup)` to `vitest.setup.ts`).
@@ -355,7 +361,7 @@ $ find out content .leakcheck -type f | wc -l
 $ find out content .leakcheck -type f -exec shasum {} \; | sort | shasum
 3e7756fdc067fff61b2ce672e6a4d74df9e7123c  -
 
-$ npm run test                    # (output above — 20/20 passed)
+$ npm run test                    # (output above — 23/23 passed)
 
 $ find out content .leakcheck -type f | wc -l
 139
