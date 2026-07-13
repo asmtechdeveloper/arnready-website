@@ -5,11 +5,12 @@ findings, explicit milestone deferrals, and open items Anusha has consciously
 decided to retain. Review packets contain evidence for one implementation
 pass; this log tracks findings and decisions across passes.
 
-**Last reviewed state:** `40d2dc1` (M0 documentation cleanup). The Header-test
-hardening and M0-R14/R15 are verified; M0 is approved. M0-R16 is an open,
-non-blocking packet-wording NIT. M0-D1 remains explicitly deferred to M1.
-Other uncommitted or later implementation changes do not change an item's
-status until Codex verifies them in a named review pass.
+**Last reviewed state:** `5316237` (M0 final documentation cleanup). All M0
+findings through M0-R16 are verified RESOLVED, with no OPEN BLOCKER,
+SHOULD-FIX, or NIT. Anusha signed off M0 on 2026-07-14. M0-D1 remains
+explicitly deferred to M1. Other uncommitted or later implementation changes
+do not change an item's status until Codex verifies them in a named review
+pass.
 
 ## Status rules
 
@@ -41,6 +42,8 @@ may mark an item RESOLVED only after re-verification.
 | 2026-07-13 | M0 remediation pass 4 re-review | `7eec177` | APPROVE AFTER FIXES | The test-only `next/link` mock removes the internal Next.js import while preserving Header's supplied click handler and the three M0-R6 regression cases. Lint, typecheck, all 23 tests, five repeated Header-test runs, live-Firestore build, standalone leak gate, `git diff --check`, and the normalized 73-path inventory independently passed. M0-R14 was an open packet-evidence SHOULD-FIX and M0-R15 a packet NIT. M0-D1 remained explicitly deferred to M1. |
 | 2026-07-14 | M0 documentation-cleanup re-review | `048e47a` | APPROVE AFTER FIXES | M0-R15 and the attribution/anchor portions of M0-R14 are fixed. Independent lint, typecheck, 23-test suite, five focused Header runs, live-Firestore build, standalone leak gate, `git diff --check`, and normalized 73-path inventory pass. The focused Header runs have empty stderr, but the full suite has 462 stderr bytes from four expected negative leak fixtures, so the packet's literal full-suite zero-stderr claim remains false. |
 | 2026-07-14 | M0-R14 targeted packet verification | `40d2dc1` | APPROVE | The packet now accurately states that five focused Header runs have empty stderr and that the passing full suite retains expected negative-fixture diagnostics but has no unexpected or jsdom-navigation-related stderr. M0-R14 and M0-R15 are RESOLVED; no OPEN M0 BLOCKER or SHOULD-FIX remains. M0-R16 records one non-blocking wording NIT. |
+| 2026-07-14 | M0-R16 targeted packet verification | `5316237` | APPROVE | The packet now accurately says the expected leak-fixture diagnostics are emitted on stderr and omitted from the stdout-only pasted block. The remediation diff is documentation-only; independent lint, typecheck, and all 23 tests pass, with four expected leak-fixture diagnostics and no jsdom navigation stderr. All M0 findings through M0-R16 are RESOLVED. |
+| 2026-07-14 | M0 owner sign-off | `5316237` | SIGNED OFF | Anusha explicitly signed off M0 and authorized transition to M1. M0-D1 remains carried forward to M1. |
 
 ## Findings and explicitly retained items
 
@@ -61,7 +64,7 @@ may mark an item RESOLVED only after re-verification.
 | M0-R13 | M0-r2 | NIT | The current-state summary incorrectly said the raw-hex guard retained a pinning-test exception after M0-R2 removed it. | `docs/review-packets/M0_PACKET.md:90-95` | RESOLVED | No | — | Verified in the working tree atop `ae4658e`: the summary now states there are no exceptions and accurately describes checksum-based token pinning. Remaining exception mentions are explicitly historical or state that the exception was removed. |
 | M0-R14 | M0-r4 | SHOULD-FIX | The r4 packet claimed the full suite produced zero stderr every time and that this was checked by grepping `error\|not implemented\|fail`. The focused Header test has empty stderr, but the full suite intentionally emits four negative leak-fixture `PAID-CONTENT LEAK GATE FAILED` diagnostics. | `docs/review-packets/M0_PACKET.md:3-32,342-361` | RESOLVED | No | — | Verified at `40d2dc1`: the packet claims empty stderr only for the five focused Header runs and accurately distinguishes the full suite's expected negative-fixture diagnostics from unexpected or jsdom-navigation-related stderr. The attribution and anchor explanation are also accurate. |
 | M0-R15 | M0-r4 | NIT | The final-commit scope chain stopped at M0-r3 even though the packet was M0-r4, and the hash-proof comment said `20/20 passed` while the final suite contains 23 tests. | `docs/review-packets/M0_PACKET.md:123,143-146,365` | RESOLVED | No | — | Verified at `048e47a`: both scope descriptions list all four remediation passes through M0-r4 and the hash-proof comment says `23/23 passed`. |
-| M0-R16 | M0 documentation cleanup | NIT | The packet says the expected leak-fixture diagnostics are “visible in” its pasted `npm run test` block, but that block contains only the passing test summary and omits stderr. | `docs/review-packets/M0_PACKET.md:342-348` | OPEN | No | M0 evidence cleanup | Replace “lines visible in the full-suite output (§2's `npm run test` block)” with “lines emitted on stderr by the full suite,” or include the expected diagnostics in the pasted block. |
+| M0-R16 | M0 documentation cleanup | NIT | The packet said the expected leak-fixture diagnostics were “visible in” its pasted `npm run test` block, but that block contains only the passing test summary and omits stderr. | `docs/review-packets/M0_PACKET.md:342-349` | RESOLVED | No | — | Verified at `5316237`: the packet now says the diagnostics are emitted on stderr and explicitly notes that the pasted block is stdout-only and omits them. |
 | M0-D1 | M0 initial | BLOCKER | Paid-fingerprint truncation/collision and HTML-entity normalization gaps in the load-bearing export/leak scripts. | `scripts/export-content.mjs`; `scripts/check-paid-leak.mjs` | DEFERRED | No | M1 | **Anusha decision, 2026-07-13:** defer to M1 and address with M1's public-budget leak-gate extension. Recorded in `M0_PACKET.md`. |
 
 ## Decision history
@@ -86,6 +89,7 @@ Add one row whenever an item's status changes. Do not rewrite prior decisions.
 | 2026-07-13 | M0-R11 | OPEN | RESOLVED | Codex | Verified custom gutter utilities across public page and shared containers. |
 | 2026-07-14 | M0-R15 | OPEN | RESOLVED | Codex | At `048e47a`, verified both M0 scope/pass descriptions include M0-r4 and the stale test count is corrected to 23/23. |
 | 2026-07-14 | M0-R14 | OPEN | RESOLVED | Codex | At `40d2dc1`, verified the packet accurately limits the empty-stderr claim to five focused Header runs and identifies the full suite's four negative leak-fixture diagnostics as expected output, with no unexpected or jsdom-navigation-related stderr. |
+| 2026-07-14 | M0-R16 | OPEN | RESOLVED | Codex | At `5316237`, verified the packet accurately distinguishes the diagnostics emitted on stderr from the stdout-only pasted test block. |
 
 ## Maintenance procedure
 
@@ -98,3 +102,6 @@ Add one row whenever an item's status changes. Do not rewrite prior decisions.
    SHOULD-FIX entries whose source is that milestone.
 5. At the start of each milestone, review all DEFERRED entries targeting it
    and all ACCEPTED entries whose revisit trigger has fired.
+6. After Anusha explicitly signs off an M-gate, Codex records the sign-off
+   and commits the review-log closeout. Implementation executors must not
+   author or commit Codex verdict/status entries.

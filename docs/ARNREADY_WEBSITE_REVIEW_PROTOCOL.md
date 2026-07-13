@@ -169,4 +169,18 @@ their rationale and date. Silence and "known limitation" labels never waive
 an item. Before milestone approval, the log must contain no OPEN BLOCKER or
 SHOULD-FIX entries for that milestone.
 
+The review log and Codex verdict/status entries are Codex-owned review
+artifacts. The implementation executor must not author, alter, resolve, or
+commit entries on Codex's behalf. The paste-prompt's "Do not edit any file"
+rule applies to implementation and evidence files during the adversarial
+review; it does not prevent Codex from maintaining its own review log after
+the verdict.
+
+After Anusha explicitly signs off an M-gate, Codex must record that sign-off
+and commit the review-log closeout on `web-product`. That dedicated closeout
+commit may also include Codex-owned review-protocol corrections, but must not
+include implementation or evidence-packet changes unless Anusha separately
+requests them. Any DEFERRED or ACCEPTED items must remain visible with their
+target milestone or revisit trigger so they carry into the next review.
+
 *ARNReady · ASM Tech · arnready.com*
