@@ -38,6 +38,8 @@ export const nav = {
   signIn: { label: 'Sign in — coming soon' },
   menuLabel: 'Menu',
   closeMenuLabel: 'Close menu',
+  ariaLabel: 'Primary',
+  ariaLabelMobile: 'Primary (mobile)',
   links: [
     { href: '/syllabus', label: 'Syllabus' },
     { href: '/pricing', label: 'Pricing' },

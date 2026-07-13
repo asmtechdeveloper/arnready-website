@@ -1,5 +1,18 @@
 # M0 Evidence Packet — Fresh scaffold
 
+## Remediation log (M0-r3)
+
+Closes the two items Codex left open after the M0-r2 re-review
+(`docs/ARNREADY_WEBSITE_REVIEW_LOG.md`: M0-R6, M0-R12) plus their own
+targeted-verification follow-ups:
+
+| ID | Finding | Outcome |
+|---|---|---|
+| M0-R6 | No automated Header test covered the mobile-menu close behavior, so a future refactor could silently reintroduce the same-route bug; the first attempt at adding tests worked but emitted jsdom "navigation not implemented" errors to stderr because `next/link` had no `RouterContext` to call `preventDefault()` against | **Fixed** — added `test/Header.test.tsx` (3 tests: same-route primary-CTA close, same-route mobile-nav-link close, cross-route pathname-fallback close); wrapped the test render in a stub `RouterContext.Provider` so `next/link` takes over the click instead of falling through to a native anchor navigation jsdom can't perform. All 23 tests pass with a clean stderr. |
+| M0-R12 | Packet's file-list inventory omitted the (at-the-time uncommitted) `test/Header.test.tsx` while calling itself the final-commit inventory | **Fixed** — file list below regenerated via `git diff --name-status` against the pre-M0 baseline immediately before this commit, so it includes `test/Header.test.tsx` and every other path actually in the tree at commit time |
+
+---
+
 ## Remediation log (M0-r2)
 
 Codex re-reviewed the M0-r commit (`1c94cb2`) and returned **REJECT** again
@@ -90,7 +103,8 @@ and Nunito via `next/font`. One design token module
 (`src/styles/tokens.ts`) encodes the locked palette (with the muted text
 colour darkened to clear WCAG AA); a repo-wide grep guard
 (`scripts/check-no-raw-hex.mjs`) fails lint if any hex literal appears
-outside that file (and its one documented pinning-test exception). Base
+outside that file — no exceptions (M0-R2 removed the last one; the palette
+is now pinned in `test/tokens.test.ts` via a checksum, not a literal). Base
 layout: header with an accessible mobile menu and a stubbed, disabled
 sign-in slot; footer with the standard disclaimer; a shared `Arnie` image
 component with a `priority` prop for the homepage hero. All Feather icons
@@ -101,78 +115,103 @@ CTAs, table data, image alts — lives in `src/lib/copy.ts`, marked WORKING;
 pages import and render it. The eight standard/compliance pages each end
 with exactly one primary CTA.
 
-**Full changed-file list** (cumulative across the original M0 commit and
-both remediation passes; nothing on `main` touched):
+**Full file list, as it exists in the final commit** (every path touched
+across M0 → M0-r → M0-r2 → M0-r3, relative to the pre-M0 baseline
+`bb09ee0`; nothing on `main` touched; produced by `git diff --name-status`
+against that baseline, not hand-maintained):
 
 ```
-.claude/launch.json
-.env.example                              (amended: +ARNREADY_SA_KEY)
-THIRD_PARTY_NOTICES.md                    (new, M0-r2 — full Feather MIT text)
-docs/review-packets/M0_PACKET.md
-docs/review-packets/screenshots/M0/*.png  (new, M0-r2 — 18 files, see §3)
-eslint.config.mjs
-next.config.ts
-package-lock.json
-package.json                              (amended: -firebase, -next start)
-postcss.config.mjs
-public/arnie/breathe.png
-public/arnie/celebrating.png
-public/arnie/checks-in.png
-public/arnie/dozing.png
-public/arnie/makes-it-stick.png
-public/arnie/meditating.png
-public/arnie/proud.png
-public/arnie/reading.png
-public/arnie/setting-the-scene.png
-public/arnie/thinking.png
-public/arnie/warns.png
-public/arnie/waving.png
-public/arnie/working.png
-public/arnie/works-it-out.png
-scripts/check-no-raw-hex.mjs
-src/app/about/page.tsx
-src/app/delete-account/page.tsx
-src/app/faq/page.tsx
-src/app/globals.css
-src/app/layout.tsx
-src/app/nism-series-v-a/page.tsx
-src/app/page.tsx
-src/app/pricing/page.tsx
-src/app/privacy/page.tsx
-src/app/support/page.tsx
-src/app/syllabus/page.tsx
-src/components/Arnie.tsx
-src/components/ContentCard.tsx
-src/components/Footer.tsx
-src/components/Header.tsx
-src/components/Icon.tsx
-src/lib/copy.ts
-src/lib/linkify.tsx
-src/styles/tokens.ts
-tailwind.config.ts
-test/Footer.test.tsx
-test/check-paid-leak.test.ts
-test/icon-paths.test.ts                   (new, M0-r2)
-test/linkify.test.tsx                     (new, M0-r2)
-test/tokens.test.ts
-tsconfig.json
-vitest.config.ts
-vitest.setup.ts                           (amended, M0-r2: +afterEach cleanup)
+A  .claude/launch.json
+M  .env.example
+A  THIRD_PARTY_NOTICES.md
+A  docs/ARNREADY_WEBSITE_REVIEW_LOG.md
+M  docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md
+A  docs/review-packets/M0_PACKET.md
+A  docs/review-packets/screenshots/M0/about-1440.png
+A  docs/review-packets/screenshots/M0/about-375.png
+A  docs/review-packets/screenshots/M0/delete-account-1440.png
+A  docs/review-packets/screenshots/M0/delete-account-375.png
+A  docs/review-packets/screenshots/M0/faq-1440.png
+A  docs/review-packets/screenshots/M0/faq-375.png
+A  docs/review-packets/screenshots/M0/home-1440.png
+A  docs/review-packets/screenshots/M0/home-375.png
+A  docs/review-packets/screenshots/M0/nism-series-v-a-1440.png
+A  docs/review-packets/screenshots/M0/nism-series-v-a-375.png
+A  docs/review-packets/screenshots/M0/pricing-1440.png
+A  docs/review-packets/screenshots/M0/pricing-375.png
+A  docs/review-packets/screenshots/M0/privacy-1440.png
+A  docs/review-packets/screenshots/M0/privacy-375.png
+A  docs/review-packets/screenshots/M0/support-1440.png
+A  docs/review-packets/screenshots/M0/support-375.png
+A  docs/review-packets/screenshots/M0/syllabus-1440.png
+A  docs/review-packets/screenshots/M0/syllabus-375.png
+A  eslint.config.mjs
+A  next.config.ts
+A  package-lock.json
+A  package.json
+A  postcss.config.mjs
+A  public/arnie/breathe.png
+A  public/arnie/celebrating.png
+A  public/arnie/checks-in.png
+A  public/arnie/dozing.png
+A  public/arnie/makes-it-stick.png
+A  public/arnie/meditating.png
+A  public/arnie/proud.png
+A  public/arnie/reading.png
+A  public/arnie/setting-the-scene.png
+A  public/arnie/thinking.png
+A  public/arnie/warns.png
+A  public/arnie/waving.png
+A  public/arnie/working.png
+A  public/arnie/works-it-out.png
+A  scripts/check-no-raw-hex.mjs
+A  src/app/about/page.tsx
+A  src/app/delete-account/page.tsx
+A  src/app/faq/page.tsx
+A  src/app/globals.css
+A  src/app/layout.tsx
+A  src/app/nism-series-v-a/page.tsx
+A  src/app/page.tsx
+A  src/app/pricing/page.tsx
+A  src/app/privacy/page.tsx
+A  src/app/support/page.tsx
+A  src/app/syllabus/page.tsx
+A  src/components/Arnie.tsx
+A  src/components/ContentCard.tsx
+A  src/components/Footer.tsx
+A  src/components/Header.tsx
+A  src/components/Icon.tsx
+A  src/lib/copy.ts
+A  src/lib/linkify.tsx
+A  src/styles/tokens.ts
+A  tailwind.config.ts
+A  test/Footer.test.tsx
+A  test/Header.test.tsx
+A  test/check-paid-leak.test.ts
+A  test/icon-paths.test.ts
+A  test/linkify.test.tsx
+A  test/tokens.test.ts
+A  tsconfig.json
+A  vitest.config.ts
+A  vitest.setup.ts
 ```
 
-(`next-env.d.ts` is regenerated by Next.js and gitignored — not committed,
-correctly omitted from this list.)
+(`next-env.d.ts` is regenerated by Next.js and gitignored — never
+committed, correctly absent from this list.)
 
 `scripts/export-content.mjs` and `scripts/check-paid-leak.mjs` themselves
-remain byte-for-byte unmodified (load-bearing, per the manual) — see the
-B9/M0-D1 note above for why the fingerprint-normalization gap Codex found
-was deferred rather than fixed here.
+are NOT in this list — they remain byte-for-byte unmodified (load-bearing,
+per the manual). See the B9/M0-D1 note above for why the
+fingerprint-normalization gap Codex found was deferred rather than fixed
+here.
 
 `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md` and
-`docs/ARNREADY_WEBSITE_REVIEW_LOG.md` also changed in the working tree —
-those are Codex's own review-process files (the log's maintenance rules
-state only Codex marks entries RESOLVED), not part of this implementation
-diff, and are intentionally excluded from this packet's file list.
+`docs/ARNREADY_WEBSITE_REVIEW_LOG.md` ARE in the commit (listed above) —
+they're Codex's own review-process files, not part of this session's
+implementation diff, but they exist in the working tree and the manual
+gives no basis to leave real files uncommitted. The log's own maintenance
+rules mean only Codex marks its entries RESOLVED; nothing in this packet
+should be read as claiming that authority.
 
 ## 2. Pasted gate outputs (final commit)
 
@@ -260,11 +299,18 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
  ✓ test/icon-paths.test.ts (9 tests)
  ✓ test/linkify.test.tsx (3 tests)
  ✓ test/Footer.test.tsx (1 test)
+ ✓ test/Header.test.tsx (3 tests)
  ✓ test/check-paid-leak.test.ts (5 tests)
 
- Test Files  5 passed (5)
-      Tests  20 passed (20)
+ Test Files  6 passed (6)
+      Tests  23 passed (23)
 ```
+
+Clean stderr — no jsdom "navigation not implemented" noise. `test/Header.test.tsx`
+wraps its renders in a stub `next/link` `RouterContext.Provider`, which lets
+`next/link` call `preventDefault()` and take over the click itself instead of
+falling through to a native anchor navigation (which jsdom doesn't
+implement and which was previously logging harmless-but-noisy errors).
 
 No unhandled-exception warnings (M0-r2 fixed a flaky `window is not
 defined` teardown issue by adding `afterEach(cleanup)` to `vitest.setup.ts`).
@@ -421,6 +467,12 @@ itself, same as originally intended.)
 - `test/linkify.test.tsx` (3 tests, new in M0-r2) proves repeated link
   labels are all wrapped with no text loss, multiple distinct rules
   compose correctly, and the no-rules case is a no-op (M0-R5).
+- `test/Header.test.tsx` (3 tests, new in M0-r3) regression-tests the
+  mobile menu's close behavior: same-route primary CTA, same-route mobile
+  nav link, and cross-route pathname-change fallback (M0-R6) — a
+  reviewer removing `onClick={closeMenu}` from any of the three closing
+  links, or the `pathname !== renderedPathname` fallback, now fails a test
+  instead of silently reintroducing the bug.
 
 ---
 *ARNReady · ASM Tech · arnready.com*
