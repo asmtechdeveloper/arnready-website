@@ -1,5 +1,15 @@
 # ARNReady Website — CLAUDE.md
 
+> **⚠ 13 Jul 2026 CORRECTION (Anusha-approved):** the product model changed.
+> `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` is now the CANONICAL execution
+> plan and product model; where this file's "LOCKED web-side rules (9 Jul)"
+> section (access model, ad gates, checkout timing) disagrees with the
+> manual, THE MANUAL WINS. The app's ad policy also changed: canonical is
+> `../ARNReady-App/documents/adgate-logic.md` (rewarded-only, single Q11
+> practice gate, exam pre-start gate, zero banners). Razorpay is approved
+> for integration now. Reviews follow
+> `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md`.
+
 > **This file owns STABLE, LOCKED knowledge for the WEBSITE project.**
 > Current state and roadmap live in `docs/ARNREADY_WEBSITE_EXECUTION_PLAN.md`.
 > On *current state* the execution plan wins; on *locked rules* this file
@@ -14,57 +24,53 @@
 >
 > **New session? Read in this order:** (1) this file, (2)
 > `docs/ARNREADY_WEBSITE_EXECUTION_PLAN.md`, (3) the app repo's
-> `CLAUDE.md`, (4) `docs/ARNREADY_WEB_PRODUCT_PRD.md`, then (5) the doc
-> you need for the current task (IA, copy scaffold, architecture, prompt
-> library, or the shared strategy/repurposing docs).
+> `CLAUDE.md`, (4) `docs/ARNREADY_WEB_PRODUCT_PRD.md`, (5)
+> `docs/ARNREADY_WEBSITE_DESIGN_DOCUMENT.md`, then (6) the doc you need
+> for the current task (IA, copy scaffold, architecture, prompt library,
+> or the shared strategy/repurposing docs).
 
 ## What this is
 
-The arnready.com website. Two lives:
-1. **Today (pre-Web-1):** a static stopgap — homepage, privacy draft,
-   delete-account draft, and chapter redirect stubs. `/support` and the
-   Firebase Hosting config are not yet present in this repo. Its only
-   launch-gating job is making the required compliance URLs final and real
-   for Play Console.
-2. **Next (Web-1 onwards):** the ARNReady WEB PRODUCT — the same app in
-   the browser (practice, exam, flashcards, laptop mocks) plus the
-   public SEO/course hub. Web checkout (Razorpay) is the primary
-   conversion CTA once Web-3 ships.
+The arnready.com website and browser study product. The repository currently
+has two implementations with different deployment states:
+
+1. **Live on `main`:** the static GitHub Pages compliance/holding site.
+   A push to `main` is a production deploy; never merge or push casually.
+2. **Built on `web-product`:** the Next.js public site and `/app` study
+   product: practice, chapter exams, flashcards, a laptop mock, mistakes,
+   progress, account, and upgrade surfaces. It is not yet the live site.
+   Firebase Hosting config and an approval-gated preview/cutover runbook exist.
+
+Web checkout (Razorpay) remains a later Web-3 milestone. Until it ships,
+pricing and upgrade copy must say that checkout is coming soon.
 
 Developer: Anusha Murthy (ASM Tech). Deployed at arnready.com.
 Registry/remote: `github.com/asmtechdeveloper/arnready-website` (this
 folder IS the git repo — separate from the app repo).
 
-## Architecture — TODAY (static compliance site)
+## Architecture — CURRENT `web-product` branch
 
-Plain HTML, no build step. `index.html`, `privacy.html`,
-`delete-account.html`, chapter redirect stubs (`chapter-1.html` …
-`chapter-12.html`), plus empty `chapters/`, `flashcards/`, `questions/`
-folders for future expansion. `CNAME` declares the domain. There is no
-`package.json`, `firebase.json`, or `.firebaserc` here yet; Firebase Hosting
-is the decided target, not a currently reproducible deployment from this
-folder. The old scaffold in the app repo must be consolidated into this repo
-before hosting is configured.
-
-## Architecture — WHAT'S PLANNED (ARNReady Web product)
-
-One **Next.js (App Router)** codebase in this repo, replacing the
-static scaffold when Web-1 starts. Route groups:
+One **Next.js (App Router)** codebase, TypeScript, React, Tailwind CSS,
+Firebase Web SDK, Zustand, and a static export for classic Firebase Hosting.
+Build-time exported content contains free questions/flashcards only and is
+guarded by `scripts/check-paid-leak.mjs`. Route groups:
 - **Public (SSG, generated FROM Firestore):** `/`, `/nism-series-v-a`,
   `/syllabus`, `/chapters`, `/chapters/[chapter]`, `/mock-test`,
-  `/flashcards`, `/questions`, `/pricing`, `/book`, `/youtube-course`,
-  `/about`, `/faq`, `/privacy`, `/delete-account`, `/support`.
+  `/flashcards`, `/questions`, `/pricing`, `/about`, `/faq`, `/privacy`,
+  `/delete-account`, `/support`. `/book` and `/youtube-course` remain planned.
 - **Product (client-rendered; not every route requires Google sign-in):**
-  `/app`, `/app/flashcards`,
+  `/app`, `/app/flashcards`, `/app/flashcards/[chapter]`,
   `/app/practice`, `/app/practice/[chapter]`, `/app/exam/[chapter]`,
-  `/app/mock`, `/app/mock/[attempt]`, `/app/results/[session]`,
+  `/app/mock`,
   `/app/mistakes`, `/app/progress`, `/app/account`, `/app/upgrade`.
 
 Auth: Firebase Web SDK, Google provider — same Firebase project as the
 app, same uid, same Firestore documents. NOT `@react-native-firebase`.
-State: zustand (matches app's `entitlementStore` pattern). Hosting:
-Firebase Hosting. Full arch detail:
-`docs/ARNREADY_WEB_ARCHITECTURE.md` (Architecture v2, rewritten 9 Jul).
+State: Zustand (matches app's `entitlementStore` pattern). Auth and
+entitlement code exists but still needs a registered Firebase Web App and
+integration testing. Full architecture: `docs/ARNREADY_WEB_ARCHITECTURE.md`.
+Visual and interaction contract:
+`docs/ARNREADY_WEBSITE_DESIGN_DOCUMENT.md`.
 
 ## LOCKED web-side rules (9 Jul)
 
@@ -186,31 +192,47 @@ with Web-1.
   WEBSITE_COPY_SCAFFOLD.md`) is canonical; every public artefact ships
   WORKING until her voice pass.
 
-## Model policy (10 Jul, Anusha)
+## Working arrangement and model policy (13 Jul, Anusha)
 
 "Opus moment" / "Opus session" throughout this doc set is a SEVERITY
 label, not a model booking. It marks the highest-stakes work — the kind
-that gets the strongest available model, a dedicated session, and
-Anusha's explicit sign-off. Current policy: **every session, Opus
-moments included, runs on Fable for as long as Fable access lasts.**
-When that access goes away, flagged moments fall back to the best
-available model (Opus-class). Do not downgrade a session because a doc
-says "Opus" — the flag governs care and sign-off, not model selection.
+that gets a dedicated review and Anusha's explicit sign-off.
+
+**Codex builds the website. Claude reviews Codex's completed milestones.**
+Anusha owns product decisions, voice approval, policy calls, and deployment.
+Codex implements and verifies; Claude returns prioritised, file-specific
+findings; Codex remediates accepted findings. Do not have both agents edit the
+same files concurrently. Handoffs include scope, changed files, tests,
+screenshots for visual work, known limitations, and Anusha decisions.
+
+**Fable access is limited and must be rationed.** Until the app advertising
+work is complete, do not use Fable for routine website implementation, copy,
+documentation, styling, or standard reviews. Afterwards, batch Fable use only
+for genuinely high-risk moments: shared-core/cross-repo parity, auth and
+Firestore write/rules changes, entitlement, Razorpay/payment security, hosting
+cutover/final release audit, or a design-system decision Anusha explicitly
+escalates. Routine website work continues with Codex plus Claude review.
 
 ## Process rules
 
 1. Read this file + the execution plan + the app repo's CLAUDE.md before
    any task.
-2. Public copy passes E-1 (fake-claims) + E-2 (affiliation-risk)
+2. Follow `docs/ARNREADY_WEBSITE_DESIGN_DOCUMENT.md` for visual,
+   interaction, accessibility, and review-handoff rules.
+3. Public copy passes E-1 (fake-claims) + E-2 (affiliation-risk)
    reviews (prompt library) before ship.
-3. Every public page ends with ONE primary CTA; footer disclaimer on
+4. Every public page ends with ONE primary CTA; footer disclaimer on
    every page.
-4. The Android app never links to or mentions web checkout — absolute.
-5. Locked engine rules (scoring, gates, mock weights/draw,
-   free-mock-ever) are imported from the shared core, never re-derived.
-6. Ask Anusha before architectural decisions; flag Opus moments
+5. The Android app never links to or mentions web checkout — absolute.
+6. Locked engine rules (scoring, gates, mock weights/draw,
+   free-mock-ever) must never be re-derived. Until shared-core extraction,
+   the interim web port stays pinned to the app with cross-repo fixture tests;
+   after extraction, both products import the shared core.
+7. Ask Anusha before architectural decisions; flag Opus moments
    explicitly (shared-core extraction, webhook CF, rules changes,
    payments work).
+8. Batch Claude review at coherent milestones; do not spend Fable merely to
+   repeat a standard review.
 
 ## The Jeeves Protocol (mirrored from the app repo)
 
