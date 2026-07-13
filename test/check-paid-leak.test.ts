@@ -1,34 +1,39 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync, copyFileSync, mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 /**
  * check-paid-leak.mjs is a load-bearing script (kept as-is per the manual)
  * that always scans content/ + out/ + .leakcheck/paid-manifest.json
- * relative to the repo root — it isn't parameterizable. There is no live
- * Firestore service account key in this environment (per .env.example: "the
- * service account key stays OUTSIDE this repo"), so export-content.mjs
- * cannot run here. These tests exercise the leak gate itself against
- * synthetic fixtures written to the same (gitignored) paths the real build
- * pipeline uses, then clean up.
+ * relative to its OWN file location (`import.meta.dirname`), not the
+ * process cwd — it isn't parameterizable. There is no live Firestore
+ * service account key in this environment, so export-content.mjs cannot
+ * run here either. To test the leak gate without touching this repo's real
+ * (gitignored) content/.leakcheck/out directories — which a real build may
+ * be using concurrently — each test copies the script into a fresh, unique
+ * temp directory (so the script's own ROOT resolves there) and runs it
+ * from that isolated copy.
  */
-const ROOT = path.resolve(import.meta.dirname, '..');
-const CONTENT_DIR = path.join(ROOT, 'content');
-const LEAK_DIR = path.join(ROOT, '.leakcheck');
-const OUT_DIR = path.join(ROOT, 'out');
-const MANIFEST = path.join(LEAK_DIR, 'paid-manifest.json');
+const REPO_ROOT = path.resolve(import.meta.dirname, '..');
+const SCRIPT_SRC = path.join(REPO_ROOT, 'scripts', 'check-paid-leak.mjs');
 
-function cleanup() {
-  rmSync(CONTENT_DIR, { recursive: true, force: true });
-  rmSync(LEAK_DIR, { recursive: true, force: true });
-  rmSync(OUT_DIR, { recursive: true, force: true });
+let tempRoot: string;
+
+function paths() {
+  return {
+    content: path.join(tempRoot, 'content'),
+    leak: path.join(tempRoot, '.leakcheck'),
+    out: path.join(tempRoot, 'out'),
+    manifest: path.join(tempRoot, '.leakcheck', 'paid-manifest.json'),
+  };
 }
 
 function run() {
   try {
-    const stdout = execFileSync('node', ['scripts/check-paid-leak.mjs'], {
-      cwd: ROOT,
+    const stdout = execFileSync('node', [path.join('scripts', 'check-paid-leak.mjs')], {
+      cwd: tempRoot,
       encoding: 'utf8',
     });
     return { code: 0, stdout };
@@ -39,75 +44,72 @@ function run() {
 }
 
 describe('check-paid-leak.mjs (leak gate)', () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    tempRoot = mkdtempSync(path.join(tmpdir(), 'arnready-leak-gate-'));
+    mkdirSync(path.join(tempRoot, 'scripts'), { recursive: true });
+    copyFileSync(SCRIPT_SRC, path.join(tempRoot, 'scripts', 'check-paid-leak.mjs'));
+  });
+
+  afterEach(() => {
+    rmSync(tempRoot, { recursive: true, force: true });
+  });
 
   it('fails closed when the paid manifest is missing', () => {
-    cleanup();
     const result = run();
     expect(result.code).not.toBe(0);
     expect(result.stderr).toMatch(/Missing .*paid-manifest\.json/);
   });
 
   it('fails when a free question record is missing isFree:true', () => {
-    cleanup();
-    mkdirSync(path.join(CONTENT_DIR, 'questions'), { recursive: true });
-    mkdirSync(LEAK_DIR, { recursive: true });
+    const p = paths();
+    mkdirSync(path.join(p.content, 'questions'), { recursive: true });
+    mkdirSync(p.leak, { recursive: true });
     writeFileSync(
-      path.join(CONTENT_DIR, 'questions', 'ch01.free.json'),
+      path.join(p.content, 'questions', 'ch01.free.json'),
       JSON.stringify([{ id: 'q1', isFree: false }]),
     );
-    writeFileSync(
-      MANIFEST,
-      JSON.stringify({ ids: ['paid-q-1'], fps: ['a'.repeat(24)] }),
-    );
+    writeFileSync(p.manifest, JSON.stringify({ ids: ['paid-q-1'], fps: ['a'.repeat(24)] }));
     const result = run();
     expect(result.code).not.toBe(0);
     expect(result.stderr).toMatch(/without isFree===true/);
   });
 
   it('fails when a paid question id leaks into the static export', () => {
-    cleanup();
-    mkdirSync(LEAK_DIR, { recursive: true });
-    mkdirSync(OUT_DIR, { recursive: true });
-    writeFileSync(
-      MANIFEST,
-      JSON.stringify({ ids: ['paid-secret-id'], fps: ['a'.repeat(24)] }),
-    );
-    writeFileSync(path.join(OUT_DIR, 'leak.html'), '<div>paid-secret-id</div>');
+    const p = paths();
+    mkdirSync(p.leak, { recursive: true });
+    mkdirSync(p.out, { recursive: true });
+    writeFileSync(p.manifest, JSON.stringify({ ids: ['paid-secret-id'], fps: ['a'.repeat(24)] }));
+    writeFileSync(path.join(p.out, 'leak.html'), '<div>paid-secret-id</div>');
     const result = run();
     expect(result.code).not.toBe(0);
     expect(result.stderr).toMatch(/contains paid question id/);
   });
 
   it('fails when paid question text (fingerprint) leaks into the static export', () => {
-    cleanup();
-    mkdirSync(LEAK_DIR, { recursive: true });
-    mkdirSync(OUT_DIR, { recursive: true });
+    const p = paths();
+    mkdirSync(p.leak, { recursive: true });
+    mkdirSync(p.out, { recursive: true });
     const fp = 'thisisapaidquestionfingerprintxyz123';
-    writeFileSync(MANIFEST, JSON.stringify({ ids: ['pid-1'], fps: [fp] }));
-    writeFileSync(path.join(OUT_DIR, 'leak.html'), `<div>${fp}</div>`);
+    writeFileSync(p.manifest, JSON.stringify({ ids: ['pid-1'], fps: [fp] }));
+    writeFileSync(path.join(p.out, 'leak.html'), `<div>${fp}</div>`);
     const result = run();
     expect(result.code).not.toBe(0);
     expect(result.stderr).toMatch(/contains paid question text/);
   });
 
   it('passes when the export is clean of paid ids and fingerprints', () => {
-    cleanup();
-    mkdirSync(path.join(CONTENT_DIR, 'questions'), { recursive: true });
-    mkdirSync(LEAK_DIR, { recursive: true });
-    mkdirSync(OUT_DIR, { recursive: true });
+    const p = paths();
+    mkdirSync(path.join(p.content, 'questions'), { recursive: true });
+    mkdirSync(p.leak, { recursive: true });
+    mkdirSync(p.out, { recursive: true });
     writeFileSync(
-      path.join(CONTENT_DIR, 'questions', 'ch01.free.json'),
+      path.join(p.content, 'questions', 'ch01.free.json'),
       JSON.stringify([{ id: 'free-q-1', isFree: true }]),
     );
-    writeFileSync(
-      MANIFEST,
-      JSON.stringify({ ids: ['paid-secret-id'], fps: ['a'.repeat(24)] }),
-    );
-    writeFileSync(path.join(OUT_DIR, 'index.html'), '<div>totally clean public page</div>');
+    writeFileSync(p.manifest, JSON.stringify({ ids: ['paid-secret-id'], fps: ['a'.repeat(24)] }));
+    writeFileSync(path.join(p.out, 'index.html'), '<div>totally clean public page</div>');
     const result = run();
     expect(result.code).toBe(0);
     expect(result.stdout).toMatch(/PASSED/);
-    expect(existsSync(OUT_DIR)).toBe(true);
   });
 });

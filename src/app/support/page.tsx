@@ -1,40 +1,50 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { ContentPage } from '@/components/ContentCard';
+import { support, contact } from '@/lib/copy';
+import { linkify } from '@/lib/linkify';
 
 export const metadata: Metadata = {
-  title: 'Support',
-  description: 'Get help with ARNReady. One developer, honest answers, within 48 hours.',
+  title: support.meta.title,
+  description: support.meta.description,
   alternates: { canonical: '/support' },
 };
 
-// WORKING — copy pending Anusha's voice pass.
+const rules = [
+  { label: 'Delete account', href: '/delete-account' },
+  { label: 'Privacy policy', href: '/privacy' },
+  { label: 'FAQ', href: '/faq' },
+];
+
 export default function SupportPage() {
   return (
-    <ContentPage title="Support">
-      <section>
-        <h2>Email</h2>
-        <p>
-          ARNReady is built and supported by one developer, so you&rsquo;ll
-          get a real answer from a real person — usually within 48 hours.
-        </p>
-        <p>
-          <a href="mailto:asmtechdeveloper@gmail.com">asmtechdeveloper@gmail.com</a>
-        </p>
-        <p>Include your app or website version and, for account issues, the Gmail you sign in with.</p>
-      </section>
+    <>
+      <ContentPage title={support.h1}>
+        <section>
+          <h2>{support.email.h2}</h2>
+          <p>{support.email.body}</p>
+          <p>
+            <a href={`mailto:${contact.supportEmail}`}>{contact.supportEmail}</a>
+          </p>
+          <p>{support.email.note}</p>
+        </section>
 
-      <section>
-        <h2>Common requests</h2>
-        <p>
-          Deleting your account and data: <a href="/delete-account">Delete account</a>.
-        </p>
-        <p>
-          How your data is handled: <a href="/privacy">Privacy policy</a>.
-        </p>
-        <p>
-          Questions about the exam or the free tier: <a href="/faq">FAQ</a>.
-        </p>
-      </section>
-    </ContentPage>
+        <section>
+          <h2>{support.common.h2}</h2>
+          <p>{linkify(support.common.deleteLine, rules)}</p>
+          <p>{linkify(support.common.privacyLine, rules)}</p>
+          <p>{linkify(support.common.faqLine, rules)}</p>
+        </section>
+      </ContentPage>
+
+      <div className="mx-auto flex max-w-reading justify-center px-4 pb-14 sm:px-6">
+        <Link
+          href={support.cta.href}
+          className="rounded-pill bg-purple px-6 py-3 text-base font-bold text-white hover:bg-purple-dark"
+        >
+          {support.cta.label}
+        </Link>
+      </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { home } from '@/lib/copy';
 import './globals.css';
 
 const nunito = Nunito({
@@ -14,11 +15,10 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   metadataBase: new URL('https://arnready.com'),
   title: {
-    default: 'ARNReady — Get ARN Ready',
+    default: home.meta.title,
     template: '%s — ARNReady',
   },
-  description:
-    'The honest prep for the NISM Series V-A Mutual Fund Distributor exam — on the web and in the app.',
+  description: home.meta.description,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -15,7 +15,10 @@ export const colors = {
   amber: '#F59E0B',
   red: '#EF4444',
   ink: '#1A1A2E',
-  muted: '#6B7280',
+  // Darkened from the original #6B7280 (4.42:1 on bg) to clear WCAG AA's
+  // 4.5:1 minimum for normal text — this token carries body copy and the
+  // footer disclaimer (design doc §9).
+  muted: '#5B6472',
   line: '#E5E7EB',
   white: '#FFFFFF',
 } as const;
@@ -24,6 +27,10 @@ export const radii = {
   card: '20px',
   pill: '9999px',
   control: '12px',
+} as const;
+
+export const shadows = {
+  card: '0 2px 16px rgba(26, 26, 46, 0.07)',
 } as const;
 
 export const spacing = {

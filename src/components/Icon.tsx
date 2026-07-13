@@ -1,22 +1,27 @@
 import type { SVGProps } from 'react';
 
 /**
- * Feather-style icon set (design system: "Feather icons only", CLAUDE.md
- * §"Design system"). Paths are the Feather Icons project's own outlines
- * (ISC licence), inlined to avoid adding an npm dependency for a handful of
- * glyphs — a new dependency is a manual §0.10 stop condition.
+ * Feather icon set (design system: "Feather icons only", CLAUDE.md
+ * §"Design system"). Outlines are the Feather Icons project's own paths,
+ * inlined (rather than installing the npm package) to avoid a new
+ * dependency for a handful of glyphs — a manual §0.10 stop condition.
+ * Multi-primitive icons (mail, lock, award, check-circle) are converted to
+ * a single combined `d` string (SVG paths may hold multiple unconnected
+ * subpaths) so the renderer below only needs one <path> element.
+ *
+ * Feather Icons — MIT License. Copyright (c) 2013-2023 Cole Bemis.
+ * https://github.com/feathericons/feather
  */
 const PATHS = {
   menu: 'M3 12h18M3 6h18M3 18h18',
   x: 'M18 6 6 18M6 6l12 12',
   'arrow-right': 'M5 12h14M12 5l7 7-7 7',
   'chevron-right': 'M9 18l6-6-6-6',
-  mail: 'M4 4h16v16H4zM22 6l-10 7L2 6',
+  mail: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6L12 13L2 6',
   check: 'M20 6 9 17l-5-5',
-  'check-circle': 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4 12 14.01l-3-3',
-  lock: 'M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2ZM7 11V7a5 5 0 0 1 10 0v4',
-  award:
-    'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12ZM8.21 13.89 7 23l5-3 5 3-1.21-9.12',
+  'check-circle': 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01L9 12',
+  lock: 'M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2zM7 11V7a5 5 0 0 1 10 0v4',
+  award: 'M5 8a7 7 0 1 0 14 0a7 7 0 1 0-14 0M8.21 13.89L7 23L12 20L17 23L15.79 13.88',
 } as const;
 
 export type IconName = keyof typeof PATHS;

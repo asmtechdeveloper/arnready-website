@@ -1,20 +1,39 @@
 /**
  * check-no-raw-hex — design-system guard (CLAUDE.md §"Design system": "no
  * raw hex anywhere else"). The only file allowed to contain a hex colour
- * literal is src/styles/tokens.ts; everything else must reference tokens
- * via Tailwind classes or the tokens module.
+ * literal is src/styles/tokens.ts; everything else (including root-level
+ * config files and tests) must reference tokens via Tailwind classes or the
+ * tokens module.
+ *
+ * One narrow, explicit exception: test/tokens.test.ts, which pins
+ * src/styles/tokens.ts's values against the manual §0.7 locked palette by
+ * literal comparison — that's the test's entire job, so it necessarily
+ * contains the same hex strings as the token file it's checking.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const SRC = path.join(ROOT, 'src');
-const ALLOWED = new Set([path.join(SRC, 'styles', 'tokens.ts')]);
-const SCAN_EXT = new Set(['.ts', '.tsx', '.css']);
+const ALLOWED = new Set(
+  [path.join('src', 'styles', 'tokens.ts'), path.join('test', 'tokens.test.ts')].map((p) =>
+    path.join(ROOT, p),
+  ),
+);
+const IGNORE_DIRS = new Set([
+  'node_modules',
+  '.next',
+  'out',
+  'content',
+  '.leakcheck',
+  '.git',
+  'public',
+]);
+const SCAN_EXT = new Set(['.ts', '.tsx', '.css', '.mjs']);
 const HEX_RE = /#[0-9a-fA-F]{3,8}\b/g;
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
+    if (IGNORE_DIRS.has(name)) continue;
     const p = path.join(dir, name);
     if (statSync(p).isDirectory()) yield* walk(p);
     else if (SCAN_EXT.has(path.extname(p))) yield p;
@@ -22,7 +41,7 @@ function* walk(dir) {
 }
 
 const offences = [];
-for (const file of walk(SRC)) {
+for (const file of walk(ROOT)) {
   if (ALLOWED.has(file)) continue;
   const raw = readFileSync(file, 'utf8');
   const matches = raw.match(HEX_RE);
@@ -37,4 +56,4 @@ if (offences.length > 0) {
   process.exit(1);
 }
 
-console.log('Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.');
+console.log('Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts (and its pinning test).');

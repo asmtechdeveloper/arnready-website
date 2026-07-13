@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { colors, radii, maxWidth } from './src/styles/tokens';
+import { colors, radii, maxWidth, shadows, spacing } from './src/styles/tokens';
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
@@ -28,7 +28,13 @@ const config: Config = {
         sans: ['var(--font-nunito)', 'sans-serif'],
       },
       boxShadow: {
-        card: '0 2px 16px rgba(26, 26, 46, 0.07)',
+        card: shadows.card,
+      },
+      spacing: {
+        'gutter-mobile': spacing.gutterMobile,
+        'gutter-desktop': spacing.gutterDesktop,
+        'section-gap-public': spacing.sectionGapPublic,
+        'section-gap-product': spacing.sectionGapProduct,
       },
     },
   },
