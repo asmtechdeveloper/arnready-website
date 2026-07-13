@@ -1,21 +1,33 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { nav } from '@/lib/copy';
+import { brand, nav } from '@/lib/copy';
 import { Icon } from '@/components/Icon';
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const [renderedPathname, setRenderedPathname] = useState(pathname);
+
+  // Close the mobile menu on every route change — covers the logo link, the
+  // primary CTA, and any nav link, without an onClick on each. Adjusting
+  // state during render (not an effect) per React's "you might not need an
+  // effect" guidance for resetting state when a prop changes.
+  if (pathname !== renderedPathname) {
+    setRenderedPathname(pathname);
+    setOpen(false);
+  }
 
   return (
     <header className="border-b border-line bg-bg">
-      <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-gutter-mobile py-3 sm:px-gutter-desktop">
         <Link
           href="/"
           className="flex min-h-11 items-center text-lg font-extrabold tracking-tight text-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple"
         >
-          ARNReady
+          {brand.name}
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 sm:flex">
@@ -68,7 +80,6 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  onClick={() => setOpen(false)}
                   className="flex min-h-11 items-center text-base font-semibold text-ink hover:text-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple"
                 >
                   {link.label}

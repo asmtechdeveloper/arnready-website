@@ -10,11 +10,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/privacy' },
 };
 
-const rules = [
-  { label: 'the delete-account page', href: '/delete-account' },
-  { label: 'emailing us', href: `mailto:${contact.supportEmail}` },
-];
-
 export default function PrivacyPage() {
   return (
     <>
@@ -22,33 +17,30 @@ export default function PrivacyPage() {
         {privacy.sections.map((section) => (
           <section key={section.h2}>
             <h2>{section.h2}</h2>
-            {section.paragraphs?.map((p) => <p key={p}>{linkify(p, rules)}</p>)}
-            {section.list && (
-              <ul>
-                {section.list.map((item) => (
-                  <li key={item}>{linkify(item, rules)}</li>
-                ))}
-              </ul>
-            )}
-            {section.paragraphs2?.map((p) => <p key={p}>{linkify(p, rules)}</p>)}
-            {section.list2 && (
-              <ul>
-                {section.list2.map((item) => (
-                  <li key={item}>{linkify(item, rules)}</li>
-                ))}
-              </ul>
-            )}
-            {section.paragraphs3?.map((p) => <p key={p}>{linkify(p, rules)}</p>)}
-            {section.h2 === 'Who we are' && (
-              <p>
-                <a href={`mailto:${contact.supportEmail}`}>{contact.supportEmail}</a>
-              </p>
-            )}
+            {section.blocks.map((block, i) => {
+              if (block.type === 'email') {
+                return (
+                  <p key={i}>
+                    <a href={`mailto:${contact.supportEmail}`}>{contact.supportEmail}</a>
+                  </p>
+                );
+              }
+              if (block.type === 'ul') {
+                return (
+                  <ul key={i}>
+                    {block.items.map((item) => (
+                      <li key={item.text}>{linkify(item.text, item.links ?? [])}</li>
+                    ))}
+                  </ul>
+                );
+              }
+              return <p key={i}>{linkify(block.text, block.links ?? [])}</p>;
+            })}
           </section>
         ))}
       </ContentPage>
 
-      <div className="mx-auto flex max-w-reading justify-center px-4 pb-14 sm:px-6">
+      <div className="mx-auto flex max-w-reading justify-center px-gutter-mobile pb-14 sm:px-gutter-desktop">
         <Link
           href={privacy.cta.href}
           className="rounded-pill bg-purple px-6 py-3 text-base font-bold text-white hover:bg-purple-dark"

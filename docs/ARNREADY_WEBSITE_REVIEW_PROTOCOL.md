@@ -155,9 +155,18 @@ model.
 ## 6. After the review
 
 Anusha pastes Codex findings into a remediation session (manual §3).
-BLOCKERs and SHOULD-FIXes are fixed or explicitly rejected by Anusha (her
-call, recorded in the packet's remediation log). NITs are batched or
-dropped. Codex re-reviews only the remediation diff. Then Anusha approves
-the milestone and the next one may start.
+BLOCKERs and SHOULD-FIXes are fixed, explicitly deferred, or explicitly
+accepted by Anusha (her call, recorded in the packet's remediation log and
+the durable review log). NITs are batched, accepted, or dropped. Codex
+re-reviews only the remediation diff. Then Anusha approves the milestone and
+the next one may start.
+
+Codex also maintains `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` after every review
+and remediation pass. Every unresolved finding is recorded there. An item may
+be marked DEFERRED only when Anusha explicitly names the later milestone, or
+ACCEPTED only when she explicitly decides to retain it; both decisions record
+their rationale and date. Silence and "known limitation" labels never waive
+an item. Before milestone approval, the log must contain no OPEN BLOCKER or
+SHOULD-FIX entries for that milestone.
 
 *ARNReady · ASM Tech · arnready.com*

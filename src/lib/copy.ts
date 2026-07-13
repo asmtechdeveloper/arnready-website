@@ -9,6 +9,7 @@ export const WORKING = true;
 
 export const brand = {
   name: 'ARNReady',
+  legalName: 'ASM Tech',
   tagline: 'Get ARN Ready.',
   motto: 'Knowledge is free. Mastery is earned.',
 };
@@ -16,6 +17,11 @@ export const brand = {
 export const contact = {
   supportEmail: 'asmtechdeveloper@gmail.com',
 };
+
+/** A link that can be spliced into the middle of a copy string (see linkify). */
+export type LinkRule = { label: string; href: string };
+/** Plain text plus optional link phrases to splice in — the copy stays one string. */
+export type TextWithLinks = { text: string; links?: LinkRule[] };
 
 export const footerDisclaimer = {
   body: 'ARNReady is built by ASM Tech and is an independent study aid. It is not affiliated with, endorsed by, or approved by NISM, SEBI, or AMFI. "NISM" is used only to describe the exam ARNReady helps you prepare for.',
@@ -196,7 +202,17 @@ export const pricing = {
 };
 
 // ── /privacy ────────────────────────────────────────────────────────────
-export const privacy = {
+// Each section is an ordered list of blocks — 'p' (paragraph, optionally
+// with spliced-in links), 'ul' (list of TextWithLinks items), or 'email'
+// (renders the contact email as a link). No page component ever compares
+// against a section's visible h2 text to decide what to render — that
+// broke when a heading was reworded, hence the explicit 'email' block type.
+type PrivacyBlock =
+  | { type: 'p'; text: string; links?: LinkRule[] }
+  | { type: 'ul'; items: TextWithLinks[] }
+  | { type: 'email' };
+
+export const privacy: { meta: { title: string; description: string }; h1: string; meta_updated: string; cta: { href: string; label: string }; sections: { h2: string; blocks: PrivacyBlock[] }[] } = {
   meta: { title: 'Privacy Policy', description: 'How ARNReady collects, stores, and protects your data.' },
   h1: 'Privacy Policy',
   meta_updated: 'Last updated: July 2026',
@@ -204,76 +220,121 @@ export const privacy = {
   sections: [
     {
       h2: 'Who we are',
-      paragraphs: [
-        'ARNReady is built and operated by Anusha Murthy, trading as ASM Tech, Bengaluru, India. If you have questions about this policy, email us at the address below.',
+      blocks: [
+        {
+          type: 'p',
+          text: 'ARNReady is built and operated by Anusha Murthy, trading as ASM Tech, Bengaluru, India. If you have questions about this policy, email us at the address below.',
+        },
+        { type: 'email' },
       ],
     },
     {
       h2: 'What we collect',
-      paragraphs: [
-        'If you sign in with Google, on the app or on the website:',
-      ],
-      list: [
-        'Your name and email address from your Google account',
-        'Your display name, if you choose to set one',
-        'Your exam date, if you choose to enter it',
-      ],
-      paragraphs2: ['Automatically, once signed in:'],
-      list2: [
-        'Your progress through chapters, flashcards, and mock tests',
-        'Questions you answered correctly and incorrectly',
-        'Crash and performance data via Firebase',
-        'Ad performance data via Google AdMob — Android app free users only. The website is ad-free; no ad data is collected here.',
-      ],
-      paragraphs3: [
-        'We never collect your payment card details, your location, or your contacts.',
+      blocks: [
+        { type: 'p', text: 'If you sign in with Google, on the app or on the website:' },
+        {
+          type: 'ul',
+          items: [
+            { text: 'Your name and email address from your Google account' },
+            { text: 'Your display name, if you choose to set one' },
+            { text: 'Your exam date, if you choose to enter it' },
+          ],
+        },
+        { type: 'p', text: 'Automatically, once signed in:' },
+        {
+          type: 'ul',
+          items: [
+            { text: 'Your progress through chapters, flashcards, and mock tests' },
+            { text: 'Questions you answered correctly and incorrectly' },
+            { text: 'Crash and performance data via Firebase' },
+            {
+              text: 'Ad performance data via Google AdMob — Android app free users only. The website is ad-free; no ad data is collected here.',
+            },
+          ],
+        },
+        { type: 'p', text: 'We never collect your payment card details, your location, or your contacts.' },
       ],
     },
     {
       h2: 'Where your data lives',
-      paragraphs: [
-        'Your account and study data are stored in Google Firebase (Cloud Firestore), in the asia-south1 (Mumbai) region.',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Your account and study data are stored in Google Firebase (Cloud Firestore), in the asia-south1 (Mumbai) region.',
+        },
       ],
     },
     {
       h2: 'How we use it',
-      list: [
-        'To save your progress across sessions, devices, and platforms',
-        'To show your score honestly and point out weak areas',
-        'To serve relevant ads to free users of the Android app',
-        'To fix bugs and improve the product',
+      blocks: [
+        {
+          type: 'ul',
+          items: [
+            { text: 'To save your progress across sessions, devices, and platforms' },
+            { text: 'To show your score honestly and point out weak areas' },
+            { text: 'To serve relevant ads to free users of the Android app' },
+            { text: 'To fix bugs and improve the product' },
+          ],
+        },
       ],
     },
     {
       h2: 'Third parties',
-      list: [
-        'Google Firebase — authentication and data storage',
-        'Google AdMob — advertising for free users of the Android app only',
-        'Google Play — payment processing for the app’s premium unlock; we never see your card details',
-        'Razorpay — planned for website checkout; not live yet. We will name it here again, with full detail, before it goes live, and we will never see your card details.',
-      ],
-      paragraphs2: [
-        'None of these parties receive your data for their own marketing purposes beyond their standard platform terms.',
+      blocks: [
+        {
+          type: 'ul',
+          items: [
+            { text: 'Google Firebase — authentication and data storage' },
+            { text: 'Google AdMob — advertising for free users of the Android app only' },
+            {
+              text: 'Google Play — payment processing for the app’s premium unlock; we never see your card details',
+            },
+            {
+              text: 'Razorpay — planned for website checkout; not live yet. We will name it here again, with full detail, before it goes live, and we will never see your card details.',
+            },
+          ],
+        },
+        {
+          type: 'p',
+          text: 'None of these parties receive your data for their own marketing purposes beyond their standard platform terms.',
+        },
       ],
     },
     {
       h2: 'Your data, your rights',
-      list: [
-        'You can delete your account and all associated data — in the app (Profile → Delete Account) or by email. See the delete-account page for details.',
-        'You can request a copy of your data at any time by emailing us',
-        'Paid users are ad-free everywhere — AdMob does not run on paid accounts',
+      blocks: [
+        {
+          type: 'ul',
+          items: [
+            {
+              text: 'You can delete your account and all associated data — in the app (Profile → Delete Account) or by email. See the delete-account page for details.',
+              links: [{ label: 'the delete-account page', href: '/delete-account' }],
+            },
+            {
+              text: 'You can request a copy of your data at any time by emailing us',
+              links: [{ label: 'emailing us', href: `mailto:${contact.supportEmail}` }],
+            },
+            { text: 'Paid users are ad-free everywhere — AdMob does not run on paid accounts' },
+          ],
+        },
       ],
     },
     {
       h2: 'Children',
-      paragraphs: [
-        'ARNReady is intended for adults preparing for a professional certification. We do not knowingly collect data from anyone under 18.',
+      blocks: [
+        {
+          type: 'p',
+          text: 'ARNReady is intended for adults preparing for a professional certification. We do not knowingly collect data from anyone under 18.',
+        },
       ],
     },
     {
       h2: 'Changes to this policy',
-      paragraphs: [
-        'If we make material changes, we will notify you within the app or on this website. Continued use after notification means you accept the updated policy.',
+      blocks: [
+        {
+          type: 'p',
+          text: 'If we make material changes, we will notify you within the app or on this website. Continued use after notification means you accept the updated policy.',
+        },
       ],
     },
   ],
@@ -313,7 +374,13 @@ export const deleteAccount = {
   },
   questions: {
     h2: 'Questions?',
-    body: 'Anything about your data or this process: email us, or see Support.',
+    body: {
+      text: 'Anything about your data or this process: email us, or see Support.',
+      links: [
+        { label: 'email us', href: `mailto:${contact.supportEmail}` },
+        { label: 'Support', href: '/support' },
+      ],
+    } as TextWithLinks,
   },
 };
 
@@ -329,9 +396,14 @@ export const support = {
   },
   common: {
     h2: 'Common requests',
-    deleteLine: 'Deleting your account and data: Delete account.',
-    privacyLine: 'How your data is handled: Privacy policy.',
-    faqLine: 'Questions about the exam or the free tier: FAQ.',
+    lines: [
+      {
+        text: 'Deleting your account and data: Delete account.',
+        links: [{ label: 'Delete account', href: '/delete-account' }],
+      },
+      { text: 'How your data is handled: Privacy policy.', links: [{ label: 'Privacy policy', href: '/privacy' }] },
+      { text: 'Questions about the exam or the free tier: FAQ.', links: [{ label: 'FAQ', href: '/faq' }] },
+    ] as TextWithLinks[],
   },
 };
 
@@ -373,6 +445,7 @@ export const nismSeriesVA = {
   format: {
     h2: 'Exam format',
     caption: 'NISM Series V-A exam format',
+    columns: ['Property', 'Value'],
     rows: [
       ['Questions', '100, multiple choice [VERIFY]'],
       ['Duration', '120 minutes [VERIFY]'],

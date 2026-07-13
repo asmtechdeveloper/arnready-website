@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/delete-account' },
 };
 
-const rules = [{ label: 'Support', href: '/support' }];
-
 export default function DeleteAccountPage() {
   return (
     <>
@@ -64,11 +62,11 @@ export default function DeleteAccountPage() {
 
         <section>
           <h2>{deleteAccount.questions.h2}</h2>
-          <p>{linkify(deleteAccount.questions.body, rules)}</p>
+          <p>{linkify(deleteAccount.questions.body.text, deleteAccount.questions.body.links ?? [])}</p>
         </section>
       </ContentPage>
 
-      <div className="mx-auto flex max-w-reading justify-center px-4 pb-14 sm:px-6">
+      <div className="mx-auto flex max-w-reading justify-center px-gutter-mobile pb-14 sm:px-gutter-desktop">
         <Link
           href={deleteAccount.cta.href}
           className="rounded-pill bg-purple px-6 py-3 text-base font-bold text-white hover:bg-purple-dark"

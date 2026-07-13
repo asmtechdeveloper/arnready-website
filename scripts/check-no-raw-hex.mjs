@@ -3,22 +3,15 @@
  * raw hex anywhere else"). The only file allowed to contain a hex colour
  * literal is src/styles/tokens.ts; everything else (including root-level
  * config files and tests) must reference tokens via Tailwind classes or the
- * tokens module.
- *
- * One narrow, explicit exception: test/tokens.test.ts, which pins
- * src/styles/tokens.ts's values against the manual §0.7 locked palette by
- * literal comparison — that's the test's entire job, so it necessarily
- * contains the same hex strings as the token file it's checking.
+ * tokens module. No exceptions — test/tokens.test.ts pins the locked
+ * palette via a checksum (see that file), not literal hex, specifically so
+ * this guard can scan it like any other file.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const ALLOWED = new Set(
-  [path.join('src', 'styles', 'tokens.ts'), path.join('test', 'tokens.test.ts')].map((p) =>
-    path.join(ROOT, p),
-  ),
-);
+const ALLOWED = new Set([path.join(ROOT, 'src', 'styles', 'tokens.ts')]);
 const IGNORE_DIRS = new Set([
   'node_modules',
   '.next',
@@ -28,7 +21,7 @@ const IGNORE_DIRS = new Set([
   '.git',
   'public',
 ]);
-const SCAN_EXT = new Set(['.ts', '.tsx', '.css', '.mjs']);
+const SCAN_EXT = new Set(['.ts', '.tsx', '.js', '.jsx', '.cjs', '.mjs', '.css']);
 const HEX_RE = /#[0-9a-fA-F]{3,8}\b/g;
 
 function* walk(dir) {
@@ -56,4 +49,4 @@ if (offences.length > 0) {
   process.exit(1);
 }
 
-console.log('Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts (and its pinning test).');
+console.log('Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.');

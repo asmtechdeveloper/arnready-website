@@ -8,7 +8,7 @@ export function ContentPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto max-w-reading px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-reading px-gutter-mobile py-12 sm:px-gutter-desktop">
       <header className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-purple sm:text-4xl">{title}</h1>
         {meta && <p className="mt-1 text-sm text-muted">{meta}</p>}

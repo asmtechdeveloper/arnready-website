@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function SyllabusPage() {
   return (
-    <div className="mx-auto max-w-reading px-4 py-14 sm:px-6">
+    <div className="mx-auto max-w-reading px-gutter-mobile py-14 sm:px-gutter-desktop">
       <h1 className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">{syllabus.h1}</h1>
       <p className="mt-4 text-base leading-7 text-muted">{syllabus.intro}</p>
 

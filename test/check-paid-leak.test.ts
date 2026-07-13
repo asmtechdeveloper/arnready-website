@@ -8,13 +8,14 @@ import path from 'node:path';
  * check-paid-leak.mjs is a load-bearing script (kept as-is per the manual)
  * that always scans content/ + out/ + .leakcheck/paid-manifest.json
  * relative to its OWN file location (`import.meta.dirname`), not the
- * process cwd — it isn't parameterizable. There is no live Firestore
- * service account key in this environment, so export-content.mjs cannot
- * run here either. To test the leak gate without touching this repo's real
- * (gitignored) content/.leakcheck/out directories — which a real build may
- * be using concurrently — each test copies the script into a fresh, unique
- * temp directory (so the script's own ROOT resolves there) and runs it
- * from that isolated copy.
+ * process cwd — it isn't parameterizable. These tests are intentionally
+ * credential-independent: they exercise the gate's own logic against
+ * synthetic fixtures rather than a live Firestore export, so they run the
+ * same way whether or not a service-account key is configured. To do that
+ * without touching this repo's real (gitignored) content/.leakcheck/out
+ * directories — which a real build may be using concurrently — each test
+ * copies the script into a fresh, unique temp directory (so the script's
+ * own ROOT resolves there) and runs it from that isolated copy.
  */
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const SCRIPT_SRC = path.join(REPO_ROOT, 'scripts', 'check-paid-leak.mjs');

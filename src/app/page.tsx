@@ -4,7 +4,7 @@ import { home } from '@/lib/copy';
 
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-content px-4 py-16 sm:px-6">
+    <div className="mx-auto max-w-content px-gutter-mobile py-16 sm:px-gutter-desktop">
       <section className="grid items-center gap-10 sm:grid-cols-2">
         <div>
           <h1 className="text-4xl font-extrabold leading-tight text-ink sm:text-5xl">

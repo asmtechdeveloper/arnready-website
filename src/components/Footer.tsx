@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { footerDisclaimer } from '@/lib/copy';
+import { brand, footerDisclaimer } from '@/lib/copy';
 
 export function Footer() {
   const year = footerDisclaimer.copyrightYear;
   return (
     <footer className="border-t border-line bg-bg">
-      <div className="mx-auto max-w-content px-4 py-8 text-center sm:px-6">
+      <div className="mx-auto max-w-content px-gutter-mobile py-8 text-center sm:px-gutter-desktop">
         <p className="mx-auto max-w-reading text-sm leading-7 text-muted">{footerDisclaimer.body}</p>
         <ul className="mt-1 flex flex-wrap items-center justify-center gap-x-1">
           {footerDisclaimer.links.map((link, i) => (
@@ -24,7 +24,7 @@ export function Footer() {
             </li>
           ))}
           <li className="flex min-h-11 items-center px-1 text-sm text-muted">
-            · © {year} ASM Tech
+            · © {year} {brand.legalName}
           </li>
         </ul>
       </div>

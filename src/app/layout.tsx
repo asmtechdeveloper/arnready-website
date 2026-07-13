@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { home } from '@/lib/copy';
+import { brand, home } from '@/lib/copy';
 import './globals.css';
 
 const nunito = Nunito({
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://arnready.com'),
   title: {
     default: home.meta.title,
-    template: '%s — ARNReady',
+    template: `%s — ${brand.name}`,
   },
   description: home.meta.description,
 };

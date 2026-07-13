@@ -48,7 +48,7 @@ export default function FaqPage() {
   };
 
   return (
-    <div className="mx-auto max-w-reading px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-reading px-gutter-mobile py-12 sm:px-gutter-desktop">
       <h1 className="text-3xl font-extrabold tracking-tight text-purple sm:text-4xl">{faq.h1}</h1>
       <div className="mt-8 space-y-8">
         {faq.items.map((item) => (

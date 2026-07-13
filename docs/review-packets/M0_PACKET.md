@@ -1,5 +1,41 @@
 # M0 Evidence Packet — Fresh scaffold
 
+## Remediation log (M0-r2)
+
+Codex re-reviewed the M0-r commit (`1c94cb2`) and returned **REJECT** again
+with 4 remaining BLOCKERs, 5 SHOULD-FIXes, and 2 NITs (tracked as
+M0-R1…M0-R11 in `docs/ARNREADY_WEBSITE_REVIEW_LOG.md`, which Codex now
+maintains as the durable cross-pass record — this packet documents the
+implementation evidence for Codex's next re-verification pass; only Codex
+marks log entries RESOLVED, per that log's own maintenance rules).
+
+| ID | Finding | Outcome |
+|---|---|---|
+| M0-R1 | Copy/link metadata still outside `copy.ts` (brand name in Header/Footer/layout, table columns in nism-series-v-a, fragile `section.h2 === 'Who we are'` string-compare in privacy) | **Fixed** — `brand.name`/`brand.legalName` added and used everywhere; `nismSeriesVA.format.columns` added; privacy rewritten to a `blocks` model (`{type:'p'|'ul'|'email', ...}`) so no page ever compares against visible heading text |
+| M0-R2 | Raw-hex guard exempted all of `test/tokens.test.ts` (5 literals) and missed `.js`/`.jsx`/`.cjs` | **Fixed** — exception removed entirely; `test/tokens.test.ts` now pins the palette via a SHA-256 checksum (zero hex literals); guard scans `.ts/.tsx/.js/.jsx/.cjs/.mjs/.css` repo-wide with only `src/styles/tokens.ts` exempt |
+| M0-R3 | `check-circle`'s polyline ended at `(9,12)`, not the official `(9,11.01)` | **Fixed** — corrected to `L9 11.01`; added `test/icon-paths.test.ts` (9 tests) pinning every icon's exact `d` string against the official Feather primitives, with the source primitive documented per test |
+| M0-R4 | No attached screenshot artifacts | **Fixed** — 18 real PNGs (9 routes × 375px/1440px) at `docs/review-packets/screenshots/M0/`, captured via Playwright driving the system-installed Chrome (`--channel=chrome`, not a new npm dependency — Playwright itself isn't in `package.json`) against the actual static `out/` build. See §3. |
+| M0-R5 | `linkify` dropped text after a repeated label (destructuring `split()`) | **Fixed** — rewritten to interleave every split segment; `test/linkify.test.tsx` (3 tests) proves 3 occurrences of one label all link correctly with no text lost |
+| M0-R6 | Mobile menu stayed open after header logo/CTA navigation | **Fixed** — `Header` now resets `open` when `usePathname()` changes (adjusted during render, not in a `useEffect`, to satisfy `react-hooks/set-state-in-effect`); reproduced Codex's exact repro (open menu → tap header "Get ARNReady" at 375px) via the interactive browser and confirmed it now navigates AND closes the menu |
+| M0-R7 | Delete-account "email us" regressed to plain text | **Fixed** — `deleteAccount.questions.body` is now `{text, links}`; both "email us" (mailto) and "Support" (`/support`) render as real links |
+| M0-R8 | Packet's file counts contradicted each other (37 / 113 / 37) and implied cleanup the isolated tests don't do | **Fixed** — see §2; before/after counts are now identical file counts (139) AND identical aggregate SHA-1 hashes of every file in `out/`+`content/`+`.leakcheck/`, computed immediately before and after the test run |
+| M0-R9 | Feather MIT notice named the license but omitted the permission-notice body | **Fixed** — added `/THIRD_PARTY_NOTICES.md` with the full upstream MIT license text; `Icon.tsx` references it |
+| M0-R10 | `check-paid-leak.test.ts` comment said no live key exists, contradicting the corrected packet | **Fixed** — comment now says the tests are intentionally credential-independent (they exercise gate logic via synthetic fixtures regardless of whether a real key is configured) |
+| M0-R11 | Gutter tokens configured but unused; containers still used default `px-4 sm:px-6` | **Fixed** — every page/component container now uses `px-gutter-mobile sm:px-gutter-desktop` |
+
+**One bug found and fixed during this pass, not from Codex's list:** capturing
+the 375px screenshots for M0-R4 surfaced a real regression — `linkify`'s
+review fix depended on functioning list rendering, and while testing it a
+separate `react-hooks/set-state-in-effect` ESLint error surfaced from the
+initial (naive) M0-R6 fix, which is captured above. Also found: a flaky
+`window is not defined` unhandled-rejection warning from `test/linkify.test.tsx`
+leaving un-cleaned-up renders — fixed by adding `afterEach(cleanup)` from
+`@testing-library/react` to `vitest.setup.ts` (was previously masked because
+no test file rendered more than one component per file until `linkify.test.tsx`
+added three `render()` calls).
+
+---
+
 ## Remediation log (M0-r)
 
 Codex reviewed the original M0 commit (`4a2c31f`) and returned **REJECT**
@@ -46,7 +82,7 @@ already assigns it.
 
 ## 1. Scope
 
-**Milestone:** M0 [SONNET] — Fresh scaffold (`docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` §2), remediated per Codex's review (M0-r).
+**Milestone:** M0 [SONNET] — Fresh scaffold (`docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` §2), remediated per Codex's review (M0-r, M0-r2).
 
 **Summary:** Scaffolded a clean Next.js App Router + TypeScript + Tailwind
 site configured for static export, with vitest + ESLint (0-warning policy)
@@ -66,12 +102,14 @@ pages import and render it. The eight standard/compliance pages each end
 with exactly one primary CTA.
 
 **Full changed-file list** (cumulative across the original M0 commit and
-this M0-r remediation; nothing on `main` touched):
+both remediation passes; nothing on `main` touched):
 
 ```
 .claude/launch.json
 .env.example                              (amended: +ARNREADY_SA_KEY)
+THIRD_PARTY_NOTICES.md                    (new, M0-r2 — full Feather MIT text)
 docs/review-packets/M0_PACKET.md
+docs/review-packets/screenshots/M0/*.png  (new, M0-r2 — 18 files, see §3)
 eslint.config.mjs
 next.config.ts
 package-lock.json
@@ -114,10 +152,12 @@ src/styles/tokens.ts
 tailwind.config.ts
 test/Footer.test.tsx
 test/check-paid-leak.test.ts
+test/icon-paths.test.ts                   (new, M0-r2)
+test/linkify.test.tsx                     (new, M0-r2)
 test/tokens.test.ts
 tsconfig.json
 vitest.config.ts
-vitest.setup.ts
+vitest.setup.ts                           (amended, M0-r2: +afterEach cleanup)
 ```
 
 (`next-env.d.ts` is regenerated by Next.js and gitignored — not committed,
@@ -125,19 +165,22 @@ correctly omitted from this list.)
 
 `scripts/export-content.mjs` and `scripts/check-paid-leak.mjs` themselves
 remain byte-for-byte unmodified (load-bearing, per the manual) — see the
-B9 note above for why the fingerprint-normalization gap Codex found was
-deferred rather than fixed here.
+B9/M0-D1 note above for why the fingerprint-normalization gap Codex found
+was deferred rather than fixed here.
+
+`docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md` and
+`docs/ARNREADY_WEBSITE_REVIEW_LOG.md` also changed in the working tree —
+those are Codex's own review-process files (the log's maintenance rules
+state only Codex marks entries RESOLVED), not part of this implementation
+diff, and are intentionally excluded from this packet's file list.
 
 ## 2. Pasted gate outputs (final commit)
 
-**Correction from the original packet:** the original M0 packet
-incorrectly stated no Firestore service-account key was available in this
-environment. It is available (`../ARNReady-App/scripts/serviceAccountKey.json`,
-the documented default path) — the earlier packet ran `npx next build`
-directly instead of `npm run build` and never actually tried the full
-lifecycle. This packet corrects that: `npm run build` below is the real,
-complete `prebuild → export-content → check-paid-leak → next build →
-postbuild → check-paid-leak` pipeline, run against live Firestore data.
+A live Firestore service-account key is available in this environment at
+the documented default path (`../ARNReady-App/scripts/serviceAccountKey.json`).
+`npm run build` below is the real, complete `prebuild → export-content →
+check-paid-leak → next build → postbuild → check-paid-leak` pipeline, run
+against live Firestore data.
 
 ### `npm run build` (full lifecycle, live Firestore data)
 
@@ -162,8 +205,8 @@ free-only.
 > next build
 
 ▲ Next.js 16.2.10 (Turbopack)
-✓ Compiled successfully in 1725ms
-✓ Generating static pages using 9 workers (11/11) in 132ms
+✓ Compiled successfully in 1777ms
+✓ Generating static pages using 9 workers (11/11) in 135ms
 
 Route (app)
 ┌ ○ /
@@ -185,7 +228,7 @@ ids + 4596 text fingerprints; exported question files structurally
 free-only.
 ```
 
-exit code: `0`. This matches Codex's own independent verification numbers
+exit code: `0`. Matches Codex's own independent verification numbers
 exactly (119 artefacts, 4596 paid ids, 4596 fingerprints).
 
 ### `npm run lint`
@@ -194,9 +237,10 @@ exactly (119 artefacts, 4596 paid ids, 4596 fingerprints).
 > arnready-website@0.0.0 lint
 > eslint . --max-warnings=0 && node scripts/check-no-raw-hex.mjs
 
-Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts
-(and its pinning test).
+Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
 ```
+
+(No exception in the message this time — M0-R2 removed the last one.)
 
 ### `npm run typecheck`
 
@@ -213,74 +257,141 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts
  RUN  v3.2.7
 
  ✓ test/tokens.test.ts (2 tests)
+ ✓ test/icon-paths.test.ts (9 tests)
+ ✓ test/linkify.test.tsx (3 tests)
  ✓ test/Footer.test.tsx (1 test)
  ✓ test/check-paid-leak.test.ts (5 tests)
 
- Test Files  3 passed (3)
-      Tests  8 passed (8)
+ Test Files  5 passed (5)
+      Tests  20 passed (20)
 ```
 
-Ran immediately after the real build above; `content/`, `.leakcheck/`, and
-`out/` (37 files, all real Firestore-exported free content) were confirmed
-untouched afterward — the leak-gate tests now run entirely inside a
-per-test temp directory (`test/check-paid-leak.test.ts` copies the script
-there rather than exercising the repo's real gitignored directories).
+No unhandled-exception warnings (M0-r2 fixed a flaky `window is not
+defined` teardown issue by adding `afterEach(cleanup)` to `vitest.setup.ts`).
+
+### Leak-gate test isolation, proven with hashes (fixes M0-R8)
+
+The previous packet's file counts (37 / 113 / 37) were confusing and
+implied the isolated tests still touch the real directories. They don't —
+here is unambiguous before/after proof, run immediately around `npm run
+test` with no rebuild in between:
+
+```
+$ find out content .leakcheck -type f | wc -l
+139
+$ find out content .leakcheck -type f -exec shasum {} \; | sort | shasum
+3e7756fdc067fff61b2ce672e6a4d74df9e7123c  -
+
+$ npm run test                    # (output above — 20/20 passed)
+
+$ find out content .leakcheck -type f | wc -l
+139
+$ find out content .leakcheck -type f -exec shasum {} \; | sort | shasum
+3e7756fdc067fff61b2ce672e6a4d74df9e7123c  -
+```
+
+Identical file count and identical aggregate hash before and after —
+`test/check-paid-leak.test.ts` genuinely never touches the repo's real
+`content/`, `.leakcheck/`, or `out/` directories; it copies the script into
+a fresh `mkdtempSync` temp directory per test and operates entirely there.
 
 ### Manual verification of the real `out/`
 
 ```
-$ grep -rl "correctIndex" out/          → (no matches)
-$ grep -rc "isFree\":false" out/*.html out/*.txt → (no matches)
-$ find out -type f | wc -l              → 113 (post-test-run: 37 after cleanup ran again)
+$ grep -rl "correctIndex" out/                    → (no matches)
+$ grep -rc "isFree\":false" out/*.html out/*.txt  → (no matches)
+$ find out -type f | wc -l                        → 113
 ```
 
-## 3. Screenshots (375px and 1440px)
+(113 is `out/` alone; 139 above is `out/` + `content/` + `.leakcheck/`
+combined — not a contradiction, just two different scopes, both now
+labelled explicitly.)
 
-Verified interactively via the in-app browser against `npm run dev`
-(same components/CSS as the static export — nothing in M0 depends on
-runtime data):
+## 3. Screenshots (375px and 1440px) — now attached (fixes M0-R4)
 
-- **375px:** homepage (hero, Arnie waving, hamburger menu closed and open
-  — confirmed nav links + sign-in stub become reachable), `/faq` (card
-  list, no horizontal overflow).
-- **1440px:** `/pricing` (desktop nav with visible sign-in stub, two-column
-  free/premium cards, **"thinking" Arnie** confirming the B8 fix),
-  `/delete-account` (table with visible caption text position, "Contact
-  support" CTA at the page end confirming the B6 fix).
+`docs/review-packets/screenshots/M0/` contains 18 real PNG files — all
+nine routes at both 375px and 1440px, captured against the actual static
+`out/` build (served locally, not the dev server):
 
-**Known limitation, stated plainly:** the browser tool used in this
-session (`mcp__Claude_Browser`) does not expose a way to persist a
-screenshot to a file on disk from this execution environment, so no image
-files could be attached to this packet or committed alongside it. The
-four checks above were performed and visually confirmed pass/fail during
-the session, but that is a verbal record, not an attached artifact — a
-real gap against "attach screenshot artifacts." If Anusha or Codex need
-attached image evidence, it needs to be captured by whoever has file-system
-access from the render, e.g. `npm run dev` + a local screenshot tool, or a
-CI screenshot step — flagging this rather than re-claiming resolution I
-can't actually demonstrate.
+```
+about-375.png            about-1440.png
+delete-account-375.png   delete-account-1440.png
+faq-375.png               faq-1440.png
+home-375.png              home-1440.png
+nism-series-v-a-375.png   nism-series-v-a-1440.png
+pricing-375.png           pricing-1440.png
+privacy-375.png           privacy-1440.png
+support-375.png           support-1440.png
+syllabus-375.png          syllabus-1440.png
+```
+
+**Capture method:** `npm run build` → serve `out/` locally → `npx
+playwright@1.48 screenshot --channel=chrome --viewport-size=<W>,<H>
+--full-page <url> <file>`, i.e. Playwright's CLI driving the
+system-installed Google Chrome (`--channel=chrome` uses the machine's own
+Chrome binary — Playwright is not added to `package.json`/`package-lock.json`,
+it runs once via `npx` purely to generate this evidence).
+
+**Why not plain headless-Chrome CLI flags** (`chrome --headless=new
+--window-size=W,H --screenshot=file url`), which is what the M0-r packet
+used: in this specific environment that invocation deterministically
+ignored the requested viewport width for CSS layout purposes — screenshots
+at 320–700px all rendered the *desktop* layout (full nav bar, no hamburger,
+right-edge text cut off) regardless of the requested output canvas size,
+even with a freshly isolated Chrome profile, `--force-device-scale-factor=1`,
+and `--virtual-time-budget`. This was a false alarm about the *site* (the
+interactive browser tool confirmed the real responsive behaviour is
+correct throughout this session, including the M0-R6 mobile-menu fix
+below) but a real bug in that specific capture method. Playwright's
+`--viewport-size` uses `Emulation.setDeviceMetricsOverride` over CDP,
+which reliably set the actual layout viewport and produced correct
+mobile-responsive captures on the first attempt.
+
+**What the screenshots confirm:**
+- **375px:** hamburger menu present and functional (`home-375.png`); no
+  horizontal overflow on any page including the longest (`faq-375.png`,
+  `privacy-375.png`); the delete-account table remains readable
+  (`delete-account-375.png`); both restored links ("email us" mailto,
+  "Support") visible and styled (`delete-account-375.png`).
+- **1440px:** desktop nav with the sign-in stub visible; two-column
+  pricing cards; **`pricing-1440.png` shows the "thinking" Arnie**,
+  confirming the B8 fix holds; every page ends with exactly one primary
+  CTA and the shared footer disclaimer.
+- Cream `#F5F5F0` canvas, Nunito, purple/ink/muted tokens, no raw hex, no
+  emoji — consistent across all 18 captures.
+
+**Mobile-menu-closes-on-navigation (M0-R6) — verified interactively, not
+just in a screenshot:** using the interactive browser at 375px, opened the
+mobile menu, tapped the header's "Get ARNReady" CTA, and confirmed both
+that navigation to `/pricing` occurred and that the menu closed
+automatically (no leftover expanded panel) — Codex's exact repro steps.
 
 ## 4. Deviations from the manual
 
-Unchanged from the original packet, plus:
-
 1. **Feather icons hand-rolled instead of an npm package** (manual §0.10
-   new-dependency stop condition) — now using the *official* Feather
-   project's SVG path data (MIT-licensed, attributed) rather than
-   approximate paths.
-2. **Homepage (`/`) was built** though M0 step 5 only lists the eight
+   new-dependency stop condition) — using the *official* Feather project's
+   SVG path data (MIT-licensed, full text in `THIRD_PARTY_NOTICES.md`)
+   rather than an installed dependency; pinned by `test/icon-paths.test.ts`.
+2. **Playwright used transiently via `npx` to generate screenshot
+   evidence** (M0-r2, see §3) — not added to `package.json` or
+   `package-lock.json`, driving the system-installed Chrome rather than
+   downloading its own browser. Evidence-generation tooling, not a product
+   dependency.
+3. **Homepage (`/`) was built** though M0 step 5 only lists the eight
    compliance/standard pages — kept minimal, full build is M6's job.
-3. **`test/tokens.test.ts` is a second, explicit, narrow exception to the
-   raw-hex guard** (new this remediation) — it pins `tokens.ts`'s literal
-   values against the manual's locked palette, which is its entire job and
-   necessarily requires the same hex strings.
-4. **B9 deferred to M1 by Anusha's explicit instruction** — see above.
+4. **B9 deferred to M1 by Anusha's explicit instruction** — see the
+   remediation log above.
+
+(The M0-r packet's deviation #3 — a second raw-hex-guard exception for
+`test/tokens.test.ts` — no longer applies: M0-R2 removed that exception
+entirely, replacing it with a hash-pinned test containing zero hex
+literals, so the guard now has exactly one exception, `src/styles/tokens.ts`
+itself, same as originally intended.)
 
 ## 5. Known limitations / deferred
 
-- **B9 (leak-gate fingerprint/entity-decoding gap)** — deferred to M1, see
-  the remediation log above.
-- **Screenshot artifacts could not be attached** — see §3.
+- **B9 / M0-D1 (leak-gate fingerprint/entity-decoding gap)** — deferred to
+  M1, see the remediation log above and `docs/ARNREADY_WEBSITE_REVIEW_LOG.md`.
 - All new page copy remains marked WORKING per manual §0.8, still needs
   Anusha's voice pass plus the E-1/E-2 review prompts (scheduled for M6).
   `[VERIFY]`/`[SLOT]`/`[ANUSHA-DECIDE]` markers are unchanged from the
@@ -293,12 +404,23 @@ Unchanged from the original packet, plus:
   Unchanged from the original packet's assessment; fixing either requires a
   major downgrade, out of scope for a scaffold milestone.
 
-## 6. Fixture-test note (leak gate)
+## 6. Fixture/pinning-test note
 
-`test/check-paid-leak.test.ts` (5 tests) now runs the script from an
-isolated per-test temp directory rather than the repo's real gitignored
-paths — see S1 in the remediation log. All 5 scenarios (missing manifest,
-non-`isFree` record, leaked id, leaked fingerprint, clean pass) still pass.
+- `test/check-paid-leak.test.ts` (5 tests) runs the script from an
+  isolated per-test temp directory rather than the repo's real gitignored
+  paths — see S1 in the M0-r log and the hash proof in §2. All 5 scenarios
+  (missing manifest, non-`isFree` record, leaked id, leaked fingerprint,
+  clean pass) pass.
+- `test/tokens.test.ts` (2 tests) pins the locked colour palette via a
+  SHA-256 checksum of the tokens object — no hex literals in the test file
+  (M0-R2).
+- `test/icon-paths.test.ts` (9 tests, new in M0-r2) pins every Feather
+  icon's exact `d` string against the official project's primitives, each
+  test documenting the source `<line>`/`<polyline>`/`<circle>`/`<rect>`
+  it was derived from (M0-R3).
+- `test/linkify.test.tsx` (3 tests, new in M0-r2) proves repeated link
+  labels are all wrapped with no text loss, multiple distinct rules
+  compose correctly, and the no-rules case is a no-op (M0-R5).
 
 ---
 *ARNReady · ASM Tech · arnready.com*
