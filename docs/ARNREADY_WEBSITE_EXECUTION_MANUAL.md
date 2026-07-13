@@ -119,6 +119,39 @@ Execute strictly in order. One milestone = one session = one commit = one
 Codex review = one Anusha approval. Do not start M(n+1) before M(n) is
 approved.
 
+**Repo reset note (13 Jul):** the repository was intentionally stripped to a
+clean start. The complete previous implementation (a working Next.js
+product) is preserved at git tag `pre-reset-snapshot` — consult it
+READ-ONLY for reference (`git show pre-reset-snapshot:<path>`,
+`git ls-tree -r pre-reset-snapshot --name-only`). Never cherry-pick or
+restore files from it wholesale; build per this manual. Two scripts were
+kept in the tree as-is and are load-bearing: `scripts/export-content.mjs`
+(Firestore → build-time content export) and `scripts/check-paid-leak.mjs`
+(the leak gate).
+
+### M0 [SONNET] — Fresh scaffold
+**Goal:** a clean Next.js foundation the later milestones build on.
+**Steps:**
+1. Scaffold Next.js (App Router) + TypeScript + Tailwind, configured for
+   STATIC EXPORT (classic Firebase Hosting — `output: 'export'`); vitest +
+   ESLint (0-warning policy); Nunito via next/font.
+2. One theme-token module encoding §0.7 exactly (colors, bg `#F5F5F0`,
+   radii, spacing); no raw hex anywhere else — add a lint/grep guard.
+3. Base layout: header (sign-in slot stubbed), footer with the standard
+   disclaimer; shared Arnie image component (static PNGs from `assets/`,
+   one per surface).
+4. Wire `scripts/export-content.mjs` into the build (`.env.example` lists
+   the required credentials — Anusha supplies real values locally, never
+   committed) and make `scripts/check-paid-leak.mjs` a build-blocking step.
+5. Recreate the compliance/standard public pages from the copy scaffold:
+   `/privacy`, `/delete-account`, `/support`, `/about`, `/faq`, `/pricing`,
+   `/syllabus`, `/nism-series-v-a` — copy marked WORKING. (The live GH
+   Pages versions on `main` remain the deployed truth until cutover; do
+   not touch `main`.)
+**Acceptance:** §0.11 gates green on the fresh scaffold; static export
+builds; leak gate runs and passes; screenshots of the base layout at 375px
+and 1440px.
+
 ### M1 [SONNET] — Public content layer
 **Goal:** chapter hubs + subtopic spokes live on the static build.
 **Steps:**
@@ -136,7 +169,9 @@ approved.
    including `docType` exclusion), one sign-in CTA, footer disclaimer.
 3. Build `/chapters/[chapter]/[subtopic]` for approved-teaching subtopics
    only: teaching + that subtopic's sampler cards + breadcrumbs + prev/next.
-4. Retire `/questions` (redirect to `/chapters`); update sitemap.
+4. Do NOT create a public `/questions` page; add a redirect from the old
+   `/questions` URL to `/chapters` (it existed on the previous site).
+   Generate sitemap + robots including hubs and spokes.
 5. Extend `scripts/check-paid-leak.mjs` to enforce the §0.6 budget,
    including "≤10 cards per chapter" and "zero question text in the export".
 **Forbidden:** auth code, `/app/*` routes, any question rendering.
@@ -258,7 +293,9 @@ explicit go, as its own approval.
   full free tier) and ad-gate description (Q11+Q16, banner ads) are
   SUPERSEDED by §1 of this manual. The app's canonical ad policy is
   `../ARNReady-App/documents/adgate-logic.md` (13 Jul).
-- `docs/ARNREADY_WEBSITE_NEXT_WORK_PLAN.md`: superseded by §2.
+- The old next-work-plan, execution plan, PRD, IA, and architecture docs
+  were removed in the 13 Jul repo reset (recoverable at
+  `pre-reset-snapshot`); §2 of this manual replaces them.
 - Razorpay is APPROVED for integration (13 Jul) — "checkout coming soon"
   copy is required only until M7 ships.
 
