@@ -1,30 +1,37 @@
 /**
- * Atomic, crash-safe publication of the build-time export (M1-S6, hardened in
- * the second re-review round).
+ * Atomic, crash-safe publication of the build-time export (M1-S6, hardened
+ * across three re-review rounds).
  *
  * The export has two reader-facing trees — `content/` (SSG source) and
- * `.leakcheck/` (leak-gate manifests). The earlier approach renamed each of
- * the two directories into place separately, so a crash between the two
- * renames could leave `content/` and `.leakcheck/` from DIFFERENT generations,
- * and a crash mid-rename could leave a tree missing entirely. Two independent
- * directory renames can never be made a single atomic unit.
+ * `.leakcheck/` (leak-gate manifests). Renaming those two directories into
+ * place separately can never be one atomic unit, so a crash between the two
+ * renames could leave them from DIFFERENT generations, or a crash mid-rename
+ * could leave a reader path missing.
  *
- * Instead, both trees are published UNDER ONE generation directory
+ * Instead, both trees live UNDER ONE generation directory
  * (`.export/<slot>/content`, `.export/<slot>/leakcheck`) and the reader paths
- * are stable symlinks that resolve through a single `.export/current` pointer:
+ * are STABLE symlinks that resolve through a single `.export/current` pointer:
  *
  *     content     -> .export/current/content
  *     .leakcheck  -> .export/current/leakcheck
- *     .export/current -> genA | genB   (the one thing that ever switches)
+ *     .export/current -> genA | genB      (the one thing a publish switches)
  *
- * Publishing is a single `rename()` of a new symlink onto `.export/current`,
- * which POSIX guarantees atomic — so BOTH trees switch generations together,
- * in one step. A crash before the rename leaves the previous generation fully
- * live; a crash after it leaves the new generation fully live. There is no
- * window in which the trees are mixed or missing, and therefore no recovery
- * pass is needed. Generations ping-pong between two slots, so at most the
- * current + one previous generation exist on disk (the previous is a free
- * manual rollback point; the next run overwrites it).
+ * Steady-state publishing is a single `rename()` of a new symlink onto
+ * `.export/current`, which POSIX guarantees atomic — BOTH trees switch
+ * generations together, or not at all.
+ *
+ * The reader symlinks are installed ONCE, by `ensureReaderLayout`, which the
+ * exporter calls at startup BEFORE it stages or publishes anything — so by the
+ * time `publishGeneration` switches `current`, both stable symlinks already
+ * exist (they are never touched again). `ensureReaderLayout` also performs the
+ * one-time migration from the legacy real-directory layout, and is fully
+ * idempotent/recoverable: it captures any legacy real `content/`/`.leakcheck/`
+ * into ONE generation (both into the same slot, so the two trees can never end
+ * up from different generations) and points `current` at it with a single
+ * atomic switch; a crash mid-migration leaves only a transient MISSING reader
+ * path (never a mixed generation), which the next startup re-reconciles before
+ * anything reads. Generations ping-pong between two slots (at most current +
+ * one previous on disk; the previous is a free rollback point).
  *
  * Extracted into scripts/lib so it is unit-testable without a Firestore
  * credential, matching freeManifestExclusion.mjs / samplerManifest.mjs.
@@ -36,11 +43,90 @@ export const EXPORT_BASENAME = '.export';
 
 function symlinkExists(p) {
   try {
-    lstatSync(p); // lstat, not exists: a dangling symlink still "exists" here
+    lstatSync(p); // lstat, not existsSync: a dangling symlink still "exists" here
     return true;
   } catch {
     return false;
   }
+}
+
+function isRealDirectory(p) {
+  try {
+    const st = lstatSync(p);
+    return st.isDirectory() && !st.isSymbolicLink();
+  } catch {
+    return false;
+  }
+}
+
+/** Atomically point `current` at `slot` (a single POSIX rename of a symlink). */
+function switchCurrent(exportDir, slot) {
+  const current = path.join(exportDir, 'current');
+  const pending = path.join(exportDir, 'current.pending');
+  rmSync(pending, { force: true });
+  symlinkSync(slot, pending); // relative target within exportDir
+  renameSync(pending, current); // ← atomic publish
+}
+
+function ensureReaderSymlink(linkPath, target) {
+  try {
+    const st = lstatSync(linkPath);
+    if (st.isSymbolicLink() && readlinkSync(linkPath) === target) return; // already correct
+    // A real directory here would be unexpected (legacy dirs are captured into
+    // a generation earlier); remove it so the rename below can install the link.
+    if (st.isDirectory() && !st.isSymbolicLink()) rmSync(linkPath, { recursive: true, force: true });
+  } catch {
+    /* absent — fall through and create it */
+  }
+  // Create/replace the reader symlink ATOMICALLY: build it at a temp path, then
+  // rename onto linkPath (POSIX rename atomically replaces an existing symlink,
+  // or creates it if absent). So even repairing a wrong link never leaves the
+  // reader path missing.
+  const tmp = `${linkPath}.linktmp`;
+  rmSync(tmp, { force: true });
+  symlinkSync(target, tmp);
+  renameSync(tmp, linkPath);
+}
+
+/** Capture a legacy real reader dir into a generation slot, or create an empty subtree. Idempotent. */
+function captureOrCreate(readerPath, genTarget, subdirs) {
+  if (existsSync(genTarget)) return; // already captured (recovery re-run)
+  mkdirSync(path.dirname(genTarget), { recursive: true }); // ensure the slot dir exists first
+  if (isRealDirectory(readerPath)) {
+    renameSync(readerPath, genTarget); // preserve the legacy real dir AS this generation
+  } else {
+    mkdirSync(genTarget, { recursive: true });
+    for (const d of subdirs) mkdirSync(path.join(genTarget, d), { recursive: true });
+  }
+}
+
+/**
+ * Guarantee the stable reader layout exists BEFORE any publish, and complete
+ * the one-time migration from the legacy real-directory export. Idempotent and
+ * recoverable — safe to call at every export startup; it repairs any partial
+ * migration left by an earlier crash. `root` holds the reader symlinks;
+ * `exportDir` is `<root>/.export`.
+ */
+export function ensureReaderLayout(root, exportDir) {
+  mkdirSync(exportDir, { recursive: true });
+  const current = path.join(exportDir, 'current');
+  const contentLink = path.join(root, 'content');
+  const leakLink = path.join(root, '.leakcheck');
+
+  // Bootstrap `current` if it does not yet resolve to a generation. Capture
+  // any legacy real reader dirs into ONE slot (so the two trees are never from
+  // different generations), then switch `current` to it atomically.
+  if (!symlinkExists(current)) {
+    const slot = 'genA';
+    captureOrCreate(contentLink, path.join(exportDir, slot, 'content'), ['questions', 'flashcards']);
+    captureOrCreate(leakLink, path.join(exportDir, slot, 'leakcheck'), []);
+    switchCurrent(exportDir, slot);
+  }
+
+  // Install/repair the stable reader symlinks. They point through `current`, so
+  // once they exist a publish only ever switches `current` — never these.
+  ensureReaderSymlink(contentLink, path.join(EXPORT_BASENAME, 'current', 'content'));
+  ensureReaderSymlink(leakLink, path.join(EXPORT_BASENAME, 'current', 'leakcheck'));
 }
 
 /**
@@ -60,8 +146,7 @@ export function stageGeneration(exportDir) {
       active = null;
     }
   }
-  // Build into whichever slot is NOT currently live.
-  const slot = active === 'genA' ? 'genB' : 'genA';
+  const slot = active === 'genA' ? 'genB' : 'genA'; // build into whichever slot is NOT live
   const genDir = path.join(exportDir, slot);
   rmSync(genDir, { recursive: true, force: true });
   const contentDir = path.join(genDir, 'content');
@@ -73,9 +158,9 @@ export function stageGeneration(exportDir) {
 }
 
 /**
- * Validate a staged generation is complete before it can be published.
- * Throws (leaving the live generation untouched) if any required artefact is
- * missing or empty — a half-written generation must never go live.
+ * Validate a staged generation is complete before it can be published. Throws
+ * (leaving the live generation untouched) if any required artefact is missing
+ * or empty — a half-written generation must never go live.
  */
 export function validateStagedGeneration(contentDir, leakDir) {
   const requireFile = (p, label) => {
@@ -94,30 +179,12 @@ export function validateStagedGeneration(contentDir, leakDir) {
   requireFile(path.join(leakDir, 'sampler-manifest.json'), 'sampler manifest');
 }
 
-function ensureReaderSymlink(linkPath, target) {
-  try {
-    const st = lstatSync(linkPath);
-    if (st.isSymbolicLink() && readlinkSync(linkPath) === target) return; // already correct
-    rmSync(linkPath, { recursive: true, force: true }); // stale real dir or wrong link
-  } catch {
-    /* absent — fall through and create it */
-  }
-  symlinkSync(target, linkPath);
-}
-
 /**
- * Atomically publish the staged `slot` as the live generation, then ensure the
- * reader-facing `content`/`.leakcheck` symlinks resolve through `current`. The
- * ONLY publish step is the single `rename` onto `current`; everything after it
- * is idempotent and self-heals on re-run. `root` is the repo root that holds
- * the reader symlinks; `exportDir` is `<root>/.export`.
+ * Publish the staged `slot` as the live generation. The reader symlinks must
+ * already exist (installed by ensureReaderLayout at startup), so this is the
+ * single atomic `current` switch — both content/ and .leakcheck/ go live
+ * together, or not at all.
  */
-export function publishGeneration(root, exportDir, slot) {
-  const current = path.join(exportDir, 'current');
-  const pending = path.join(exportDir, 'current.pending');
-  rmSync(pending, { force: true });
-  symlinkSync(slot, pending); // relative target within exportDir
-  renameSync(pending, current); // ← the single atomic publish: both trees switch at once
-  ensureReaderSymlink(path.join(root, 'content'), path.join(EXPORT_BASENAME, 'current', 'content'));
-  ensureReaderSymlink(path.join(root, '.leakcheck'), path.join(EXPORT_BASENAME, 'current', 'leakcheck'));
+export function publishGeneration(exportDir, slot) {
+  switchCurrent(exportDir, slot);
 }

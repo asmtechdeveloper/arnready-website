@@ -1,4 +1,5 @@
 export declare const EXPORT_BASENAME: string;
+export declare function ensureReaderLayout(root: string, exportDir: string): void;
 export declare function stageGeneration(exportDir: string): {
   slot: string;
   genDir: string;
@@ -6,4 +7,4 @@ export declare function stageGeneration(exportDir: string): {
   leakDir: string;
 };
 export declare function validateStagedGeneration(contentDir: string, leakDir: string): void;
-export declare function publishGeneration(root: string, exportDir: string, slot: string): void;
+export declare function publishGeneration(exportDir: string, slot: string): void;

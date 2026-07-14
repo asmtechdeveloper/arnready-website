@@ -22,6 +22,10 @@ next-env.d.ts
 /content
 /.leakcheck
 /.export
+# Transient temp symlinks used to swap the reader links in atomically; renamed
+# away immediately, but can survive an abrupt crash.
+/content.linktmp
+/.leakcheck.linktmp
 
 # Superseded static scaffold moved here from the app repo (10 Jul cleanup).
 # Kept on disk for the README step-5 consolidation, but NEVER committed:

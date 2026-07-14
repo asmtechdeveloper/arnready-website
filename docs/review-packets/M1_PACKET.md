@@ -154,7 +154,7 @@ see M1-r's remediation log (§7) for what changed and why.
 
 ```
  Test Files  18 passed | 3 skipped (21)
-      Tests  170 passed | 6 skipped (176)
+      Tests  171 passed | 6 skipped (177)
 ```
 
 The 3 skipped files/6 skipped tests are `test/signInPlacement.test.tsx`,
@@ -171,7 +171,7 @@ retained as supplementary evidence, not the primary gate:**
 
 ```
  Test Files  21 passed (21)
-      Tests  176 passed (176)
+      Tests  177 passed (177)
 ```
 
 `test/sitemap.test.ts`: 8 tests (was 3 at the original commit) — exact
@@ -184,8 +184,9 @@ route. `test/teaching.test.ts` (24), `test/flashcardDeck.test.ts` (19 —
 canonical-order-parity assertion), `test/content.test.ts` (4 — new in
 M1-r: the S3 exact canonical first-ten id/front pinning through the
 loader's real composition and the S1 slug-join), `test/atomicExport.test.ts`
-(7 — new in M1-r: the S6 stage/validate/publish helper, incl. the
-second re-review round's single-pointer atomic publish), `test/multiScan.test.ts`
+(8 — new in M1-r: the S6 stage/validate/publish helper, incl. the
+single-pointer atomic publish and the reader-layout install/migration/repair),
+`test/multiScan.test.ts`
 (6 — new in the re-review round: the Rabin–Karp leak-gate scanner that
 replaced the ~90s per-pattern sweep), `test/canonicalDeck.test.ts` (3),
 `test/canon.test.ts` (12),
@@ -427,9 +428,9 @@ fixture (B10) all still pass.
 - **S6 — atomic export replacement.** `scripts/export-content.mjs` builds the
   whole export into an inactive generation slot, validates it, then makes it
   live so a chapter dropped from Firestore leaves no stale `.raw.json` (and no
-  stale public route) behind. The publish mechanism was hardened across two
+  stale public route) behind. The publish mechanism was hardened across three
   re-review rounds and its final, crash-safe form is described under
-  **Re-review round 2** below; the helpers live in
+  **Re-review round 3** below; the helpers live in
   `scripts/lib/atomicExport.mjs` (unit-testable without a credential), covered
   by `test/atomicExport.test.ts`.
 - **N1 — active breadcrumb crumb.** The terminal breadcrumb on both the hub
@@ -498,15 +499,46 @@ live build with both leak scans over 1,927 artefacts) and left one SHOULD-FIX.
   most current + one previous on disk; the previous is a free rollback point).
   The reader code (`src/lib/content.ts`, `scripts/check-paid-leak.mjs`) is
   unchanged — it still reads `content/` and `.leakcheck/`, now symlinks that
-  Node follows transparently. Covered by 7 `test/atomicExport.test.ts` cases
-  (genA-first + inactive-slot ping-pong that never disturbs the live tree;
-  validate accept/reject; both trees resolve to the new gen through one
-  pointer; both switch together on the next publish; a failed/invalid new gen
-  leaves the previous one fully live; one-time migration of a pre-existing real
-  `content/` directory into the symlink layout). Verified live: `npm run
-  export-content` migrated the existing real `content/`/`.leakcheck/` into the
-  symlink layout; `npm run build` re-published (current → genB) with both leak
-  gates passing and 195 pages generated. `.export/` is gitignored.
+  Node follows transparently. Steady-state publishing is atomic. **Gap left for
+  round 3:** in this version `publishGeneration` switched `current` and *then*
+  replaced the reader symlinks, so the very first real-dir→symlink migration
+  still touched the two reader paths separately.
+
+### Re-review round 3 (Codex APPROVE AFTER FIXES of `64bdf34`)
+
+Codex confirmed steady-state publishing is atomic and flagged one residual
+SHOULD-FIX: the first real-directory→symlink migration was not atomic —
+switching `current` and then replacing `content/` and `.leakcheck/`
+separately meant a crash between them could leave the two paths from different
+generations, or a kill between `rmSync`/`symlinkSync` could leave a path
+missing.
+
+- **SHOULD-FIX — the reader symlinks are now installed BEFORE any publish, and
+  migration is idempotent/recoverable.** A new `ensureReaderLayout(root,
+  exportDir)` runs at the very start of `export-content`, before it stages or
+  publishes anything. It guarantees `content/` and `.leakcheck/` are the stable
+  symlinks and performs the one-time legacy migration by capturing any
+  pre-existing real reader dirs into ONE generation (both trees into the SAME
+  slot, via `rename`) and pointing `current` at it with a single atomic switch
+  — so the two trees can never be captured into different generations. It is
+  fully idempotent and recoverable: a crash mid-migration can only leave a
+  transient MISSING reader path (never a mixed generation), and the next
+  `export-content` startup re-reconciles it before anything reads. Because the
+  reader symlinks already exist by the time `publishGeneration` runs,
+  `publishGeneration` now does nothing but the single atomic `current` switch —
+  it never touches the reader paths (satisfying Codex's “only switch `current`
+  after both stable reader symlinks already exist”). Covered by 7
+  `test/atomicExport.test.ts` cases including fresh-env install-before-publish,
+  legacy real-dir→symlink migration capturing both trees into one generation,
+  and idempotent recovery of a partial migration (`current` bootstrapped, reader
+  symlinks not yet installed), plus a wrong-pre-existing-symlink repair. The
+  reader symlinks are also installed/replaced atomically (built at a temp path
+  and `rename`d onto the reader path), so even repairing a tampered link never
+  leaves the reader path missing. Verified live: fresh-from-empty export;
+  legacy real `content/`/`.leakcheck/` dirs migrated into the symlink layout;
+  three back-to-back exports ping-ponging `current` genB→genA→genB with the
+  reader paths valid throughout; and `npm run build` re-publishing with both
+  leak gates passing and 195 pages generated.
 
 No `firestore.rules`, app-repo `functions/`, scoring constant, `/app/*`
 route, or new npm dependency was touched in any M1-r round.

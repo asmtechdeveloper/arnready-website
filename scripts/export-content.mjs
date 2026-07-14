@@ -21,7 +21,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { canon, fieldFingerprints } from './lib/canon.mjs';
 import { computePublicBlobs, partitionFreeFieldFps } from './lib/freeManifestExclusion.mjs';
 import { computeSamplerManifest } from './lib/samplerManifest.mjs';
-import { EXPORT_BASENAME, stageGeneration, validateStagedGeneration, publishGeneration } from './lib/atomicExport.mjs';
+import { EXPORT_BASENAME, ensureReaderLayout, stageGeneration, validateStagedGeneration, publishGeneration } from './lib/atomicExport.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const KEY_PATH =
@@ -39,6 +39,12 @@ async function main() {
   const key = JSON.parse(readFileSync(KEY_PATH, 'utf8'));
   initializeApp({ credential: cert(key) });
   const db = getFirestore();
+
+  // Install the stable reader-path symlinks (and complete the one-time
+  // migration from the legacy real-directory export) BEFORE staging or
+  // publishing — so the atomic publish below only ever switches the single
+  // `current` pointer, never the reader paths themselves.
+  ensureReaderLayout(ROOT, EXPORT_DIR);
 
   // Build into the inactive generation slot; the live generation is untouched
   // until the single atomic publish at the end succeeds.
@@ -235,7 +241,7 @@ async function main() {
   // wholesale, so a chapter dropped from Firestore cannot leave a stale
   // approved .raw.json (and its stale public route) behind.
   validateStagedGeneration(stage.contentDir, stage.leakDir);
-  publishGeneration(ROOT, EXPORT_DIR, stage.slot);
+  publishGeneration(EXPORT_DIR, stage.slot);
 
   const freeTotal = [...freeByChapter.values()].reduce((n, l) => n + l.length, 0);
   console.log(
