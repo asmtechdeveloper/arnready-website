@@ -90,6 +90,8 @@ NOT part of this commit:
 ?? scripts/lib/canonicalDeck.d.mts
 ?? scripts/lib/freeManifestExclusion.mjs
 ?? scripts/lib/freeManifestExclusion.d.mts
+?? scripts/lib/multiScan.mjs
+?? scripts/lib/multiScan.d.mts
 ?? scripts/lib/publicTeachingText.mjs
 ?? scripts/lib/publicTeachingText.d.mts
 ?? scripts/lib/samplerManifest.mjs
@@ -103,11 +105,18 @@ NOT part of this commit:
 ?? test/content.test.ts
 ?? test/flashcardSamplerLeakGate.test.tsx
 ?? test/freeManifestExclusion.test.ts
+?? test/multiScan.test.ts
 ?? test/primaryCta.test.tsx
 ?? test/samplerManifest.test.ts
 ?? test/signInPlacement.test.tsx
 ?? test/spokeNavIcons.test.tsx
 ```
+
+(The re-review round additionally modified `.gitignore`,
+`scripts/check-paid-leak.mjs`, `scripts/lib/atomicExport.mjs`,
+`test/atomicExport.test.ts`, `test/check-paid-leak.test.ts`, and
+`test/flashcardSamplerLeakGate.test.tsx`, and added the two `multiScan`
+files above — all already reflected in the list.)
 
 No `firestore.rules`, app-repo `functions/`, scoring constant, or `/app/*`
 route was touched. No new npm dependency was added.
@@ -144,8 +153,8 @@ see M1-r's remediation log (§7) for what changed and why.
 (lint → typecheck → test, BEFORE `export-content`/`build` ever runs):**
 
 ```
- Test Files  17 passed | 3 skipped (20)
-      Tests  163 passed | 6 skipped (169)
+ Test Files  18 passed | 3 skipped (21)
+      Tests  171 passed | 6 skipped (177)
 ```
 
 The 3 skipped files/6 skipped tests are `test/signInPlacement.test.tsx`,
@@ -161,8 +170,8 @@ with a deterministic fixture and its 8 tests always run, content or not.
 retained as supplementary evidence, not the primary gate:**
 
 ```
- Test Files  20 passed (20)
-      Tests  169 passed (169)
+ Test Files  21 passed (21)
+      Tests  177 passed (177)
 ```
 
 `test/sitemap.test.ts`: 8 tests (was 3 at the original commit) — exact
@@ -175,8 +184,11 @@ route. `test/teaching.test.ts` (24), `test/flashcardDeck.test.ts` (19 —
 canonical-order-parity assertion), `test/content.test.ts` (4 — new in
 M1-r: the S3 exact canonical first-ten id/front pinning through the
 loader's real composition and the S1 slug-join), `test/atomicExport.test.ts`
-(6 — new in M1-r: the S6 stage/validate/atomic-swap helper),
-`test/canonicalDeck.test.ts` (3), `test/canon.test.ts` (12),
+(8 — new in M1-r: the S6 stage/validate/atomic-swap helper, incl. the
+re-review round's multi-pair transactional rollback), `test/multiScan.test.ts`
+(6 — new in the re-review round: the Rabin–Karp leak-gate scanner that
+replaced the ~90s per-pattern sweep), `test/canonicalDeck.test.ts` (3),
+`test/canon.test.ts` (12),
 `test/freeManifestExclusion.test.ts` (19), `test/samplerManifest.test.ts`
 (7), `test/firebase-redirects.test.ts` (14 — +13 in M1-r: every legacy
 `/chapter-N` destination for S5), `test/flashcardSamplerLeakGate
@@ -194,7 +206,12 @@ a problem.
 Re-run on the M1-r tree (the paid/free manifests are field-level since B2,
 so the fingerprint counts are higher than the original commit's single
 concatenated-field counts; the leak-gate wording is B4's exact-canonical-
-sampler assertion, not the original "≤10 cards" phrasing):
+sampler assertion, not the original "≤10 cards" phrasing). Each leak-gate
+invocation now completes in ~3–4s (the standalone gate; the full `npm run
+build` finishes in ~22s wall) — the re-review round replaced the per-pattern
+`String.includes` sweep, which took ~90s on this real export and could be
+killed by a CI timeout before reporting, with a single Rabin–Karp pass per
+artefact (see §7 and `scripts/lib/multiScan.mjs`):
 
 ```
 > npm run export-content
@@ -423,7 +440,47 @@ fixture (B10) all still pass.
   and the spoke now carries `aria-current="page"` (verified in the built
   HTML for `/chapters/1` and a spoke).
 
+### Re-review round (Codex REJECT of the first M1-r commit)
+
+Codex re-reviewed the first M1-r commit and raised one BLOCKER and one
+SHOULD-FIX; both are fixed here.
+
+- **BLOCKER — leak gate did not complete reliably.** After B2 made the paid
+  manifest field-level, the gate scanned ~1,900 artefacts against ~21.5k/21.8k
+  fingerprints (+ 4.6k ids, + free manifest) with a per-pattern
+  `String.includes` sweep — O(artefacts × patterns × textlen), ~90s of CPU on
+  the real export and climbing with content, so a CI/build host could kill it
+  before it reported (Codex saw `npm run build` stop after the prebuild gate,
+  never reaching `next build`/postbuild). Fixed by replacing the sweep with a
+  single Rabin–Karp rolling-hash pass per artefact
+  (`scripts/lib/multiScan.mjs`): each pattern set is indexed by the hash of
+  its shortest-length anchor, the text is scanned once in O(textlen), and hash
+  hits are verified with `startsWith` — so a collision costs an extra verify,
+  never a miss or false positive. Memory is O(patterns), far below an
+  Aho–Corasick trie over these long fingerprints. **Measured: 90.3s → 3.5s for
+  the standalone gate on the identical export; the full `npm run build` (both
+  gates + 195-page generation) completes in ~22s wall.** The gate's semantics
+  are unchanged — the 26 fail-closed fixtures in `test/check-paid-leak.test.ts`
+  and the B5 forced-render leak test still pass, proving detection is intact —
+  and `test/multiScan.test.ts` (6) pins scanner correctness incl. start/end
+  matches, mixed-length patterns, hash-collision rejection, and a 5,000-pattern
+  / ~270k-char large-input case that would be intractable for the old scan.
+- **SHOULD-FIX — `commitStaging` was not truly atomic.** The first version
+  deleted each live directory before renaming its replacement, so an
+  interrupted or failed rename could leave `content/` missing, or leave
+  `content/` and `.leakcheck/` from different generations. `commitStaging` is
+  now transactional: each swap moves the live tree aside to a `.previous`
+  backup first (a directory rename cannot land on an existing directory in one
+  syscall); the old generation is deleted **only after every pair swaps in**;
+  and if any rename throws, every already-swapped pair is rolled back to its
+  backup before rethrowing — so the export trees are always entirely the new
+  generation or entirely the old one, never split and never missing. Covered by
+  two added `test/atomicExport.test.ts` cases (multi-pair commit leaves no
+  backups; a later-pair rename failure rolls the earlier pair back to the old
+  generation). The `.previous` backups are gitignored. Verified live: a full
+  build left no `*.staging` or `*.previous` dirs.
+
 No `firestore.rules`, app-repo `functions/`, scoring constant, `/app/*`
-route, or new npm dependency was touched in this round.
+route, or new npm dependency was touched in either M1-r round.
 
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*

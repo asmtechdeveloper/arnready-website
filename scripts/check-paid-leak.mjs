@@ -33,6 +33,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { canon } from './lib/canon.mjs';
+import { buildScanner, findMatches } from './lib/multiScan.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MANIFEST = path.join(ROOT, '.leakcheck', 'paid-manifest.json');
@@ -93,23 +94,26 @@ if (existsSync(qDir)) {
 // content/ and out/ use different fingerprint sets (see the manifest-shape
 // comment above) — the ID check applies identically to both, since a paid
 // question's ID string should never legitimately appear anywhere.
+// A single Rabin–Karp scanner per pattern set finds every match in one
+// O(textlen) pass per artefact, instead of an O(patterns) `includes` sweep —
+// the O(artefacts × patterns × textlen) original took ~90s on a real export
+// and could be killed by a CI timeout before reporting (see lib/multiScan.mjs).
 const offences = [];
 let scanned = 0;
+const paidIdScanner = buildScanner(paidIds);
 for (const [dir, fps] of [
   [CONTENT_DIR, contentPaidFps],
   [PUBLIC_EXPORT_DIR, publicPaidFps],
 ]) {
   if (!existsSync(dir)) continue;
+  const fpScanner = buildScanner(fps);
   for (const file of walk(dir)) {
     scanned += 1;
     const raw = readFileSync(file, 'utf8');
     const rel = path.relative(ROOT, file);
-    for (const id of paidIds) {
-      if (raw.includes(id)) offences.push(`${rel}: contains paid question id "${id}"`);
-    }
-    const c = canon(raw);
-    for (const fp of fps) {
-      if (c.includes(fp)) offences.push(`${rel}: contains paid question text (fingerprint ${fp.slice(0, 16)}…)`);
+    for (const id of findMatches(paidIdScanner, raw)) offences.push(`${rel}: contains paid question id "${id}"`);
+    for (const fp of findMatches(fpScanner, canon(raw))) {
+      offences.push(`${rel}: contains paid question text (fingerprint ${fp.slice(0, 16)}…)`);
     }
     if (offences.length > 20) break;
   }
@@ -138,17 +142,16 @@ if (freeIds.length === 0 || freeFps.length === 0) {
   fail('Free-question manifest is empty or malformed — re-run `npm run export-content`.');
 }
 if (existsSync(PUBLIC_EXPORT_DIR)) {
+  const freeIdScanner = buildScanner(freeIds);
+  const freeFpScanner = buildScanner(freeFps);
   for (const file of walk(PUBLIC_EXPORT_DIR)) {
     const raw = readFileSync(file, 'utf8');
     const rel = path.relative(ROOT, file);
-    for (const id of freeIds) {
-      if (raw.includes(id)) offences.push(`${rel}: contains free question id "${id}" — questions must never appear in the public export`);
+    for (const id of findMatches(freeIdScanner, raw)) {
+      offences.push(`${rel}: contains free question id "${id}" — questions must never appear in the public export`);
     }
-    const c = canon(raw);
-    for (const fp of freeFps) {
-      if (c.includes(fp)) {
-        offences.push(`${rel}: contains free question text (fingerprint ${fp.slice(0, 16)}…) — questions must never appear in the public export`);
-      }
+    for (const fp of findMatches(freeFpScanner, canon(raw))) {
+      offences.push(`${rel}: contains free question text (fingerprint ${fp.slice(0, 16)}…) — questions must never appear in the public export`);
     }
     if (offences.length > 20) break;
   }

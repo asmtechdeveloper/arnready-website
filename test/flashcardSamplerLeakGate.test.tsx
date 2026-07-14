@@ -58,6 +58,7 @@ describe('M1-B5: export → render → leak-gate for a prohibited card before a 
     const REPO_ROOT = path.resolve(import.meta.dirname, '..');
     const SCRIPT_SRC = path.join(REPO_ROOT, 'scripts', 'check-paid-leak.mjs');
     const LIB_SRC = path.join(REPO_ROOT, 'scripts', 'lib', 'canon.mjs');
+    const MULTISCAN_SRC = path.join(REPO_ROOT, 'scripts', 'lib', 'multiScan.mjs');
     let tempRoot: string;
 
     beforeEach(() => {
@@ -65,6 +66,7 @@ describe('M1-B5: export → render → leak-gate for a prohibited card before a 
       mkdirSync(path.join(tempRoot, 'scripts', 'lib'), { recursive: true });
       copyFileSync(SCRIPT_SRC, path.join(tempRoot, 'scripts', 'check-paid-leak.mjs'));
       copyFileSync(LIB_SRC, path.join(tempRoot, 'scripts', 'lib', 'canon.mjs'));
+      copyFileSync(MULTISCAN_SRC, path.join(tempRoot, 'scripts', 'lib', 'multiScan.mjs'));
     });
 
     afterEach(() => {

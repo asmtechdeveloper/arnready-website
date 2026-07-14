@@ -45,15 +45,50 @@ export function validateStagedExport(contentStage, leakStage) {
 }
 
 /**
- * Atomically replace each `final` directory with its freshly-built `staging`
- * counterpart: discard the old final tree, then rename staging into place.
- * The rename is the atomic step — a build reading the final tree sees either
- * the entire old export or the entire new one, never a partial merge.
+ * Replace every `final` directory with its freshly-built `staging`
+ * counterpart as an all-or-nothing group. A directory rename cannot land
+ * on top of an existing directory in one syscall, so each swap moves the
+ * live tree aside to a `.previous` backup first, then renames staging into
+ * place. Crucially the group is transactional:
+ *   - the old generation (each `.previous` backup) is deleted ONLY after
+ *     every pair has swapped in successfully;
+ *   - if any rename throws, every already-swapped pair is rolled back to its
+ *     backup before rethrowing.
+ * So the caller's set of export trees (content/ + .leakcheck/) is always
+ * entirely the new generation or entirely the old one — never a mix, and
+ * never a `final` left missing because it was deleted before its replacement
+ * landed. (An abrupt process kill mid-swap can still leave a recoverable
+ * `.previous` backup on disk; a fresh export overwrites it via freshDir.)
  */
 export function commitStaging(pairs) {
-  for (const { staging, final } of pairs) {
+  for (const { staging } of pairs) {
     if (!existsSync(staging)) throw new Error(`cannot commit — staging dir missing: ${staging}`);
-    rmSync(final, { recursive: true, force: true });
-    renameSync(staging, final);
   }
+  const committed = []; // { final, backup, hadOriginal } — for rollback / cleanup
+  try {
+    for (const { staging, final } of pairs) {
+      const backup = `${final}.previous`;
+      rmSync(backup, { recursive: true, force: true });
+      const hadOriginal = existsSync(final);
+      if (hadOriginal) renameSync(final, backup);
+      try {
+        renameSync(staging, final);
+      } catch (err) {
+        // This pair failed — restore its own live tree before unwinding.
+        if (hadOriginal) renameSync(backup, final);
+        throw err;
+      }
+      committed.push({ final, backup, hadOriginal });
+    }
+  } catch (err) {
+    // Roll every already-swapped pair back to the old generation so the group
+    // never ends up split across generations.
+    for (const { final, backup, hadOriginal } of committed.reverse()) {
+      rmSync(final, { recursive: true, force: true });
+      if (hadOriginal) renameSync(backup, final);
+    }
+    throw err;
+  }
+  // Every pair swapped in — only now discard the old generation.
+  for (const { backup } of committed) rmSync(backup, { recursive: true, force: true });
 }

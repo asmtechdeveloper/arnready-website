@@ -81,6 +81,29 @@ describe('commitStaging', () => {
     expect(readFileSync(path.join(finalContent, 'chapter-stats.json'), 'utf8')).toBe('{}');
     // The staging tree was consumed by the rename.
     expect(existsSync(content)).toBe(false);
+    // No rollback backup is left behind after a clean commit.
+    expect(existsSync(`${finalContent}.previous`)).toBe(false);
+  });
+
+  it('commits multiple pairs together and leaves no backups', () => {
+    const finalContent = path.join(work, 'content');
+    const finalLeak = path.join(work, '.leakcheck');
+    mkdirSync(finalContent, { recursive: true });
+    mkdirSync(finalLeak, { recursive: true });
+    writeFileSync(path.join(finalContent, 'old.json'), 'OLD');
+    writeFileSync(path.join(finalLeak, 'old.json'), 'OLD');
+    const { content, leak } = buildValidStage(work);
+
+    commitStaging([
+      { staging: content, final: finalContent },
+      { staging: leak, final: finalLeak },
+    ]);
+
+    expect(existsSync(path.join(finalContent, 'chapter-stats.json'))).toBe(true);
+    expect(existsSync(path.join(finalLeak, 'sampler-manifest.json'))).toBe(true);
+    expect(existsSync(path.join(finalContent, 'old.json'))).toBe(false);
+    expect(existsSync(`${finalContent}.previous`)).toBe(false);
+    expect(existsSync(`${finalLeak}.previous`)).toBe(false);
   });
 
   it('throws if a staging dir is missing rather than deleting the live tree', () => {
@@ -88,7 +111,33 @@ describe('commitStaging', () => {
     mkdirSync(finalContent, { recursive: true });
     writeFileSync(path.join(finalContent, 'keep.json'), 'live');
     expect(() => commitStaging([{ staging: path.join(work, 'nope'), final: finalContent }])).toThrow(/staging dir missing/);
-    // The live tree is untouched because the swap aborted before rm.
+    // The live tree is untouched because the swap aborted before any rename.
     expect(existsSync(path.join(finalContent, 'keep.json'))).toBe(true);
+  });
+
+  it('rolls back every earlier pair to the OLD generation if a later rename fails', () => {
+    // First pair (content) swaps in fine; the second pair's `final` sits under
+    // a parent that does not exist, so its rename throws ENOENT. The whole
+    // group must then revert so content/ and .leakcheck/ never split across
+    // generations.
+    const finalContent = path.join(work, 'content');
+    mkdirSync(finalContent, { recursive: true });
+    writeFileSync(path.join(finalContent, 'gen.txt'), 'OLD');
+
+    const { content, leak } = buildValidStage(work);
+    const brokenFinal = path.join(work, 'ghost-parent', 'leak'); // parent absent → rename fails
+
+    expect(() =>
+      commitStaging([
+        { staging: content, final: finalContent },
+        { staging: leak, final: brokenFinal },
+      ]),
+    ).toThrow();
+
+    // content/ was rolled back to its OLD generation (staged chapter-stats is
+    // gone; the original gen.txt is restored), and no backup leaks.
+    expect(readFileSync(path.join(finalContent, 'gen.txt'), 'utf8')).toBe('OLD');
+    expect(existsSync(path.join(finalContent, 'chapter-stats.json'))).toBe(false);
+    expect(existsSync(`${finalContent}.previous`)).toBe(false);
   });
 });
