@@ -24,6 +24,12 @@ summarize what it did.
 > defect, a concrete failure scenario, and the fix. End with a verdict:
 > APPROVE / APPROVE AFTER FIXES / REJECT. Do not edit any file.
 
+Immediately after returning the verdict, Codex records the complete finding
+list in `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` before any remediation begins.
+The “Do not edit any file” instruction prohibits changes to implementation
+and evidence files during review; it does not prohibit this required update
+to the Codex-owned durable review log.
+
 ## 2. The evidence packet (produced by the executor, per milestone)
 
 `docs/review-packets/M<n>_PACKET.md` must contain:
@@ -154,12 +160,52 @@ model.
 
 ## 6. After the review
 
-Anusha pastes Codex findings into a remediation session (manual §3).
+### 6.1 Durable finding capture — before remediation
+
+Before Anusha sends even the first finding to an implementation executor,
+Codex must write the complete review to
+`docs/ARNREADY_WEBSITE_REVIEW_LOG.md`:
+
+1. Add the review pass and verdict to the review-history table.
+2. Record every BLOCKER, SHOULD-FIX, and NIT with a stable milestone-scoped
+   ID, severity, exact defect, location, status, and required action.
+3. Preserve the exact order in which findings were returned. Never recreate
+   an omitted finding from conversation memory. If original text is missing,
+   mark it `RECOVERY REQUIRED`; that status blocks milestone approval.
+4. Record every finding before marking or verifying any one of them
+   RESOLVED. A partial list is not a valid remediation tracker.
+5. Keep all entries—including resolved ones—until the milestone passes and
+   Anusha signs off. Findings are never deleted to make a milestone appear
+   clean.
+
+The review log is the source of truth during remediation. Chat summaries,
+executor claims, and remembered numbering are not substitutes. Before naming
+the “next finding,” Codex must read its exact ID and text from the log.
+
+### 6.2 One-at-a-time remediation verification
+
+Anusha pastes one logged finding into a remediation session (manual §3).
+After the executor reports a fix, Codex reads that finding from the durable
+log, inspects the actual remediation diff, independently reproduces the
+failure scenario, and reruns gates proportionate to the change. Codex then:
+
+- marks the item RESOLVED only if the defect and regression coverage are
+  independently verified;
+- otherwise leaves it OPEN and records the remaining failure precisely;
+- appends a decision-history row for every status change; and
+- reads the next unresolved item from the log, without skipping ahead to a
+  newly discovered SHOULD-FIX or NIT while an earlier BLOCKER remains.
+
+New findings discovered during remediation are added to the log immediately
+with new stable IDs. They do not overwrite, renumber, or displace the original
+review findings.
+
 BLOCKERs and SHOULD-FIXes are fixed, explicitly deferred, or explicitly
 accepted by Anusha (her call, recorded in the packet's remediation log and
-the durable review log). NITs are batched, accepted, or dropped. Codex
-re-reviews only the remediation diff. Then Anusha approves the milestone and
-the next one may start.
+the durable review log). NITs are batched, accepted, or dropped. Then Anusha
+approves the milestone and the next one may start.
+
+### 6.3 Ownership and write protection
 
 Codex also maintains `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` after every review
 and remediation pass. Every unresolved finding is recorded there. An item may
@@ -175,6 +221,15 @@ commit entries on Codex's behalf. The paste-prompt's "Do not edit any file"
 rule applies to implementation and evidence files during the adversarial
 review; it does not prevent Codex from maintaining its own review log after
 the verdict.
+
+Where the executor is Claude Code, project-local Claude permissions must deny
+editing `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` while still allowing reads.
+This protects ownership at the agent-tool layer without making the file
+operating-system read-only for Anusha or Codex. Claude may describe proposed
+log changes in its remediation packet, but only Codex writes review verdicts
+or statuses.
+
+### 6.4 Milestone closeout
 
 After Anusha explicitly signs off an M-gate, Codex must record that sign-off
 and commit the review-log closeout on `web-product`. That dedicated closeout

@@ -8,7 +8,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { normalizeChapterTeaching, normalizeSubtopicTeaching, type ChapterTeaching, type SubtopicTeaching } from './teaching';
-import { buildCanonicalDeck, type CanonicalDeck, type DeckCard, type RawSectionDoc } from './flashcardDeck';
+import { buildCanonicalDeck, subtopicSlug, type CanonicalDeck, type DeckCard, type RawSectionDoc } from './flashcardDeck';
 
 const CONTENT_DIR = path.resolve(process.cwd(), 'content');
 
@@ -30,15 +30,26 @@ export type ChapterContent = {
   sampler: DeckCard[];
 };
 
-export function loadChapterContent(chapter: number): ChapterContent {
-  const raw = loadRawChapterDocs(chapter);
+/**
+ * Pure composition of a chapter's public content from its raw Firestore doc
+ * array — the fs-free core of loadChapterContent, so the exact sampler
+ * (canonical order + SAMPLER_SIZE slice) and the subtopic join can be pinned
+ * in tests against an app-shaped fixture without a build-time export on disk
+ * (M1-S3). Never throws (all callees are total).
+ */
+export function buildChapterContent(raw: RawSectionDoc[], chapter: number): ChapterContent {
+  const deck = buildCanonicalDeck(raw, chapter);
   return {
     chapter,
     chapterTeaching: normalizeChapterTeaching(raw, chapter),
     subtopicTeachingBySlug: normalizeSubtopicTeaching(raw, chapter),
-    deck: buildCanonicalDeck(raw, chapter),
-    sampler: buildCanonicalDeck(raw, chapter).cards.slice(0, SAMPLER_SIZE),
+    deck,
+    sampler: deck.cards.slice(0, SAMPLER_SIZE),
   };
+}
+
+export function loadChapterContent(chapter: number): ChapterContent {
+  return buildChapterContent(loadRawChapterDocs(chapter), chapter);
 }
 
 /** Chapters eligible for a public hub page: approved chapter teaching exists. */
@@ -54,11 +65,24 @@ export function publishedChapters(): number[] {
  * Ordered list of a chapter's spoke-eligible subtopics (approved subtopic
  * teaching only — manual step 3), in canonical deck order, for the hub's
  * subtopic index and for prev/next navigation on spoke pages.
+ *
+ * M1-S1: teaching is joined to the canonical deck by SLUG identity, not by
+ * display text. A valid teaching label whose capitalization differs from the
+ * flashcard section's label slugifies to the same slug — joining on the raw
+ * display string sorted it to `-1` and gave it zero sampler cards. We walk
+ * the deck sections (already in canonical order) and attach each section's
+ * approved teaching by slug, and expose the DECK section's title as the
+ * display `subtopic`, matching the app contract.
  */
+export function orderPublishedSubtopics(content: ChapterContent): SubtopicTeaching[] {
+  const ordered: SubtopicTeaching[] = [];
+  for (const section of content.deck.sections) {
+    const teaching = content.subtopicTeachingBySlug[subtopicSlug(section.subtopic)];
+    if (teaching) ordered.push({ ...teaching, subtopic: section.subtopic });
+  }
+  return ordered;
+}
+
 export function publishedSubtopics(chapter: number): SubtopicTeaching[] {
-  const content = loadChapterContent(chapter);
-  const order = content.deck.sections.map((s) => s.subtopic);
-  return Object.values(content.subtopicTeachingBySlug).sort(
-    (a, b) => order.indexOf(a.subtopic) - order.indexOf(b.subtopic),
-  );
+  return orderPublishedSubtopics(loadChapterContent(chapter));
 }

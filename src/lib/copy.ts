@@ -422,6 +422,7 @@ export const chapters = {
     cta: { href: '/pricing', label: 'See free vs. premium' },
   },
   hub: {
+    chapterLabel: 'Chapter',
     subtopicsHeading: 'What’s inside this chapter',
     samplerHeading: 'Try 10 flashcards from this chapter',
     signIn: {
@@ -430,16 +431,29 @@ export const chapters = {
       body: 'Sign in (coming soon) to unlock every flashcard, 20 practice questions, and your progress for this chapter.',
     },
     pricingLink: { href: '/pricing', label: 'See what sign-in unlocks' },
+    /** Metadata description — the only Firestore-derived values allowed in the interpolation are the chapter number and its title. */
+    metaDescription: (chapter: number, title: string) =>
+      `Free teaching and sampler flashcards for NISM Series V-A chapter ${chapter}: ${title}.`,
   },
   spoke: {
     titleSuffix: 'NISM Series V-A',
     backToChapter: 'Back to chapter',
     prevLabel: 'Previous',
     nextLabel: 'Next',
-    noCards: 'No sampler cards from this topic yet — check back as more are added.',
+    /** Count-aware sampler heading (M1-S1/S4): a spoke shows only THIS topic's
+     * share of the chapter's 10 sampler cards, which is 1–8, not 10. */
+    samplerHeading: (count: number) => `Try ${count} sampler flashcard${count === 1 ? '' : 's'} from this topic`,
+    /** Truthful zero-share message (M1-S4): a zero share is intentional — the
+     * chapter's 10 sampler cards come from other topics — not a pending upload. */
+    noCards: 'The chapter’s 10 sampler flashcards come from other topics — this one’s cards are in the full deck.',
+    navAriaLabel: 'Subtopic navigation',
+    /** Metadata description — the only Firestore-derived values allowed in the interpolation are the subtopic name and chapter number. */
+    metaDescription: (subtopic: string, chapter: number) =>
+      `${subtopic}: free NISM Series V-A teaching and sampler flashcards, chapter ${chapter}.`,
   },
   breadcrumbs: {
     chaptersLabel: 'Chapters',
+    ariaLabel: 'Breadcrumb',
   },
 };
 

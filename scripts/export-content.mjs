@@ -18,7 +18,10 @@ import { readFileSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { canon, fingerprint } from './lib/canon.mjs';
+import { canon, fieldFingerprints } from './lib/canon.mjs';
+import { computePublicBlobs, partitionFreeFieldFps } from './lib/freeManifestExclusion.mjs';
+import { computeSamplerManifest } from './lib/samplerManifest.mjs';
+import { freshDir, validateStagedExport, commitStaging } from './lib/atomicExport.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const KEY_PATH =
@@ -27,21 +30,27 @@ const KEY_PATH =
 
 const CONTENT_DIR = path.join(ROOT, 'content');
 const LEAK_DIR = path.join(ROOT, '.leakcheck');
+// M1-S6: build into fresh staging trees, validate, then atomically swap them
+// in for the live trees, so a chapter dropped from Firestore leaves no stale
+// approved JSON (and therefore no stale public route) behind.
+const CONTENT_STAGE = path.join(ROOT, 'content.staging');
+const LEAK_STAGE = path.join(ROOT, '.leakcheck.staging');
 
 async function main() {
   const key = JSON.parse(readFileSync(KEY_PATH, 'utf8'));
   initializeApp({ credential: cert(key) });
   const db = getFirestore();
 
-  mkdirSync(path.join(CONTENT_DIR, 'questions'), { recursive: true });
-  mkdirSync(path.join(CONTENT_DIR, 'flashcards'), { recursive: true });
-  mkdirSync(LEAK_DIR, { recursive: true });
+  freshDir(CONTENT_STAGE);
+  freshDir(LEAK_STAGE);
+  mkdirSync(path.join(CONTENT_STAGE, 'questions'), { recursive: true });
+  mkdirSync(path.join(CONTENT_STAGE, 'flashcards'), { recursive: true });
 
   // ── Questions ──────────────────────────────────────────────────────────
   const qSnap = await db.collection('questions').get();
   const freeByChapter = new Map();
   const stats = new Map(); // chapter -> counters
-  const paidManifest = []; // { id, fp } — never committed, never bundled
+  const paidManifest = []; // { id, fps: [...field-level fingerprints] } — never committed, never bundled
 
   qSnap.forEach((doc) => {
     const q = doc.data();
@@ -77,7 +86,7 @@ async function main() {
       });
       freeByChapter.set(ch, list);
     } else {
-      paidManifest.push({ id: q.id, fp: fingerprint(q) });
+      paidManifest.push({ id: q.id, fps: fieldFingerprints(q) });
     }
     stats.set(ch, st);
   });
@@ -90,7 +99,7 @@ async function main() {
     }
     list.sort((a, b) => a.id.localeCompare(b.id));
     writeFileSync(
-      path.join(CONTENT_DIR, 'questions', `ch${String(ch).padStart(2, '0')}.free.json`),
+      path.join(CONTENT_STAGE, 'questions', `ch${String(ch).padStart(2, '0')}.free.json`),
       JSON.stringify(list, null, 1),
     );
   }
@@ -127,7 +136,7 @@ async function main() {
       .reduce((n, d) => n + (d.cards?.length ?? 0), 0);
     flashcardTotals.set(ch, cardCount);
     writeFileSync(
-      path.join(CONTENT_DIR, 'flashcards', `ch${String(ch).padStart(2, '0')}.raw.json`),
+      path.join(CONTENT_STAGE, 'flashcards', `ch${String(ch).padStart(2, '0')}.raw.json`),
       JSON.stringify(rawDocs, null, 1),
     );
   }
@@ -144,59 +153,103 @@ async function main() {
       subtopics: [...st.subtopics].sort(),
     }));
   writeFileSync(
-    path.join(CONTENT_DIR, 'chapter-stats.json'),
+    path.join(CONTENT_STAGE, 'chapter-stats.json'),
     JSON.stringify({ exportedAt: new Date().toISOString(), chapters: chapterStats }, null, 1),
   );
 
-  // A paid fingerprint that already occurs in the exported FREE artefacts is
-  // textually indistinguishable from public content (e.g. a paid variation
-  // sharing its opening with a free seed, or a flashcard quoting the same
-  // rule text). Matching it proves nothing about a paid leak, so it is
-  // excluded from the text scan — the unique-ID check still covers those
-  // questions. Everything else must stay absent from every build artefact.
+  // Approved teaching text + the canonical first-SAMPLER_SIZE sampler ONLY —
+  // the actual "genuinely public" surface (see freeManifestExclusion.mjs's
+  // doc). Used below to scope the paid-fingerprint exclusion for the out/
+  // scan (Blocker 6) and, further down, for the free-question manifest.
+  const publicBlobs = computePublicBlobs(rawByChapter);
+
+  // Paid FIELD fingerprints are scanned against content/ and out/ with
+  // DIFFERENT exclusion rules (Blocker 6) — using one shared exclusion for
+  // both scopes let a paid fingerprint matching card 11+ (legitimately in
+  // content/flashcards' full 732-card raw export, but NEVER in the public
+  // out/ build, which only ever renders the first-10 sampler) get excluded
+  // from the out/ scan too, hiding a real leak of non-public card text.
+  //   - content/ legitimately contains the FULL raw flashcard deck and all
+  //     free questions — a paid fp matching ANY of that is expected, not a
+  //     leak, so its exclusion blob is broad (every exported free artefact).
+  //   - out/ only ever renders approved teaching text and the canonical
+  //     first-10 sampler — its exclusion blob is the narrow `publicBlobs`
+  //     above, the same one the free-question manifest uses.
   const freeBlobs = [];
   for (const sub of ['questions', 'flashcards']) {
-    const dir = path.join(CONTENT_DIR, sub);
+    const dir = path.join(CONTENT_STAGE, sub);
     for (const f of readdirSync(dir)) {
       freeBlobs.push(canon(readFileSync(path.join(dir, f), 'utf8')));
     }
   }
-  const scannable = paidManifest.filter((m) => !freeBlobs.some((b) => b.includes(m.fp)));
-  const excluded = paidManifest.length - scannable.length;
+  const paidFieldFps = paidManifest.flatMap((m) => m.fps);
+  const contentScannablePaidFps = paidFieldFps.filter((fp) => !freeBlobs.some((b) => b.includes(fp)));
+  const publicScannablePaidFps = paidFieldFps.filter((fp) => !publicBlobs.some((b) => b.includes(fp)));
+  const excludedFieldCountContent = paidFieldFps.length - contentScannablePaidFps.length;
+  const excludedFieldCountPublic = paidFieldFps.length - publicScannablePaidFps.length;
 
-  // ALL paid ids stay in the manifest; only indistinguishable fps drop out.
+  // ALL paid ids stay in the manifest; only indistinguishable field fps drop
+  // out, per scope. check-paid-leak.mjs scans content/ with `contentFps` and
+  // out/ with `publicFps`.
   writeFileSync(
-    path.join(LEAK_DIR, 'paid-manifest.json'),
+    path.join(LEAK_STAGE, 'paid-manifest.json'),
     JSON.stringify({
       ids: paidManifest.map((m) => m.id).filter(Boolean),
-      fps: scannable.map((m) => m.fp),
+      contentFps: contentScannablePaidFps,
+      publicFps: publicScannablePaidFps,
     }),
   );
 
   // Free-question manifest: manual §0.6 requires ZERO question text — free
   // or paid — in the public/static export (the free 20 are delivered only
   // to signed-in clients, never SSG'd). check-paid-leak.mjs scans out/ for
-  // these ids/fingerprints exactly as it does for the paid manifest.
-  const freeManifestIds = [];
-  const freeManifestFps = [];
-  for (const list of freeByChapter.values()) {
-    for (const q of list) {
-      freeManifestIds.push(q.id);
-      freeManifestFps.push(fingerprint(q));
-    }
-  }
-  writeFileSync(
-    path.join(LEAK_DIR, 'free-question-manifest.json'),
-    JSON.stringify({ ids: freeManifestIds.filter(Boolean), fps: freeManifestFps }),
+  // these ids/fingerprints exactly as it does for the paid manifest, and
+  // fails closed if this manifest is missing, empty, or malformed (Blocker
+  // 3). Exclusion logic (approved teaching + first-SAMPLER_SIZE sampler
+  // only — see that module's doc for why content/questions and the full
+  // raw flashcard deck are both excluded from the comparison) lives in
+  // scripts/lib/freeManifestExclusion.mjs so it is unit-testable without a
+  // live Firestore credential.
+  const freeManifestIds = [...freeByChapter.values()].flatMap((list) => list.map((q) => q.id));
+  const { scannable: scannableFreeFps, excludedCount: excludedFreeFieldCount } = partitionFreeFieldFps(
+    freeByChapter,
+    publicBlobs,
   );
+
+  writeFileSync(
+    path.join(LEAK_STAGE, 'free-question-manifest.json'),
+    JSON.stringify({ ids: freeManifestIds.filter(Boolean), fps: scannableFreeFps }),
+  );
+
+  // Canonical sampler manifest: the EXACT first-10-canonical-order card ids
+  // each chapter's hub is allowed to render — check-paid-leak.mjs asserts
+  // exact hub equality against this (not just a ≤10 count), so a regression
+  // that renders the WRONG 10 cards (e.g. slice(10, 20)) is still caught.
+  const samplerManifest = computeSamplerManifest(rawByChapter);
+  writeFileSync(path.join(LEAK_STAGE, 'sampler-manifest.json'), JSON.stringify(samplerManifest));
+
+  // M1-S6: the staged trees are complete — validate, then atomically swap
+  // them in for the live trees. Any half-written staging tree throws here and
+  // leaves the previous export untouched; a successful swap discards the old
+  // tree wholesale, so a chapter dropped from Firestore cannot leave a stale
+  // approved .raw.json (and its stale public route) behind.
+  validateStagedExport(CONTENT_STAGE, LEAK_STAGE);
+  commitStaging([
+    { staging: CONTENT_STAGE, final: CONTENT_DIR },
+    { staging: LEAK_STAGE, final: LEAK_DIR },
+  ]);
 
   const freeTotal = [...freeByChapter.values()].reduce((n, l) => n + l.length, 0);
   console.log(
     `Exported ${freeTotal} free questions across ${freeByChapter.size} chapters, ` +
       `${[...flashcardTotals.values()].reduce((a, b) => a + b, 0)} flashcards, ` +
-      `paid manifest: ${scannable.length} text fingerprints (gitignored)` +
-      (excluded > 0
-        ? `; ${excluded} paid question(s) textually indistinguishable from free content — covered by the ID check only.`
+      `paid manifest: ${contentScannablePaidFps.length} content-scope + ${publicScannablePaidFps.length} public-scope field-level text fingerprints (gitignored)` +
+      (excludedFieldCountContent > 0 || excludedFieldCountPublic > 0
+        ? `; ${excludedFieldCountContent} paid field fingerprint(s) indistinguishable from full free content (content/ scope), ${excludedFieldCountPublic} indistinguishable from genuinely public teaching/sampler content (out/ scope) — both covered by the ID check only`
+        : '') +
+      `; free-question manifest: ${scannableFreeFps.length} field-level text fingerprints (gitignored)` +
+      (excludedFreeFieldCount > 0
+        ? `; ${excludedFreeFieldCount} free field fingerprint(s) textually indistinguishable from approved teaching/sampler content — covered by the ID check only.`
         : '.'),
   );
 }

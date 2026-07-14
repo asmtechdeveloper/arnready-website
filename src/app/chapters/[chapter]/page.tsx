@@ -15,13 +15,17 @@ function chapterTitle(chapter: number): string | undefined {
   return syllabus.chapters[chapter - 1];
 }
 
+function chapterFallbackTitle(chapter: number): string {
+  return `${chapters.hub.chapterLabel} ${chapter}`;
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ chapter: string }> }): Promise<Metadata> {
   const { chapter: chapterParam } = await params;
   const chapter = Number(chapterParam);
-  const title = chapterTitle(chapter) ?? `Chapter ${chapter}`;
+  const title = chapterTitle(chapter) ?? chapterFallbackTitle(chapter);
   return {
     title,
-    description: `Free teaching and sampler flashcards for NISM Series V-A chapter ${chapter}: ${title}.`,
+    description: chapters.hub.metaDescription(chapter, title),
     alternates: { canonical: `/chapters/${chapter}` },
   };
 }
@@ -34,21 +38,23 @@ export default async function ChapterHubPage({ params }: { params: Promise<{ cha
   const content = loadChapterContent(chapter);
   if (!content.chapterTeaching) notFound();
 
-  const title = chapterTitle(chapter) ?? `Chapter ${chapter}`;
+  const title = chapterTitle(chapter) ?? chapterFallbackTitle(chapter);
   const subtopics = publishedSubtopics(chapter);
 
   return (
     <div className="mx-auto max-w-reading px-gutter-mobile py-12 sm:px-gutter-desktop">
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-muted">
+      <nav aria-label={chapters.breadcrumbs.ariaLabel} className="mb-4 text-sm text-muted">
         <Link href="/chapters" className="text-purple hover:underline">
           {chapters.breadcrumbs.chaptersLabel}
         </Link>
         <span aria-hidden="true"> / </span>
-        <span>{title}</span>
+        <span aria-current="page">{title}</span>
       </nav>
 
       <header className="mb-8">
-        <p className="text-sm font-bold text-purple">Chapter {chapter}</p>
+        <p className="text-sm font-bold text-purple">
+          {chapters.hub.chapterLabel} {chapter}
+        </p>
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">{title}</h1>
       </header>
 
@@ -85,6 +91,8 @@ export default async function ChapterHubPage({ params }: { params: Promise<{ cha
 
       <div className="mt-12 flex flex-col items-center gap-3 rounded-card bg-purple-soft p-8 text-center">
         <p className="max-w-reading text-[0.95rem] leading-6 text-ink">{chapters.hub.signIn.body}</p>
+        {/* Sign-in is informational only until M3 wires real auth — the
+            page's one functional primary CTA is the pricing link below. */}
         <button
           type="button"
           disabled
@@ -94,7 +102,10 @@ export default async function ChapterHubPage({ params }: { params: Promise<{ cha
         >
           {chapters.hub.signIn.label}
         </button>
-        <Link href={chapters.hub.pricingLink.href} className="text-sm text-purple hover:underline">
+        <Link
+          href={chapters.hub.pricingLink.href}
+          className="mt-2 flex min-h-11 items-center rounded-pill bg-purple px-6 text-sm font-bold text-white hover:bg-purple-dark"
+        >
           {chapters.hub.pricingLink.label}
         </Link>
       </div>

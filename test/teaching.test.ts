@@ -59,9 +59,37 @@ describe('normalizeChapterTeaching', () => {
   it('never throws for null/undefined/garbage input', () => {
     expect(() => normalizeChapterTeaching(null, 1)).not.toThrow();
     expect(() => normalizeChapterTeaching(undefined, 1)).not.toThrow();
-    // @ts-expect-error deliberately malformed fixture
     expect(() => normalizeChapterTeaching([null, 'x', 42, { weird: true }], 1)).not.toThrow();
     expect(normalizeChapterTeaching(null, 1)).toBeNull();
+  });
+
+  it('never throws when rawDocs itself is not an array (malformed Firestore export)', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(() => normalizeChapterTeaching({} as unknown, 1)).not.toThrow();
+    expect(() => normalizeChapterTeaching('not-an-array' as unknown, 1)).not.toThrow();
+    expect(() => normalizeChapterTeaching(42 as unknown, 1)).not.toThrow();
+    expect(normalizeChapterTeaching({} as unknown, 1)).toBeNull();
+    spy.mockRestore();
+  });
+
+  it('never throws when status or chapter is a conversion-poison object ({ toString: null, valueOf: null })', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const poison = { toString: null, valueOf: null };
+    const docBadStatus = validDoc({ status: poison });
+    const docBadChapter = validDoc({ chapter: poison });
+    expect(() => normalizeChapterTeaching([docBadStatus], 1)).not.toThrow();
+    expect(() => normalizeChapterTeaching([docBadChapter], 1)).not.toThrow();
+    expect(normalizeChapterTeaching([docBadStatus], 1)).toBeNull();
+    expect(normalizeChapterTeaching([docBadChapter], 1)).toBeNull();
+    spy.mockRestore();
+  });
+
+  it('never throws when an unsupported block type is a conversion-poison object', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const doc = validDoc({ blocks: [{ type: { toString: null, valueOf: null }, text: 'x' }] });
+    expect(() => normalizeChapterTeaching([doc], 1)).not.toThrow();
+    expect(normalizeChapterTeaching([doc], 1)).toBeNull();
+    spy.mockRestore();
   });
 
   it('rejects a doc when more than one teaching doc is present', () => {
@@ -155,6 +183,25 @@ describe('normalizeSubtopicTeaching', () => {
     });
     const raw = [doc, subtopicDoc('Savings vs Investments')];
     expect(normalizeSubtopicTeaching(raw, 1)).toEqual({});
+  });
+
+  it('never throws when rawDocs itself is not an array (malformed Firestore export)', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const doc = validDoc({ subtopics: validSubtopics });
+    expect(() => normalizeSubtopicTeaching(doc, 1)).not.toThrow();
+    expect(() => normalizeSubtopicTeaching('not-an-array', 1)).not.toThrow();
+    expect(normalizeSubtopicTeaching('not-an-array', 1)).toEqual({});
+    spy.mockRestore();
+  });
+
+  it('never throws and skips an entry whose status is a conversion-poison object', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const poison = { toString: null, valueOf: null };
+    const doc = validDoc({ subtopics: [{ ...validSubtopics[0], status: poison }] });
+    const raw = [doc, subtopicDoc('Savings vs Investments')];
+    expect(() => normalizeSubtopicTeaching(raw, 1)).not.toThrow();
+    expect(normalizeSubtopicTeaching(raw, 1)).toEqual({});
+    spy.mockRestore();
   });
 
   it('never throws for a malformed subtopics array (not an array)', () => {

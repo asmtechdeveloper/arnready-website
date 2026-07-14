@@ -14,11 +14,15 @@ next-env.d.ts
 
 # Paid-ID manifest for the leak gate — derived, never committed
 .leakcheck/
+# Staging tree for the atomic export swap (M1-S6) — transient, never committed
+.leakcheck.staging/
 
 # Build-time Firestore export (free content only) — derived, regenerate with
 # `npm run export-content`. Firestore is the single content source (locked);
 # content is never duplicated in this repo.
 content/
+# Staging tree for the atomic export swap (M1-S6) — transient, never committed
+content.staging/
 
 # Superseded static scaffold moved here from the app repo (10 Jul cleanup).
 # Kept on disk for the README step-5 consolidation, but NEVER committed:

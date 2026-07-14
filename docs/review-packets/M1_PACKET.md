@@ -25,7 +25,8 @@ truncation/collision and HTML-entity-normalization gaps by extracting a
 shared, entity-decoding `canon()`/`fingerprint()` module used by both
 `export-content.mjs` and `check-paid-leak.mjs`.
 
-**Full changed-file list** (`git status --porcelain` at the final commit):
+**Changed-file list — M1 initial commit** (the files M1 introduced,
+relative to the 13 Jul reset):
 
 ```
  M firebase.json
@@ -54,6 +55,60 @@ shared, entity-decoding `canon()`/`fingerprint()` module used by both
 ?? test/teaching.test.ts
 ```
 
+**Additional changed files — M1-r remediation** (B1–B10, then S1–S6/N1;
+`git status --porcelain` on top of the M1 commit, excluding gitignored
+build artefacts `content/`, `.leakcheck/`, `out/` and their `*.staging`
+trees). The concurrent M2 planning doc in the working tree is intentionally
+NOT part of this commit:
+
+```
+ M .gitignore
+ M docs/ARNREADY_WEBSITE_REVIEW_LOG.md
+ M docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md
+ M docs/review-packets/M1_PACKET.md
+ M firebase.json
+ M scripts/check-paid-leak.mjs
+ M scripts/export-content.mjs
+ M scripts/lib/canon.mjs
+ M src/app/chapters/[chapter]/[subtopic]/page.tsx
+ M src/app/chapters/[chapter]/page.tsx
+ M src/lib/content.ts
+ M src/lib/copy.ts
+ M src/lib/flashcardDeck.ts
+ M src/lib/flashcardOrder.ts
+ M src/lib/teaching.ts
+ M test/check-paid-leak.test.ts
+ M test/firebase-redirects.test.ts
+ M test/flashcardDeck.test.ts
+ M test/sitemap.test.ts
+ M test/teaching.test.ts
+?? docs/codex-reviews/M1_INITIAL_REVIEW.md
+?? scripts/lib/atomicExport.mjs
+?? scripts/lib/atomicExport.d.mts
+?? scripts/lib/canon.d.mts
+?? scripts/lib/canonicalDeck.mjs
+?? scripts/lib/canonicalDeck.d.mts
+?? scripts/lib/freeManifestExclusion.mjs
+?? scripts/lib/freeManifestExclusion.d.mts
+?? scripts/lib/publicTeachingText.mjs
+?? scripts/lib/publicTeachingText.d.mts
+?? scripts/lib/samplerManifest.mjs
+?? scripts/lib/samplerManifest.d.mts
+?? scripts/lib/teachingNormalize.mjs
+?? scripts/lib/teachingNormalize.d.mts
+?? src/lib/flashcardOrder.json
+?? test/atomicExport.test.ts
+?? test/canon.test.ts
+?? test/canonicalDeck.test.ts
+?? test/content.test.ts
+?? test/flashcardSamplerLeakGate.test.tsx
+?? test/freeManifestExclusion.test.ts
+?? test/primaryCta.test.tsx
+?? test/samplerManifest.test.ts
+?? test/signInPlacement.test.tsx
+?? test/spokeNavIcons.test.tsx
+```
+
 No `firestore.rules`, app-repo `functions/`, scoring constant, or `/app/*`
 route was touched. No new npm dependency was added.
 
@@ -79,36 +134,81 @@ tsc: 0 errors
 
 ### Test (`npm test` — vitest run, full suite)
 
+This packet's original figures (10 files / 60 tests) were captured at the
+first M1 commit, before the M1-r remediation round (10 BLOCKERs B1–B10, then
+six SHOULD-FIXes S1–S6 and one NIT N1) added significant new test coverage.
+The counts below are from the current tree, run in both required states —
+see M1-r's remediation log (§7) for what changed and why.
+
+**Clean pre-build state — `content/` absent, matching the §3 gate order
+(lint → typecheck → test, BEFORE `export-content`/`build` ever runs):**
+
 ```
- Test Files  10 passed (10)
-      Tests  60 passed (60)
+ Test Files  17 passed | 3 skipped (20)
+      Tests  163 passed | 6 skipped (169)
 ```
 
-10 new tests in `test/teaching.test.ts`, 8 in `test/flashcardDeck.test.ts`,
-7 new in `test/check-paid-leak.test.ts` (11 total in that file), 3 in
-`test/sitemap.test.ts`, 1 in `test/firebase-redirects.test.ts` — on top of
-the 23 existing M0 tests, all still passing unmodified except
-`test/check-paid-leak.test.ts` (extended, not altered — see §4). Expected
+The 3 skipped files/6 skipped tests are `test/signInPlacement.test.tsx`,
+`test/primaryCta.test.tsx`, and `test/spokeNavIcons.test.tsx` (2 tests
+each) — each renders a full Server Component page against real teaching
+content and is intentionally scoped to run only after a live export exists
+(`skipIf(!hasContent)`, matching the pre-existing `test/sitemap.test.ts`
+pattern this milestone was built on). `test/sitemap.test.ts` itself is
+**no longer** one of these three (M1-B10): it now mocks `@/lib/content`
+with a deterministic fixture and its 8 tests always run, content or not.
+
+**Content-present state — after `npm run export-content` (real Firestore),
+retained as supplementary evidence, not the primary gate:**
+
+```
+ Test Files  20 passed (20)
+      Tests  169 passed (169)
+```
+
+`test/sitemap.test.ts`: 8 tests (was 3 at the original commit) — exact
+46-route fixture assertion (10 static + 12 hubs + 24 fixture spokes),
+explicit total-count check, per-hub and per-spoke presence checks, the
+retired-`/questions`-route and no-duplicate-URL checks, and two tests
+proving the exact-match technique itself fails on a missing or an extra
+route. `test/teaching.test.ts` (24), `test/flashcardDeck.test.ts` (19 —
++4 in M1-r for S2 non-array/conversion-poison totality and the S3 all-12
+canonical-order-parity assertion), `test/content.test.ts` (4 — new in
+M1-r: the S3 exact canonical first-ten id/front pinning through the
+loader's real composition and the S1 slug-join), `test/atomicExport.test.ts`
+(6 — new in M1-r: the S6 stage/validate/atomic-swap helper),
+`test/canonicalDeck.test.ts` (3), `test/canon.test.ts` (12),
+`test/freeManifestExclusion.test.ts` (19), `test/samplerManifest.test.ts`
+(7), `test/firebase-redirects.test.ts` (14 — +13 in M1-r: every legacy
+`/chapter-N` destination for S5), `test/flashcardSamplerLeakGate
+.test.tsx` (3), `test/signInPlacement.test.tsx` (2), `test/primaryCta
+.test.tsx` (2), `test/spokeNavIcons.test.tsx` (2), and
+`test/check-paid-leak.test.ts` (26, extended repeatedly through the
+remediation round, never altered to hide a failure — see §7). Expected
 `PAID-CONTENT LEAK GATE FAILED` diagnostics appear on stderr from the
-deliberately-failing fixture cases in `test/check-paid-leak.test.ts` (both
-the pre-existing paid-content cases and the new free-question/entity/
-sampler-budget cases) — this is intentional output from passing tests
-asserting the gate fails closed, not a problem.
+deliberately-failing fixture cases across several of these files — this is
+intentional output from passing tests asserting the gate fails closed, not
+a problem.
 
 ### Build (`npm run build`, live Firestore, real service-account export)
 
+Re-run on the M1-r tree (the paid/free manifests are field-level since B2,
+so the fingerprint counts are higher than the original commit's single
+concatenated-field counts; the leak-gate wording is B4's exact-canonical-
+sampler assertion, not the original "≤10 cards" phrasing):
+
 ```
 > npm run export-content
-Exported 240 free questions across 12 chapters, 732 flashcards, paid manifest: 4596 text fingerprints (gitignored).
+Exported 240 free questions across 12 chapters, 732 flashcards, paid manifest: 21458 content-scope + 21772 public-scope field-level text fingerprints (gitignored); 410 paid field fingerprint(s) indistinguishable from full free content (content/ scope), 96 indistinguishable from genuinely public teaching/sampler content (out/ scope) — both covered by the ID check only; free-question manifest: 1158 field-level text fingerprints (gitignored); 13 free field fingerprint(s) textually indistinguishable from approved teaching/sampler content — covered by the ID check only.
 
 > npm run check-paid-leak (prebuild)
-Paid-content leak gate PASSED — 25 artefact(s) scanned against 4596 paid ids + 4596 text fingerprints; exported question files structurally free-only; zero questions and ≤10 sampler cards/chapter confirmed in the public export.
+Paid-content leak gate PASSED — 25 artefact(s) scanned against 4596 paid ids + 21458 content-scope/21772 public-scope text fingerprints; exported question files structurally free-only; zero questions and an exact canonical flashcard sampler confirmed in the public export.
 
 > next build
-✓ Compiled successfully in 1993ms
+▲ Next.js 16.2.10 (Turbopack)
+✓ Compiled successfully in 1780ms
   Running TypeScript ...
-  Finished TypeScript in 1646ms ...
-✓ Generating static pages using 9 workers (195/195) in 526ms
+  Finished TypeScript in 1755ms ...
+✓ Generating static pages using 9 workers (195/195) in 565ms
 
 Route (app)
 ┌ ○ /
@@ -128,7 +228,7 @@ Route (app)
 └ ○ /syllabus
 
 > npm run check-paid-leak (postbuild, scans the real out/)
-Paid-content leak gate PASSED — 1927 artefact(s) scanned against 4596 paid ids + 4596 text fingerprints; exported question files structurally free-only; zero questions and ≤10 sampler cards/chapter confirmed in the public export.
+Paid-content leak gate PASSED — 1927 artefact(s) scanned against 4596 paid ids + 21458 content-scope/21772 public-scope text fingerprints; exported question files structurally free-only; zero questions and an exact canonical flashcard sampler confirmed in the public export.
 ```
 
 ### Manual leak-gate spot checks against the real `out/`
@@ -179,11 +279,10 @@ approved `docs/review-packets/screenshots/M0/home-375.png`.
   `{number}-{kebab-slug}` scheme. `firebase.json` already contained 12
   pre-existing legacy redirects (`/chapter-1.html` → `/chapters/1-
   investment-landscape`, etc.) from before the 13 Jul repo reset, targeting
-  a slug scheme this milestone does not implement. Those redirects were
-  already dangling (no source implemented them before this milestone
-  either) and are left untouched — flagged in §5 as a limitation for
-  Anusha's decision rather than guessed at, since no canon doc specifies
-  the intended slug format.
+  a slug scheme this milestone does not implement. At the initial M1 commit
+  these were left untouched and flagged for Anusha; **M1-r (S5) repoints
+  them to the numeric hub route (`/chapters/N`)** so old bookmarks and
+  indexed URLs 301 to a real page — see §5 and §7.
 - **Nested dynamic-route static params required a new `layout.tsx`** at
   `src/app/chapters/[chapter]/`. Next.js only propagates a parent dynamic
   segment's `generateStaticParams` to a nested child route
@@ -211,13 +310,13 @@ approved `docs/review-packets/screenshots/M0/home-375.png`.
 
 ## 5. Known limitations
 
-- The 12 pre-existing `/chapter-N.html` → `/chapters/N-slug` redirects in
-  `firebase.json` (predating this milestone) now point at chapter-hub URLs
-  that don't exist under this milestone's numeric scheme. They were already
-  broken before M1 (no hub existed at all); M1 doesn't make this worse, but
-  doesn't fix it either. Anusha decision needed: adopt the old slug scheme,
-  update the redirects to the numeric scheme, or leave for M8's release
-  audit.
+- The 12 pre-existing `/chapter-N.html` legacy redirects in `firebase.json`
+  previously pointed at a `/chapters/N-slug` scheme this milestone never
+  implemented, so every one 301'd to a 404. **Resolved in M1-r (S5):** they
+  now redirect to the numeric hub route that exists (`/chapters/N`), pinned
+  by `test/firebase-redirects.test.ts`. This adopts the numeric scheme the
+  hub pages actually use; if Anusha later prefers a slugged hub URL scheme,
+  that is an M8 release-audit decision, not an M1 gap.
 - M0-D1 (paid-fingerprint truncation/collision, HTML-entity normalization
   gaps) is resolved as part of this milestone's leak-gate extension — see
   `scripts/lib/canon.mjs`'s module doc and `test/check-paid-leak.test.ts`'s
@@ -239,5 +338,92 @@ gates did not surface:
    at 375px (long unbreakable subtopic-name links in a `justify-between`
    flex row overflowed the viewport) — fixed by stacking prev/next
    vertically below the `sm:` breakpoint with `min-w-0 break-words`.
+
+## 7. Remediation log (M1-r)
+
+Codex's initial M1 review (archived verbatim at
+`docs/codex-reviews/M1_INITIAL_REVIEW.md`) returned ten BLOCKERs, six
+SHOULD-FIXes, and one NIT. Each was fixed exactly as scoped; no scope was
+expanded. All §0.11 gates are green in both required states (§2): clean
+pre-build `lint`/`typecheck`/`test` (163 passed / 6 skipped), the live
+Firestore `export-content` → prebuild leak gate → `next build` (195 pages:
+12 hubs + 169 spokes) → postbuild leak gate (1,927 artefacts).
+
+### BLOCKERs B1–B10 — RESOLVED and independently Codex-verified
+
+B1–B10 were remediated and each independently verified RESOLVED by Codex in
+named targeted passes before this round; the exact verification text lives in
+`docs/ARNREADY_WEBSITE_REVIEW_LOG.md` (M1 remediation tracker + decision
+history), not here. This round did not touch that work, and re-running the
+full suite plus the live build/leak gates on the current tree confirms no
+regression: the field-level fingerprint gate (B2), fail-closed free manifest
+(B3), exact-canonical-sampler assertion (B4), status/entitlement deck
+exclusion (B5), spoke sign-in placement (B6), centralized copy (B7),
+functional primary CTA (B8), text-only nav (B9), and deterministic sitemap
+fixture (B10) all still pass.
+
+### SHOULD-FIXes and NIT fixed in this round
+
+- **S1 — teaching↔deck join by slug identity.** `publishedSubtopics`
+  previously ordered teaching by matching the teaching **display string**
+  against the deck's display strings (`order.indexOf(a.subtopic)`), so a
+  valid label differing only in capitalization landed at `-1` and got zero
+  cards; the spoke likewise filtered its sampler share by display-string
+  equality. Now `src/lib/content.ts` walks the canonical deck sections (in
+  order) and attaches each section's approved teaching by **slug**
+  (`subtopicSlug(section.subtopic)`), exposing the **deck** section's title
+  as the display `subtopic` (app contract). The spoke filters its share by
+  `subtopicSlug(c.subtopic) === entry.subtopicSlug`. The pure composition was
+  split out as `buildChapterContent`/`orderPublishedSubtopics` so it is
+  testable without an on-disk export. Covered by `test/content.test.ts`
+  (case-mismatched labels resolve, in canonical order, with the deck title
+  and a non-empty share).
+- **S2 — deck helper totality.** `scripts/lib/canonicalDeck.mjs` now guards a
+  non-array root (`Array.isArray(rawSections) ? … : []`) and routes every
+  subtopic coercion — in `subtopicSlug`, `orderSections`, the not-public
+  diagnostic, and section mapping — through a total `safeString` that returns
+  `''` for conversion-poison values (`{toString:null,valueOf:null}`) instead
+  of throwing. A single malformed Firestore doc can no longer abort the whole
+  static build. Covered by four new `test/flashcardDeck.test.ts` cases
+  (non-array roots; poison subtopic; poison `subtopicSlug`).
+- **S3 — exact sampler pinning + all-chapter order parity.**
+  `test/content.test.ts` pins the exact canonical first-ten card **ids and
+  fronts** through the loader's real composition (`buildChapterContent`,
+  which applies the same canonical order + `SAMPLER_SIZE` slice
+  `loadChapterContent` uses). `test/flashcardDeck.test.ts` adds an all-12
+  parity assertion: each chapter's canonical subtopics, fed in reversed
+  input order, must be restored to `flashcardOrder.json`'s order — a
+  card/section reversal in any chapter now fails.
+- **S4 — count-aware spoke copy + truthful zero-share message.** The spoke
+  no longer reuses the hub's "Try 10 flashcards from this chapter"; it uses
+  `chapters.spoke.samplerHeading(count)` → "Try N sampler flashcard(s) from
+  this topic" (verified in the built HTML: "Try 3…", "Try 7…"). The
+  zero-share message is now truthful — "The chapter's 10 sampler flashcards
+  come from other topics — this one's cards are in the full deck." — instead
+  of implying a pending upload. The hub still shows "Try 10 flashcards from
+  this chapter".
+- **S5 — legacy redirects land on real routes.** The 12 `/chapter-N`
+  redirects in `firebase.json` now target `/chapters/N` (the numeric hub
+  route that exists) instead of the never-implemented `/chapters/N-slug`
+  scheme. `test/firebase-redirects.test.ts` asserts every one of the 12
+  destinations and that no chapter redirect points at a slugged scheme.
+- **S6 — atomic export replacement.** `scripts/export-content.mjs` now builds
+  the whole export into fresh `content.staging/` + `.leakcheck.staging/`
+  trees, calls `validateStagedExport` (requires the questions/flashcards
+  dirs, chapter-stats, and all three manifests), then `commitStaging`
+  discards the old live trees and renames staging into place — so a chapter
+  dropped from Firestore leaves no stale `.raw.json` (and no stale public
+  route) behind. The stage/validate/swap helpers live in
+  `scripts/lib/atomicExport.mjs` (unit-testable without a credential) and are
+  covered by `test/atomicExport.test.ts` (fresh dir, missing-manifest reject,
+  wholesale replacement of a vanished chapter, abort-without-deleting on a
+  missing staging dir). Verified live: the export run left no `*.staging`
+  dirs and produced 12 chapter files. The staging dirs are gitignored.
+- **N1 — active breadcrumb crumb.** The terminal breadcrumb on both the hub
+  and the spoke now carries `aria-current="page"` (verified in the built
+  HTML for `/chapters/1` and a spoke).
+
+No `firestore.rules`, app-repo `functions/`, scoring constant, `/app/*`
+route, or new npm dependency was touched in this round.
 
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*
