@@ -57,9 +57,9 @@ relative to the 13 Jul reset):
 
 **Additional changed files — M1-r remediation** (B1–B10, then S1–S6/N1;
 `git status --porcelain` on top of the M1 commit, excluding gitignored
-build artefacts `content/`, `.leakcheck/`, `out/` and their `*.staging`
-trees). The concurrent M2 planning doc in the working tree is intentionally
-NOT part of this commit:
+build artefacts — the `content/`/`.leakcheck/` symlinks, their `.export/`
+generation store, and `out/`). The concurrent M2 planning doc in the working
+tree is intentionally NOT part of this commit:
 
 ```
  M .gitignore
@@ -154,7 +154,7 @@ see M1-r's remediation log (§7) for what changed and why.
 
 ```
  Test Files  18 passed | 3 skipped (21)
-      Tests  171 passed | 6 skipped (177)
+      Tests  170 passed | 6 skipped (176)
 ```
 
 The 3 skipped files/6 skipped tests are `test/signInPlacement.test.tsx`,
@@ -171,7 +171,7 @@ retained as supplementary evidence, not the primary gate:**
 
 ```
  Test Files  21 passed (21)
-      Tests  177 passed (177)
+      Tests  176 passed (176)
 ```
 
 `test/sitemap.test.ts`: 8 tests (was 3 at the original commit) — exact
@@ -184,8 +184,8 @@ route. `test/teaching.test.ts` (24), `test/flashcardDeck.test.ts` (19 —
 canonical-order-parity assertion), `test/content.test.ts` (4 — new in
 M1-r: the S3 exact canonical first-ten id/front pinning through the
 loader's real composition and the S1 slug-join), `test/atomicExport.test.ts`
-(8 — new in M1-r: the S6 stage/validate/atomic-swap helper, incl. the
-re-review round's multi-pair transactional rollback), `test/multiScan.test.ts`
+(7 — new in M1-r: the S6 stage/validate/publish helper, incl. the
+second re-review round's single-pointer atomic publish), `test/multiScan.test.ts`
 (6 — new in the re-review round: the Rabin–Karp leak-gate scanner that
 replaced the ~90s per-pattern sweep), `test/canonicalDeck.test.ts` (3),
 `test/canon.test.ts` (12),
@@ -424,26 +424,22 @@ fixture (B10) all still pass.
   route that exists) instead of the never-implemented `/chapters/N-slug`
   scheme. `test/firebase-redirects.test.ts` asserts every one of the 12
   destinations and that no chapter redirect points at a slugged scheme.
-- **S6 — atomic export replacement.** `scripts/export-content.mjs` now builds
-  the whole export into fresh `content.staging/` + `.leakcheck.staging/`
-  trees, calls `validateStagedExport` (requires the questions/flashcards
-  dirs, chapter-stats, and all three manifests), then `commitStaging`
-  discards the old live trees and renames staging into place — so a chapter
-  dropped from Firestore leaves no stale `.raw.json` (and no stale public
-  route) behind. The stage/validate/swap helpers live in
-  `scripts/lib/atomicExport.mjs` (unit-testable without a credential) and are
-  covered by `test/atomicExport.test.ts` (fresh dir, missing-manifest reject,
-  wholesale replacement of a vanished chapter, abort-without-deleting on a
-  missing staging dir). Verified live: the export run left no `*.staging`
-  dirs and produced 12 chapter files. The staging dirs are gitignored.
+- **S6 — atomic export replacement.** `scripts/export-content.mjs` builds the
+  whole export into an inactive generation slot, validates it, then makes it
+  live so a chapter dropped from Firestore leaves no stale `.raw.json` (and no
+  stale public route) behind. The publish mechanism was hardened across two
+  re-review rounds and its final, crash-safe form is described under
+  **Re-review round 2** below; the helpers live in
+  `scripts/lib/atomicExport.mjs` (unit-testable without a credential), covered
+  by `test/atomicExport.test.ts`.
 - **N1 — active breadcrumb crumb.** The terminal breadcrumb on both the hub
   and the spoke now carries `aria-current="page"` (verified in the built
   HTML for `/chapters/1` and a spoke).
 
-### Re-review round (Codex REJECT of the first M1-r commit)
+### Re-review round 1 (Codex REJECT of the first M1-r commit)
 
 Codex re-reviewed the first M1-r commit and raised one BLOCKER and one
-SHOULD-FIX; both are fixed here.
+SHOULD-FIX.
 
 - **BLOCKER — leak gate did not complete reliably.** After B2 made the paid
   manifest field-level, the gate scanned ~1,900 artefacts against ~21.5k/21.8k
@@ -465,22 +461,54 @@ SHOULD-FIX; both are fixed here.
   and `test/multiScan.test.ts` (6) pins scanner correctness incl. start/end
   matches, mixed-length patterns, hash-collision rejection, and a 5,000-pattern
   / ~270k-char large-input case that would be intractable for the old scan.
-- **SHOULD-FIX — `commitStaging` was not truly atomic.** The first version
-  deleted each live directory before renaming its replacement, so an
-  interrupted or failed rename could leave `content/` missing, or leave
-  `content/` and `.leakcheck/` from different generations. `commitStaging` is
-  now transactional: each swap moves the live tree aside to a `.previous`
-  backup first (a directory rename cannot land on an existing directory in one
-  syscall); the old generation is deleted **only after every pair swaps in**;
-  and if any rename throws, every already-swapped pair is rolled back to its
-  backup before rethrowing — so the export trees are always entirely the new
-  generation or entirely the old one, never split and never missing. Covered by
-  two added `test/atomicExport.test.ts` cases (multi-pair commit leaves no
-  backups; a later-pair rename failure rolls the earlier pair back to the old
-  generation). The `.previous` backups are gitignored. Verified live: a full
-  build left no `*.staging` or `*.previous` dirs.
+- **SHOULD-FIX (round-1 attempt, superseded) — `commitStaging` atomicity.**
+  The original version deleted each live directory before renaming its
+  replacement. Round 1 made `commitStaging` transactional against *thrown*
+  errors — move each live tree to a `.previous` backup, swap staging in, delete
+  backups only after all pairs succeed, roll back on any exception. Codex's
+  round-2 re-review correctly found this still not crash-safe: two independent
+  directory renames can never be one atomic unit, so a `SIGKILL` between them
+  can still leave `content/` missing or the two trees from different
+  generations. Fully resolved in round 2 below.
+
+### Re-review round 2 (Codex APPROVE AFTER FIXES of `9b759e3`)
+
+Codex confirmed the leak-gate BLOCKER resolved (lint, typecheck, all tests,
+live build with both leak scans over 1,927 artefacts) and left one SHOULD-FIX.
+
+- **SHOULD-FIX — export publish is now atomic against a crash.** Per Codex's
+  preferred option (“publish both trees beneath one versioned parent and
+  atomically switch a single pointer”), both reader trees are now published
+  under ONE generation directory and made live by switching a single symlink:
+
+  ```
+  content     -> .export/current/content
+  .leakcheck  -> .export/current/leakcheck
+  .export/current -> genA | genB          (the only thing that ever switches)
+  ```
+
+  `export-content` builds the whole export into the inactive slot
+  (`stageGeneration`), validates it (`validateStagedGeneration`), then calls
+  `publishGeneration`, whose ONLY publish step is a single `rename()` of a new
+  symlink onto `.export/current` — POSIX-atomic, so BOTH `content/` and
+  `.leakcheck/` switch generations together in one step. A crash before the
+  rename leaves the previous generation fully live; a crash after it leaves the
+  new one fully live. There is no window where the trees are mixed or missing,
+  so no recovery pass is needed. Generations ping-pong between two slots (at
+  most current + one previous on disk; the previous is a free rollback point).
+  The reader code (`src/lib/content.ts`, `scripts/check-paid-leak.mjs`) is
+  unchanged — it still reads `content/` and `.leakcheck/`, now symlinks that
+  Node follows transparently. Covered by 7 `test/atomicExport.test.ts` cases
+  (genA-first + inactive-slot ping-pong that never disturbs the live tree;
+  validate accept/reject; both trees resolve to the new gen through one
+  pointer; both switch together on the next publish; a failed/invalid new gen
+  leaves the previous one fully live; one-time migration of a pre-existing real
+  `content/` directory into the symlink layout). Verified live: `npm run
+  export-content` migrated the existing real `content/`/`.leakcheck/` into the
+  symlink layout; `npm run build` re-published (current → genB) with both leak
+  gates passing and 195 pages generated. `.export/` is gitignored.
 
 No `firestore.rules`, app-repo `functions/`, scoring constant, `/app/*`
-route, or new npm dependency was touched in either M1-r round.
+route, or new npm dependency was touched in any M1-r round.
 
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*

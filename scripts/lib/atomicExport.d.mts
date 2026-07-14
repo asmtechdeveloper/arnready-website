@@ -1,3 +1,9 @@
-export declare function freshDir(dir: string): string;
-export declare function validateStagedExport(contentStage: string, leakStage: string): void;
-export declare function commitStaging(pairs: { staging: string; final: string }[]): void;
+export declare const EXPORT_BASENAME: string;
+export declare function stageGeneration(exportDir: string): {
+  slot: string;
+  genDir: string;
+  contentDir: string;
+  leakDir: string;
+};
+export declare function validateStagedGeneration(contentDir: string, leakDir: string): void;
+export declare function publishGeneration(root: string, exportDir: string, slot: string): void;

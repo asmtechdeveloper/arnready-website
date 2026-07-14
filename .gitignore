@@ -12,21 +12,16 @@ next-env.d.ts
 .env.*
 !.env.example
 
-# Paid-ID manifest for the leak gate — derived, never committed
-.leakcheck/
-# Staging + rollback-backup trees for the atomic export swap (M1-S6) —
-# transient, never committed
-.leakcheck.staging/
-.leakcheck.previous/
-
 # Build-time Firestore export (free content only) — derived, regenerate with
 # `npm run export-content`. Firestore is the single content source (locked);
-# content is never duplicated in this repo.
-content/
-# Staging + rollback-backup trees for the atomic export swap (M1-S6) —
-# transient, never committed
-content.staging/
-content.previous/
+# content is never duplicated in this repo. `content` and `.leakcheck` are
+# symlinks that resolve through .export/current (M1-S6 atomic publish); the
+# generation store `.export/` holds the actual trees. All derived, never
+# committed. Patterns are root-anchored with NO trailing slash so they match
+# the symlinks (files), not only directories.
+/content
+/.leakcheck
+/.export
 
 # Superseded static scaffold moved here from the app repo (10 Jul cleanup).
 # Kept on disk for the README step-5 consolidation, but NEVER committed:

@@ -1,143 +1,124 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync, lstatSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { freshDir, validateStagedExport, commitStaging } from '../scripts/lib/atomicExport.mjs';
+import { stageGeneration, validateStagedGeneration, publishGeneration } from '../scripts/lib/atomicExport.mjs';
 
 /**
- * M1-S6: unit coverage for the atomic export-tree swap without a live
- * Firestore credential — the export script builds into a staging tree,
- * validates it, and only then replaces the live tree wholesale, so a chapter
- * dropped from Firestore cannot leave a stale approved .raw.json behind.
+ * M1-S6 (re-review hardening): the export publishes content/ and .leakcheck/
+ * under one generation dir and goes live via a SINGLE atomic pointer switch,
+ * so the two reader trees can never be from different generations or missing.
+ * These cover slot selection, validate-before-publish, that both trees switch
+ * together through one `current`, that a failed/invalid new generation leaves
+ * the previous one fully live, and the one-time migration of a pre-existing
+ * real content/ directory into the symlink layout.
  */
-let work: string;
+let root: string;
+let exportDir: string;
 
-/** Build a complete, valid staged export tree under `root`. */
-function buildValidStage(root: string) {
-  const content = path.join(root, 'content.staging');
-  const leak = path.join(root, '.leakcheck.staging');
-  mkdirSync(path.join(content, 'questions'), { recursive: true });
-  mkdirSync(path.join(content, 'flashcards'), { recursive: true });
-  writeFileSync(path.join(content, 'questions', 'ch01.free.json'), '[]');
-  writeFileSync(path.join(content, 'flashcards', 'ch01.raw.json'), '[]');
-  writeFileSync(path.join(content, 'chapter-stats.json'), '{}');
-  mkdirSync(leak, { recursive: true });
-  writeFileSync(path.join(leak, 'paid-manifest.json'), '{}');
-  writeFileSync(path.join(leak, 'free-question-manifest.json'), '{}');
-  writeFileSync(path.join(leak, 'sampler-manifest.json'), '{}');
-  return { content, leak };
+type Stage = ReturnType<typeof stageGeneration>;
+
+/** Write a complete, valid generation tagged so we can tell generations apart. */
+function fillGen(stage: Stage, tag: string) {
+  writeFileSync(path.join(stage.contentDir, 'questions', 'ch01.free.json'), '[]');
+  writeFileSync(path.join(stage.contentDir, 'flashcards', 'ch01.raw.json'), JSON.stringify([tag]));
+  writeFileSync(path.join(stage.contentDir, 'chapter-stats.json'), JSON.stringify({ tag }));
+  writeFileSync(path.join(stage.leakDir, 'paid-manifest.json'), JSON.stringify({ tag }));
+  writeFileSync(path.join(stage.leakDir, 'free-question-manifest.json'), '{}');
+  writeFileSync(path.join(stage.leakDir, 'sampler-manifest.json'), '{}');
 }
 
+function publishValid(tag: string): Stage {
+  const stage = stageGeneration(exportDir);
+  fillGen(stage, tag);
+  validateStagedGeneration(stage.contentDir, stage.leakDir);
+  publishGeneration(root, exportDir, stage.slot);
+  return stage;
+}
+
+const liveTag = (tree: 'content' | '.leakcheck') => {
+  const file = tree === 'content' ? 'chapter-stats.json' : 'paid-manifest.json';
+  return JSON.parse(readFileSync(path.join(root, tree, file), 'utf8')).tag;
+};
+
 beforeEach(() => {
-  work = mkdtempSync(path.join(tmpdir(), 'arnready-atomic-'));
+  root = mkdtempSync(path.join(tmpdir(), 'arnready-atomic-'));
+  exportDir = path.join(root, '.export');
 });
 afterEach(() => {
-  rmSync(work, { recursive: true, force: true });
+  rmSync(root, { recursive: true, force: true });
 });
 
-describe('freshDir', () => {
-  it('clears a leftover directory and recreates it empty', () => {
-    const dir = path.join(work, 'stage');
-    mkdirSync(dir, { recursive: true });
-    writeFileSync(path.join(dir, 'leftover.json'), 'stale');
-    freshDir(dir);
-    expect(existsSync(dir)).toBe(true);
-    expect(readdirSync(dir)).toEqual([]);
-  });
-});
-
-describe('validateStagedExport', () => {
-  it('accepts a complete staged tree', () => {
-    const { content, leak } = buildValidStage(work);
-    expect(() => validateStagedExport(content, leak)).not.toThrow();
+describe('stageGeneration', () => {
+  it('builds into genA first, with empty content/leakcheck subtrees', () => {
+    const s = stageGeneration(exportDir);
+    expect(s.slot).toBe('genA');
+    expect(existsSync(path.join(s.contentDir, 'questions'))).toBe(true);
+    expect(existsSync(path.join(s.contentDir, 'flashcards'))).toBe(true);
+    expect(existsSync(s.leakDir)).toBe(true);
   });
 
-  it('throws when a required manifest is missing', () => {
-    const { content, leak } = buildValidStage(work);
-    rmSync(path.join(leak, 'sampler-manifest.json'));
-    expect(() => validateStagedExport(content, leak)).toThrow(/sampler manifest/);
-  });
-
-  it('throws when the flashcards directory is empty', () => {
-    const { content, leak } = buildValidStage(work);
-    rmSync(path.join(content, 'flashcards', 'ch01.raw.json'));
-    expect(() => validateStagedExport(content, leak)).toThrow(/flashcards/);
+  it('ping-pongs to the INACTIVE slot and never disturbs the live generation', () => {
+    publishValid('gen1'); // genA is now live
+    const s2 = stageGeneration(exportDir);
+    expect(s2.slot).toBe('genB');
+    // Staging genB left the live content/ (gen1, in genA) fully readable.
+    expect(liveTag('content')).toBe('gen1');
+    expect(liveTag('.leakcheck')).toBe('gen1');
   });
 });
 
-describe('commitStaging', () => {
-  it('replaces the live tree wholesale, discarding stale files', () => {
-    // A live tree that still holds a chapter (ch99) which vanished from the
-    // new export — it must NOT survive the swap.
-    const finalContent = path.join(work, 'content');
-    mkdirSync(path.join(finalContent, 'flashcards'), { recursive: true });
-    writeFileSync(path.join(finalContent, 'flashcards', 'ch99.raw.json'), 'STALE');
+describe('validateStagedGeneration', () => {
+  it('accepts a complete generation and rejects a missing manifest', () => {
+    const s = stageGeneration(exportDir);
+    fillGen(s, 'x');
+    expect(() => validateStagedGeneration(s.contentDir, s.leakDir)).not.toThrow();
+    rmSync(path.join(s.leakDir, 'sampler-manifest.json'));
+    expect(() => validateStagedGeneration(s.contentDir, s.leakDir)).toThrow(/sampler manifest/);
+  });
+});
 
-    const { content } = buildValidStage(work);
-    commitStaging([{ staging: content, final: finalContent }]);
-
-    expect(existsSync(path.join(finalContent, 'flashcards', 'ch99.raw.json'))).toBe(false);
-    expect(existsSync(path.join(finalContent, 'flashcards', 'ch01.raw.json'))).toBe(true);
-    expect(readFileSync(path.join(finalContent, 'chapter-stats.json'), 'utf8')).toBe('{}');
-    // The staging tree was consumed by the rename.
-    expect(existsSync(content)).toBe(false);
-    // No rollback backup is left behind after a clean commit.
-    expect(existsSync(`${finalContent}.previous`)).toBe(false);
+describe('publishGeneration', () => {
+  it('publishes both trees via symlinks that resolve to the new generation', () => {
+    publishValid('gen1');
+    expect(lstatSync(path.join(root, 'content')).isSymbolicLink()).toBe(true);
+    expect(lstatSync(path.join(root, '.leakcheck')).isSymbolicLink()).toBe(true);
+    expect(liveTag('content')).toBe('gen1');
+    expect(liveTag('.leakcheck')).toBe('gen1');
   });
 
-  it('commits multiple pairs together and leaves no backups', () => {
-    const finalContent = path.join(work, 'content');
-    const finalLeak = path.join(work, '.leakcheck');
-    mkdirSync(finalContent, { recursive: true });
-    mkdirSync(finalLeak, { recursive: true });
-    writeFileSync(path.join(finalContent, 'old.json'), 'OLD');
-    writeFileSync(path.join(finalLeak, 'old.json'), 'OLD');
-    const { content, leak } = buildValidStage(work);
-
-    commitStaging([
-      { staging: content, final: finalContent },
-      { staging: leak, final: finalLeak },
-    ]);
-
-    expect(existsSync(path.join(finalContent, 'chapter-stats.json'))).toBe(true);
-    expect(existsSync(path.join(finalLeak, 'sampler-manifest.json'))).toBe(true);
-    expect(existsSync(path.join(finalContent, 'old.json'))).toBe(false);
-    expect(existsSync(`${finalContent}.previous`)).toBe(false);
-    expect(existsSync(`${finalLeak}.previous`)).toBe(false);
+  it('switches BOTH trees to the new generation together on the next publish', () => {
+    publishValid('gen1');
+    publishValid('gen2');
+    // A single pointer switch moved content/ AND .leakcheck/ to gen2 at once —
+    // never a mix of gen1/gen2 across the two trees.
+    expect(liveTag('content')).toBe('gen2');
+    expect(liveTag('.leakcheck')).toBe('gen2');
   });
 
-  it('throws if a staging dir is missing rather than deleting the live tree', () => {
-    const finalContent = path.join(work, 'content');
-    mkdirSync(finalContent, { recursive: true });
-    writeFileSync(path.join(finalContent, 'keep.json'), 'live');
-    expect(() => commitStaging([{ staging: path.join(work, 'nope'), final: finalContent }])).toThrow(/staging dir missing/);
-    // The live tree is untouched because the swap aborted before any rename.
-    expect(existsSync(path.join(finalContent, 'keep.json'))).toBe(true);
+  it('leaves the previous generation fully live if the new one fails validation', () => {
+    publishValid('gen1');
+    const bad = stageGeneration(exportDir); // genB
+    // A half-written generation: everything except the sampler manifest.
+    writeFileSync(path.join(bad.contentDir, 'questions', 'ch01.free.json'), '[]');
+    writeFileSync(path.join(bad.contentDir, 'flashcards', 'ch01.raw.json'), '["gen2"]');
+    writeFileSync(path.join(bad.contentDir, 'chapter-stats.json'), JSON.stringify({ tag: 'gen2' }));
+    writeFileSync(path.join(bad.leakDir, 'paid-manifest.json'), JSON.stringify({ tag: 'gen2' }));
+    writeFileSync(path.join(bad.leakDir, 'free-question-manifest.json'), '{}');
+
+    expect(() => validateStagedGeneration(bad.contentDir, bad.leakDir)).toThrow();
+    // publishGeneration is NOT reached — content/ and .leakcheck/ still gen1.
+    expect(liveTag('content')).toBe('gen1');
+    expect(liveTag('.leakcheck')).toBe('gen1');
   });
 
-  it('rolls back every earlier pair to the OLD generation if a later rename fails', () => {
-    // First pair (content) swaps in fine; the second pair's `final` sits under
-    // a parent that does not exist, so its rename throws ENOENT. The whole
-    // group must then revert so content/ and .leakcheck/ never split across
-    // generations.
-    const finalContent = path.join(work, 'content');
-    mkdirSync(finalContent, { recursive: true });
-    writeFileSync(path.join(finalContent, 'gen.txt'), 'OLD');
-
-    const { content, leak } = buildValidStage(work);
-    const brokenFinal = path.join(work, 'ghost-parent', 'leak'); // parent absent → rename fails
-
-    expect(() =>
-      commitStaging([
-        { staging: content, final: finalContent },
-        { staging: leak, final: brokenFinal },
-      ]),
-    ).toThrow();
-
-    // content/ was rolled back to its OLD generation (staged chapter-stats is
-    // gone; the original gen.txt is restored), and no backup leaks.
-    expect(readFileSync(path.join(finalContent, 'gen.txt'), 'utf8')).toBe('OLD');
-    expect(existsSync(path.join(finalContent, 'chapter-stats.json'))).toBe(false);
-    expect(existsSync(`${finalContent}.previous`)).toBe(false);
+  it('migrates a pre-existing real content/ directory into the symlink layout', () => {
+    // Simulate the one-time transition from the old real-directory export.
+    mkdirSync(path.join(root, 'content'), { recursive: true });
+    writeFileSync(path.join(root, 'content', 'stale.json'), 'OLD-REAL-DIR');
+    publishValid('gen1');
+    expect(lstatSync(path.join(root, 'content')).isSymbolicLink()).toBe(true);
+    expect(existsSync(path.join(root, 'content', 'stale.json'))).toBe(false);
+    expect(liveTag('content')).toBe('gen1');
   });
 });

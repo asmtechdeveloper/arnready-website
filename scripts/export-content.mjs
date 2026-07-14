@@ -14,37 +14,37 @@
  * Credentials: the service account key stays OUTSIDE this repo (app repo's
  * scripts/ workspace). Override with ARNREADY_SA_KEY=/path/to/key.json.
  */
-import { readFileSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { canon, fieldFingerprints } from './lib/canon.mjs';
 import { computePublicBlobs, partitionFreeFieldFps } from './lib/freeManifestExclusion.mjs';
 import { computeSamplerManifest } from './lib/samplerManifest.mjs';
-import { freshDir, validateStagedExport, commitStaging } from './lib/atomicExport.mjs';
+import { EXPORT_BASENAME, stageGeneration, validateStagedGeneration, publishGeneration } from './lib/atomicExport.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const KEY_PATH =
   process.env.ARNREADY_SA_KEY ??
   path.resolve(ROOT, '../ARNReady-App/scripts/serviceAccountKey.json');
 
-const CONTENT_DIR = path.join(ROOT, 'content');
-const LEAK_DIR = path.join(ROOT, '.leakcheck');
-// M1-S6: build into fresh staging trees, validate, then atomically swap them
-// in for the live trees, so a chapter dropped from Firestore leaves no stale
-// approved JSON (and therefore no stale public route) behind.
-const CONTENT_STAGE = path.join(ROOT, 'content.staging');
-const LEAK_STAGE = path.join(ROOT, '.leakcheck.staging');
+// M1-S6 (re-review hardening): both the content/ SSG source and the
+// .leakcheck/ manifests are published UNDER ONE generation directory and made
+// live by switching a single .export/current pointer atomically, so the two
+// reader trees can never end up from different generations or be left missing
+// on a crash — see scripts/lib/atomicExport.mjs.
+const EXPORT_DIR = path.join(ROOT, EXPORT_BASENAME);
 
 async function main() {
   const key = JSON.parse(readFileSync(KEY_PATH, 'utf8'));
   initializeApp({ credential: cert(key) });
   const db = getFirestore();
 
-  freshDir(CONTENT_STAGE);
-  freshDir(LEAK_STAGE);
-  mkdirSync(path.join(CONTENT_STAGE, 'questions'), { recursive: true });
-  mkdirSync(path.join(CONTENT_STAGE, 'flashcards'), { recursive: true });
+  // Build into the inactive generation slot; the live generation is untouched
+  // until the single atomic publish at the end succeeds.
+  const stage = stageGeneration(EXPORT_DIR);
+  const CONTENT_STAGE = stage.contentDir;
+  const LEAK_STAGE = stage.leakDir;
 
   // ── Questions ──────────────────────────────────────────────────────────
   const qSnap = await db.collection('questions').get();
@@ -228,16 +228,14 @@ async function main() {
   const samplerManifest = computeSamplerManifest(rawByChapter);
   writeFileSync(path.join(LEAK_STAGE, 'sampler-manifest.json'), JSON.stringify(samplerManifest));
 
-  // M1-S6: the staged trees are complete — validate, then atomically swap
-  // them in for the live trees. Any half-written staging tree throws here and
-  // leaves the previous export untouched; a successful swap discards the old
-  // tree wholesale, so a chapter dropped from Firestore cannot leave a stale
+  // M1-S6: the staged generation is complete — validate it, then publish it
+  // with a SINGLE atomic pointer switch (both content/ and .leakcheck/ go live
+  // together, or not at all). A half-written generation throws here and leaves
+  // the previous export fully live; a published generation replaces it
+  // wholesale, so a chapter dropped from Firestore cannot leave a stale
   // approved .raw.json (and its stale public route) behind.
-  validateStagedExport(CONTENT_STAGE, LEAK_STAGE);
-  commitStaging([
-    { staging: CONTENT_STAGE, final: CONTENT_DIR },
-    { staging: LEAK_STAGE, final: LEAK_DIR },
-  ]);
+  validateStagedGeneration(stage.contentDir, stage.leakDir);
+  publishGeneration(ROOT, EXPORT_DIR, stage.slot);
 
   const freeTotal = [...freeByChapter.values()].reduce((n, l) => n + l.length, 0);
   console.log(
