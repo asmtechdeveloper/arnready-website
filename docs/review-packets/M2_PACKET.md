@@ -188,4 +188,83 @@ changed feeds the export.
   practice once-at-Q11 simulation + totality; the optional live cross-repo parity
   test passed locally (app repo present). All green (§2).
 
+---
+
+## 8. M2-r remediation log
+
+Addresses the three M2 initial-review BLOCKERs (`b34f341`, verdict REJECT) per
+Anusha's decisions of 2026-07-15.
+
+**Additional changed files in M2-r** (beyond §1):
+- `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` — dated scope amendment under M2
+  and M3 (B1).
+- `test/canvasBackground.test.ts` — canvas-never-white regression (B3).
+- `docs/review-packets/M2_PACKET.md` — this remediation log.
+This section supersedes §5's build caveat.
+
+### M2-B1 — client-product wiring absent → RESOLVED by scope re-sequence (Anusha, 2026-07-15)
+The live `/app` render sites for the M2 machinery are **re-sequenced to M3**,
+recorded as a dated scope amendment in the manual under both M2 and M3. Rationale:
+those render sites require auth (M3) and question/flashcard data (M3+), and
+building them now would force question-shaped text into the static export,
+violating §0.6 ("zero questions in the export, ever"). M2's delivered scope is the
+machinery — `<PremiumNudge>`, `<UpgradeWall>`, `src/lib/nudgeGates.ts` + app-parity
+fixtures, screenshots. The render-site wiring (practice Q11, exam pre-start,
+flashcard 15/30/45, the free-user Q21+ deep-link → wall unbypassable, mock-results
+pitch) and its tests are now **M3 acceptance items** — the M2 forward-obligations
+(§6) already scoped them there. No code change; the decision layer + components are
+ready for M3 to consume verbatim.
+
+### M2-B2 — full `npm run build` not reproduced → RESOLVED with credentialed build
+Run from the final M2-r tree with the Firestore service-account key at the export
+script's default path (`../ARNReady-App/scripts/serviceAccountKey.json`; the
+build's prebuild is plain `node` and reads that key file directly, not
+`.env.local`). Full lifecycle green — live Firestore pull, both leak gates, and
+the 195-page static export:
+
+```
+$ npm run build
+> prebuild → export-content
+Exported 240 free questions across 12 chapters, 732 flashcards, paid manifest:
+21458 content-scope + 21772 public-scope field-level text fingerprints …
+> prebuild → check-paid-leak
+Paid-content leak gate PASSED — 1927 artefact(s) scanned … zero questions and an
+exact canonical flashcard sampler confirmed in the public export.
+> next build
+✓ Compiled successfully in 1979ms
+✓ Generating static pages using 9 workers (195/195) in 545ms
+> postbuild → check-paid-leak
+Paid-content leak gate PASSED — 1927 artefact(s) scanned … zero questions and an
+exact canonical flashcard sampler confirmed in the public export.
+```
+This supersedes §5 (which noted the build could not run in the original session).
+
+### M2-B3 — cards use `bg-white` → engaged on merit; rule pinned correctly, components unchanged (Anusha, 2026-07-15)
+`bg-white` is a **theme token** (`white: '#FFFFFF'` in `src/styles/tokens.ts`; the
+raw-hex guard passes) and is the card-surface pattern used by **every signed-off
+M0/M1 card**: `src/components/ContentCard.tsx:16`,
+`src/components/FlashcardSampler.tsx:17`, the chapter hub/spoke, pricing, faq,
+homepage, syllabus — all `rounded-card bg-white shadow-card`, all Codex-approved in
+M0/M1. The design document §4.1 states explicitly: "White is allowed for cards and
+contained surfaces, not as the page canvas." The manual §0.7 "never white" governs
+the page **canvas**, which is `#F5F5F0` via `src/app/globals.css`
+(`body { @apply bg-bg … }`). `<PremiumNudge>` and `<UpgradeWall>` match this
+sanctioned pattern exactly; changing only them would make them the *only* non-white
+cards in the product — a visual regression, not a fix.
+
+The underlying concern (a white page canvas) is legitimate and is now pinned by
+`test/canvasBackground.test.ts`: the canvas `bg` token is distinct from white, and
+neither `globals.css` nor the root layout `<body>` paints the canvas white. If
+Codex maintains that white *cards* violate the manual, that is a product-wide
+question touching all M0/M1 cards and is Anusha's to adjudicate — not a unilateral
+M2-only change.
+
+### Gates after M2-r (non-build)
+```
+$ npm run typecheck   → clean
+$ npm run lint        → clean (eslint 0 warnings; raw-hex guard PASSED)
+$ npm test            → 996 passed (25→26 files; +3 canvasBackground)
+```
+Full `npm run build` + leak gate: see M2-B2 above.
+
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*

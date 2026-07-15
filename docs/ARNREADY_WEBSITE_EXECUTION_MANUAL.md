@@ -180,6 +180,21 @@ cards/chapter and zero question text (paste the leak-gate output);
 screenshots of one hub + one spoke at 375px and 1440px.
 
 ### M2 [SONNET] — Nudge component + free-gate wiring in the client product
+
+> **Scope amendment (Anusha, 2026-07-15, resolving M2 Codex finding M2-B1):**
+> M2 delivers the nudge/gate MACHINERY only — the `<PremiumNudge>` and
+> `<UpgradeWall>` components, the pure `src/lib/nudgeGates.ts` decision layer
+> with app-parity fixtures, and the screenshots. The **live `/app` render
+> sites** for that machinery — the "live in /app" goal plus steps 3–4's
+> render behavior (practice Q11 nudge, exam pre-start, flashcard 15/30/45, the
+> free-user Q21+ deep-link→wall unbypassable behavior, and the mock-results
+> premium pitch) — are **re-sequenced to M3**, because they require auth (M3)
+> and question/flashcard data (M3+) and would otherwise force question-shaped
+> text into the static export, violating §0.6. M2's acceptance is met by the
+> machinery + fixtures + screenshots below; the render-site wiring and its
+> tests move to M3's acceptance. The component/decision-layer specs in the
+> steps below still govern what M2 builds.
+
 **Goal:** the §1 free-tier rhythm live in `/app` practice, exam, flashcards.
 **Steps:**
 1. One shared `<PremiumNudge>` component: Arnie, WORKING copy per the nudge
@@ -198,6 +213,16 @@ screenshots of one hub + one spoke at 375px and 1440px.
 screenshots of all four nudge points + the wall.
 
 ### M3 [ANUSHA + OPUS] — Firebase Web App + auth/entitlement integration
+
+> **Scope amendment (Anusha, 2026-07-15):** M3 additionally owns the live
+> `/app` wiring re-sequenced from M2 — render the M2 machinery at real render
+> sites once auth + data exist: practice Q11 nudge, exam pre-start nudge,
+> flashcard 15/30/45 nudges, the free-user Q21+ deep-link → `<UpgradeWall>`
+> (unbypassable client-side), and the mock-results premium pitch; plus wiring
+> tests asserting NO nudge renders on mock runs, the mistakes deck, or for
+> paid users. Consume `src/lib/nudgeGates.ts` and the M2 components verbatim;
+> never re-derive gate logic.
+
 **Anusha first:** register the Firebase Web App in the console (same
 project as the app), hand the config to the session. No rules changes.
 **Opus then:** wire Google sign-in end-to-end; entitlement store mirroring
