@@ -510,3 +510,57 @@ export const nismSeriesVA = {
   },
   cta: { href: '/syllabus', label: 'See the full syllabus' },
 };
+
+// ── Premium nudges + upgrade wall (manual §1 nudge law) ──────────────────
+// WORKING until Anusha's voice pass. Every string pitches what premium ADDS,
+// never relief from the nudge itself (the web is ad-free — there is nothing to
+// remove). Dual CTA until M7 ships web checkout.
+export const nudge = {
+  // Interim: "Get the app" points at /pricing until the Play listing URL lands.
+  getApp: { href: '/pricing', label: 'Get the app' }, // [ANUSHA: Play Store listing URL]
+  webSoon: { label: 'Web checkout — coming soon' },   // informational, non-functional
+
+  practice: {
+    mood: 'checks-in' as const,
+    title: 'You’re flying through these.',
+    body: 'The free set runs to 20 questions per chapter. Premium opens every question beyond them — plus unlimited mock tests and the full mistakes engine, on the app today and the web soon.',
+    continue: 'Keep practising',
+  },
+
+  exam: {
+    mood: 'setting-the-scene' as const,
+    title: 'One honest run, coming up.',
+    body: 'This exam uses your 20 free questions for the chapter and won’t interrupt you once it starts. Premium adds the complete question bank, unlimited mocks, and full answer review — on the app today, the web soon.',
+    continue: 'Start the exam',
+  },
+
+  // Three variants, shown at distinct reveals 15 / 30 / 45 (rotation = gatesShownThisRun).
+  // Distinct copy each time honors "the same nudge never fires twice per run".
+  flashcard: {
+    mood: 'makes-it-stick' as const,
+    continue: 'Keep flipping',
+    variants: [
+      {
+        title: 'Fifteen cards deep.',
+        body: 'The full deck is yours, free forever. Premium is for the exam side — every practice question past 20, unlimited mocks, and full answer review. On the app now, the web soon.',
+      },
+      {
+        title: 'Thirty, and still going.',
+        body: 'Flashcards stay free. When you’re ready to test yourself hard, premium opens the complete question bank and unlimited mock tests — app today, web soon.',
+      },
+      {
+        title: 'Forty-five. That’s real work.',
+        body: 'Every card is free. Premium adds the full mistakes engine and unlimited mocks, so the testing keeps up with your recall — app today, web soon.',
+      },
+    ],
+  },
+};
+
+// ── Q21+ upgrade wall (hard boundary, not a nudge) ───────────────────────
+export const upgradeWall = {
+  mood: 'proud' as const,
+  title: 'That’s all 20 free questions for this chapter.',
+  body: 'You’ve used the full free practice set. Premium opens every remaining question in this chapter — and every chapter — plus unlimited mock tests and full answer review. On the app today; web checkout is coming soon.',
+  primaryCta: { href: '/pricing', label: 'See premium' },
+  backToChapter: 'Back to the chapter', // href built by the caller from returnTo
+};

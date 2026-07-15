@@ -1,0 +1,3678 @@
+{
+  "meta": {
+    "generatedBy": "scripts/gen-nudge-golden.mjs",
+    "provenance": "Practice rule re-stated verbatim from ../ARNReady-App/services/quizEngine.ts:100-108 (gateBeforeQuestion, ad->nudge mapping per M2 plan D1). Wall/exam/flashcard rules cite ../ARNReady-App/documents/adgate-logic.md + M2 plan D2-D4. See file header comments for the full citations. Not a live cross-repo import — see header note."
+  },
+  "practice": [
+    {
+      "nextIndex": 0,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 0,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 0,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 0,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 0,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 0,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": "nudge"
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": true,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": true,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": true,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": false,
+      "nudgesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": false,
+      "nudgesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": false,
+      "nudgesShownThisRun": 2,
+      "expected": null
+    }
+  ],
+  "wall": [
+    {
+      "nextIndex": 0,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 0,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 1,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 2,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 3,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 4,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 5,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 6,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 7,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 8,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 9,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 10,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 11,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 12,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 13,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 14,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 15,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 16,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 17,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 18,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 19,
+      "isPaid": false,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 20,
+      "isPaid": false,
+      "expected": "wall"
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 21,
+      "isPaid": false,
+      "expected": "wall"
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 22,
+      "isPaid": false,
+      "expected": "wall"
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 23,
+      "isPaid": false,
+      "expected": "wall"
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 24,
+      "isPaid": false,
+      "expected": "wall"
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": true,
+      "expected": null
+    },
+    {
+      "nextIndex": 25,
+      "isPaid": false,
+      "expected": "wall"
+    }
+  ],
+  "exam": [
+    {
+      "isPaid": true,
+      "nudgeShown": true,
+      "expected": null
+    },
+    {
+      "isPaid": true,
+      "nudgeShown": false,
+      "expected": null
+    },
+    {
+      "isPaid": false,
+      "nudgeShown": true,
+      "expected": null
+    },
+    {
+      "isPaid": false,
+      "nudgeShown": false,
+      "expected": "nudge"
+    }
+  ],
+  "flashcard": [
+    {
+      "distinctReveals": 0,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 0,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 1,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 2,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 3,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 4,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 5,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 6,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 7,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 8,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 9,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 10,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 11,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 12,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 13,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 14,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 15,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 16,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 17,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 18,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 19,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 20,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 21,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 22,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 23,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 24,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 25,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 26,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 27,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 28,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 29,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 30,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 31,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 32,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 33,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 34,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 35,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 36,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 37,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 38,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 39,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 40,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 41,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 42,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 43,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 44,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": "nudge"
+    },
+    {
+      "distinctReveals": 45,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 46,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 47,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 48,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 49,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": true,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": true,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": true,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": true,
+      "gatesShownThisRun": 3,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": false,
+      "gatesShownThisRun": 0,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": false,
+      "gatesShownThisRun": 1,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": false,
+      "gatesShownThisRun": 2,
+      "expected": null
+    },
+    {
+      "distinctReveals": 50,
+      "isPaid": false,
+      "gatesShownThisRun": 3,
+      "expected": null
+    }
+  ]
+}
