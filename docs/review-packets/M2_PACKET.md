@@ -192,8 +192,8 @@ changed feeds the export.
 
 ## 8. M2-r remediation log
 
-Addresses the three M2 initial-review BLOCKERs (`b34f341`, verdict REJECT) per
-Anusha's decisions of 2026-07-15.
+Addresses the three M2 initial-review BLOCKERs (`b34f341`, verdict REJECT) and the
+follow-up re-review SHOULD-FIX M2-R1, per Anusha's decisions of 2026-07-15.
 
 **Additional changed files in M2-r** (beyond §1):
 - `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` — dated scope amendment under M2
@@ -202,7 +202,12 @@ Anusha's decisions of 2026-07-15.
 - `docs/review-packets/M2_PACKET.md` — this remediation log.
 This section supersedes §5's build caveat.
 
-### M2-B1 — client-product wiring absent → RESOLVED by scope re-sequence (Anusha, 2026-07-15)
+### M2-B1 — client-product wiring absent → DEFERRED to M3 (Anusha decision, 2026-07-15)
+**Status: DEFERRED to M3 — not RESOLVED.** Nothing was implemented in M2 to satisfy
+B1; the scope was moved to a named later milestone, which per the review-log status
+rules is DEFERRED, recorded with its target milestone, rationale, and decision date.
+**Target milestone:** M3. **Decision date:** 2026-07-15 (Anusha). **Rationale:** below.
+
 The live `/app` render sites for the M2 machinery are **re-sequenced to M3**,
 recorded as a dated scope amendment in the manual under both M2 and M3. Rationale:
 those render sites require auth (M3) and question/flashcard data (M3+), and
@@ -258,6 +263,15 @@ neither `globals.css` nor the root layout `<body>` paints the canvas white. If
 Codex maintains that white *cards* violate the manual, that is a product-wide
 question touching all M0/M1 cards and is Anusha's to adjudicate — not a unilateral
 M2-only change.
+
+### M2-R1 (SHOULD-FIX, 2026-07-15 re-review) — packet mislabeled B1 as RESOLVED → corrected
+Codex's M2-r re-review resolved B2 and B3 (the design document permits white cards;
+the cream rule governs the page canvas), and logged M2-R1: this packet's B1 heading
+read "RESOLVED by scope re-sequence" when a scope item moved to a named later
+milestone is **DEFERRED**, not RESOLVED. Corrected above — the B1 subsection now
+reads "DEFERRED to M3" and records the target milestone, rationale, and decision
+date per the review-log status rules. No code or gate change; documentation only
+(commit `M2-r2`).
 
 ### Gates after M2-r (non-build)
 ```
