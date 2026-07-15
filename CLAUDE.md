@@ -95,16 +95,18 @@ copy ships WORKING until her voice pass; public copy passes the E-1 and
 E-2 reviews (`docs/ARNREADY_WEBSITE_PROMPT_LIBRARY.md`). Every public page:
 exactly one primary CTA + the footer disclaimer.
 
-## Working arrangement (13 Jul 2026)
+## Working arrangement (updated 16 Jul 2026 — Opus orchestrates every milestone)
 
-- **Sonnet executes** milestones marked [SONNET] in the manual — one
-  milestone per session, exactly as specified, honoring the stop
-  conditions.
-- **Opus executes** milestones marked [OPUS]: auth/entitlement integration,
-  the progress-parity port, Razorpay. High-stakes work must land before
-  6 Aug 2026 (subscription end).
-- **Codex reviews every milestone** per the review protocol; the executor
-  produces an evidence packet in `docs/review-packets/`.
+- **Opus orchestrates EVERY milestone.** No milestone is handed to Sonnet
+  directly (that model produced too many defects across M0/M1). For **[SONNET]**
+  milestones Opus decomposes the work into atomic steps and drives Sonnet
+  SUBAGENTS one step at a time, reviewing each diff and re-running the gates
+  before the next. For **[OPUS]** milestones (auth/entitlement M3, progress-
+  parity M4, Razorpay M7) Opus executes directly and decides per task whether to
+  delegate mechanical sub-parts to subagents; the sensitive core stays in Opus's
+  hands. High-stakes work must land before 6 Aug 2026 (subscription end).
+- **Codex reviews every milestone** per the review protocol; the orchestrator
+  (Opus) produces the evidence packet in `docs/review-packets/`.
 - **Anusha** owns approvals, voice, secrets, deploys, and all product
   decisions. Ask her before anything architectural the manual doesn't
   already decide.

@@ -6,11 +6,28 @@ the IA doc, or the old next-work-plan, THIS FILE WINS. It was written by
 Fable as a handoff: the executing model (Sonnet/Opus) follows it exactly and
 does not re-litigate decisions recorded here.
 
-**Who does what:**
-- **Sonnet** executes milestones marked [SONNET]. Wiring, pages, components.
-- **Opus** executes milestones marked [OPUS]. Auth, entitlement, progress
-  parity, Razorpay. Sonnet must STOP and tell Anusha to open an Opus session
-  if a task drifts into [OPUS] territory.
+**Who does what** (execution model updated by Anusha, 2026-07-16 — supersedes
+the original "Sonnet executes [SONNET] milestones directly" split):
+
+> **Why the change:** M0 and M1 were handed to Sonnet directly and produced a
+> heavy defect load (M1 alone cost a full day of remediation). M2 ran under
+> Opus orchestration with Sonnet subagents and Opus-led remediation, and went
+> far cleaner. Anusha's decision: Opus orchestrates every milestone; Sonnet is
+> never handed a whole milestone directly again.
+
+- **Opus orchestrates EVERY milestone** — owns the plan, the decomposition into
+  atomic decision-free steps, the per-step diff review, and the §0.11 gates.
+- **[SONNET] milestones** (wiring, pages, components): Opus orchestrates and
+  delegates the mechanical build to **Sonnet SUBAGENTS**, one atomic step per
+  subagent, reviewing each diff and re-running the gates before releasing the
+  next. Sonnet never receives a whole milestone.
+- **[OPUS] milestones** (auth/entitlement M3, progress parity M4, Razorpay M7):
+  Opus executes directly; its orchestrator layer decides per task whether to
+  hand mechanical sub-parts to Sonnet subagents or work single-threaded. The
+  sensitive core — entitlement, payment, Firestore write-shapes — stays in
+  Opus's own hands.
+- The `[SONNET]`/`[OPUS]` tags on the milestones below now denote execution
+  STYLE under this model, not a direct hand-off to that model.
 - **Codex** reviews every milestone per `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md`.
 - **Anusha** approves each milestone, owns voice/copy, secrets, deploys.
 
@@ -293,9 +310,14 @@ explicit go, as its own approval.
 
 ## 3. Session prompts for Anusha (paste verbatim)
 
-**Sonnet milestone session:**
+**Milestone session (Opus orchestrator; paste to start a milestone):**
 > Read `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` in full, then CLAUDE.md
-> and the design document. Execute Milestone M<n> EXACTLY as written —
+> and the design document. Orchestrate Milestone M<n> per the "Who does what" model: for a [SONNET]
+> milestone drive Sonnet SUBAGENTS one atomic step at a time, reviewing each
+> diff and re-running the §0.11 gates before the next; for an [OPUS] milestone
+> execute directly, delegating mechanical sub-parts to subagents at your
+> discretion and keeping the sensitive core in your own hands, following the
+> milestone spec exactly —
 > respect every global rule in §0, especially the stop conditions. When
 > done, run all §0.11 gates, commit as `M<n>: <summary>` on `web-product`,
 > and produce the evidence packet defined in
@@ -304,7 +326,7 @@ explicit go, as its own approval.
 
 **Codex review session:** see the review protocol §1 for its paste-prompt.
 
-**Remediation session (after Codex review):**
+**Remediation session (Opus orchestrator, after Codex review):**
 > Read the manual, then `docs/review-packets/M<n>_PACKET.md` and the Codex
 > findings I paste below. Fix every finding marked BLOCKER and SHOULD-FIX
 > exactly as scoped; do not expand scope. Re-run all gates, amend the
