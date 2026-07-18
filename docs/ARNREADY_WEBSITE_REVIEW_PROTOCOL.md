@@ -40,7 +40,7 @@ to the Codex-owned durable review log.
 4. Deviations: anything done differently from the manual and why (empty
    section = claim of zero deviations — Codex verifies this claim).
 5. Known limitations + anything deferred.
-6. For fixture-test milestones (M2/M4/M5): the fixture files and both-side
+6. For fixture-test milestones (M2/M4/M5/M6): the fixture files and both-side
    outputs.
 
 ## 3. Generic checks (every review, in this order)
@@ -116,7 +116,22 @@ to the Codex-owned durable review log.
 - Single write site: no other web module writes progress/sessions/mistakes
   (grep for collection names across `src/`).
 
-**M5 (mock/mistakes/progress):**
+**M5 (signed-in study surfaces):**
+- Question/flashcard delivery is signed-in RUNTIME only — grep the static
+  export for question text; the leak gate must stay green and `out/` must
+  contain zero question text (§0.6).
+- Practice/exam ordering and draw are PORTED from the app's `quizEngine`
+  (`orderPracticeSet`, `drawExamSet`, `capFreeQuestionSet`) with fixture tests
+  vs app values; spot-check two by hand. Never re-derived.
+- The nudge/wall render sites consume `src/lib/nudgeGates.ts` and the M2
+  components verbatim — grep `src/` for any second gate definition.
+- Q21+ wall unbypassable client-side: deep-link to Q21 of practice while free
+  → wall (reproduce it, do not trust the packet).
+- Exam consults no gate after start; flashcard nudges fire at 15/30/45 distinct
+  reveals, max 3, and revisits never double-count.
+- Zero nudges anywhere for `isPaid` users; the same nudge never twice per run.
+
+**M6 (mock/mistakes/progress):**
 - Mock draw fixtures vs app `mockService.js` (weights, counts, no repeats).
 - One-free-mock counter: read AND consumed through the M4 service path;
   verify the cross-platform semantics match the app's (same field, same
@@ -125,18 +140,18 @@ to the Codex-owned durable review log.
 - Free/paid scoring displayed per the locked formulas; never both on one
   surface.
 
-**M6 (polish):** accessibility pass (keyboard, focus visible, contrast on
+**M7 (polish):** accessibility pass (keyboard, focus visible, contrast on
 `#F5F5F0`), E-1/E-2 outputs attached for public copy, no WORKING markers
 left on public pages post voice pass.
 
-**M7 (Razorpay) — see §5. Zero open blockers before live keys.**
+**M8 (Razorpay) — see §5. Zero open blockers before live keys.**
 
-**M8 (release):** full §3 on the whole branch; preview channel only; confirm
+**M9 (release):** full §3 on the whole branch; preview channel only; confirm
 no deploy config targets production; Play payments-policy side-by-side is
 a HUMAN checklist item — verify it is recorded as done by Anusha, not by a
 model.
 
-## 5. Razorpay security checklist (M7 — every line verified in code)
+## 5. Razorpay security checklist (M8 — every line verified in code)
 
 1. Webhook verifies the Razorpay HMAC signature (`X-Razorpay-Signature`,
    webhook secret, constant-time compare) BEFORE trusting any payload

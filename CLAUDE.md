@@ -29,7 +29,7 @@ Murthy (ASM Tech). Remote: `github.com/asmtechdeveloper/arnready-website`
 - **`main` is LIVE.** It serves the current GitHub Pages compliance/holding
   site (privacy, delete-account, support pages that Play Console links to).
   A push to `main` is a production deploy. Never commit to, merge to, or
-  push `main` — cutover is a separate explicit Anusha approval (manual M8).
+  push `main` — cutover is a separate explicit Anusha approval (manual M9).
 - **`web-product` is the working branch**, reset to a clean start on
   13 Jul 2026. The complete previous implementation is preserved READ-ONLY
   at git tag `pre-reset-snapshot` (`git show pre-reset-snapshot:<path>`).
@@ -52,7 +52,7 @@ Knowledge is free; mastery is earned; the web is ad-free.
   wall at Q21+); one free mock per account EVER (cross-platform counter);
   mistakes deck and progress, nudge-free.
 - **Paid (₹250 lifetime):** everything, zero nudges. Razorpay is approved
-  for integration (manual M7); until it ships, premium CTAs say web
+  for integration (manual M8); until it ships, premium CTAs say web
   checkout is coming soon and may point to the app.
 - **Nudge law (Anusha, 13 Jul):** nudges pitch what premium ADDS — never
   relief from the nudge itself. Arnie delivers warmly; same nudge never
@@ -74,7 +74,7 @@ Knowledge is free; mastery is earned; the web is ad-free.
 4. **Locked engine rules are ported, never re-derived:** scoring (free =
    correct ÷ max(10, attempted); paid = correct ÷ served), gate positions,
    mock assembly, free-mock-ever semantics — pinned to the app by fixture
-   tests (manual M2/M4/M5). Progress documents must be byte-identical to
+   tests (manual M2/M4/M5/M6). Progress documents must be byte-identical to
    the app's `progressService` output.
 5. **The leak gate** (`scripts/check-paid-leak.mjs`) blocks every build:
    teaching + ≤10 canonical cards per chapter public, zero question text
@@ -106,7 +106,7 @@ exactly one primary CTA + the footer disclaimer.
   executor SUBAGENTS, one atomic step at a time, reviewing each diff and
   re-running the gates before releasing the next.
 - **[SENSITIVE]** milestones (auth/entitlement M3, progress parity M4, payments
-  M7): the orchestrator executes the core itself; entitlement, payment, and
+  M8): the orchestrator executes the core itself; entitlement, payment, and
   Firestore write-shapes never leave its hands. High-stakes work must land
   before 6 Aug 2026 (subscription end).
 - **Codex reviews every milestone** per the review protocol; the orchestrator

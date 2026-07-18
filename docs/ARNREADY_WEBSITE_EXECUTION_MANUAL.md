@@ -131,8 +131,8 @@ Supersedes the "LOCKED web-side rules (9 Jul)" section of CLAUDE.md.
 pitches what premium ADDS (every question past 20, unlimited mocks, full
 mistakes engine) — NEVER relief from the nudge itself, because the web has
 no ads to remove. Arnie delivers it warmly; the same nudge never fires
-twice in one run. Until M7 ships, the nudge CTA is dual: "Get the app" +
-"Web checkout coming soon"; after M7 it becomes the Razorpay checkout.
+twice in one run. Until M8 ships, the nudge CTA is dual: "Get the app" +
+"Web checkout coming soon"; after M8 it becomes the Razorpay checkout.
 
 ---
 
@@ -211,11 +211,12 @@ screenshots of one hub + one spoke at 375px and 1440px.
 > sites** for that machinery — the "live in /app" goal plus steps 3–4's
 > render behavior (practice Q11 nudge, exam pre-start, flashcard 15/30/45, the
 > free-user Q21+ deep-link→wall unbypassable behavior, and the mock-results
-> premium pitch) — are **re-sequenced to M3**, because they require auth (M3)
+> premium pitch) — are **re-sequenced to M5** (signed-in study surfaces; the
+> mock-results pitch lands with the mock surface in M6), because they require auth (M3)
 > and question/flashcard data (M3+) and would otherwise force question-shaped
 > text into the static export, violating §0.6. M2's acceptance is met by the
 > machinery + fixtures + screenshots below; the render-site wiring and its
-> tests move to M3's acceptance. The component/decision-layer specs in the
+> tests move to M5/M6 acceptance. The component/decision-layer specs in the
 > steps below still govern what M2 builds.
 
 **Goal:** the §1 free-tier rhythm live in `/app` practice, exam, flashcards.
@@ -237,14 +238,12 @@ screenshots of all four nudge points + the wall.
 
 ### M3 [SENSITIVE + ANUSHA] — Firebase Web App + auth/entitlement integration
 
-> **Scope amendment (Anusha, 2026-07-15):** M3 additionally owns the live
-> `/app` wiring re-sequenced from M2 — render the M2 machinery at real render
-> sites once auth + data exist: practice Q11 nudge, exam pre-start nudge,
-> flashcard 15/30/45 nudges, the free-user Q21+ deep-link → `<UpgradeWall>`
-> (unbypassable client-side), and the mock-results premium pitch; plus wiring
-> tests asserting NO nudge renders on mock runs, the mistakes deck, or for
-> paid users. Consume `src/lib/nudgeGates.ts` and the M2 components verbatim;
-> never re-derive gate logic.
+> **Scope amendment (Anusha, 2026-07-16, narrowing the 15 Jul amendment):**
+> M3 is the auth/entitlement core ONLY. The `/app` nudge/wall wiring deferred
+> from M2 does NOT land here — it moves to **M5** (signed-in study surfaces),
+> with the mock-results premium pitch landing in **M6** alongside the mock
+> surface. M3 owns only the auth-side UI: the three cancellable sign-in
+> prompts and the signed-out/signed-in `/app` states.
 
 **Anusha first:** register the Firebase Web App in the console (same
 project as the app), hand the config to the session. No rules changes.
@@ -271,21 +270,57 @@ rounding, timestamps semantics, or mistakes-hook behavior.
 Codex diff-review of the two services side by side; one real end-to-end
 session on the test account verified in Firestore console by Anusha.
 
-### M5 [STANDARD] — Free mock + mistakes + progress surfaces
+### M5 [STANDARD] — Signed-in study surfaces: practice, exam, flashcards
+
+> **Added by Anusha, 2026-07-16.** The original milestone list had no owner for
+> the three core study players or for signed-in question/flashcard delivery — a
+> leftover from the pre-reset product, where those screens already existed. This
+> milestone owns them, and inherits the `/app` nudge/wall wiring deferred from
+> M2 (see the M2 scope amendment).
+
+**Goal:** the §1 signed-in free-tier rhythm live on real surfaces.
+**Steps:**
+1. Runtime, signed-in-only delivery of the app's fixed 20 free questions per
+   chapter (`isFree: true`) and the full flashcard deck — read client-side
+   after auth, NEVER written into the static export (§0.5, §0.6; the leak gate
+   stays green and question text never reaches `out/`).
+2. `/app/practice` and `/app/exam` players: PORT the ordering/draw from the
+   app's `quizEngine` (`orderPracticeSet`, `drawExamSet`, `capFreeQuestionSet`)
+   with fixture tests pinning them to app values. Never re-derive.
+3. `/app/flashcards` player, tracking distinct card reveals through
+   `countDistinctReveals`.
+4. Wire the M2 machinery at these render sites, consuming
+   `src/lib/nudgeGates.ts` and the M2 components VERBATIM (never re-derive gate
+   logic): practice Q11 nudge; exam pre-start nudge with the exam NEVER
+   interrupted after it starts; flashcard nudges at 15/30/45 distinct reveals
+   (max 3, rotating copy); and the free-user Q21+ deep link rendering
+   `<UpgradeWall>` — unbypassable client-side.
+5. Wiring tests: zero nudges anywhere for `isPaid` users; the same nudge never
+   fires twice in one run.
+**Forbidden:** writing progress/sessions/mistakes by any path other than the M4
+service; any question text in the static export; re-deriving gate logic.
+**Acceptance:** gates green; quizEngine fixture tests vs app values committed;
+a free-user deep link to Q21 renders the wall; screenshots of each nudge point
+and the wall on the real surfaces at 375px and 1440px.
+
+### M6 [STANDARD] — Free mock + mistakes + progress surfaces
 **Goal:** wire `/app/mock` (assembly ported from app `mockService.js` with
 fixture tests; one-free-ever counter read/write through the M4 service
 only), `/app/mistakes`, `/app/progress` to live data.
+**Also (inherited from M2):** the mock RESULTS screen carries the premium
+pitch block; wiring tests assert NO nudge renders during a mock run or in the
+mistakes deck — both are zero-nudge surfaces per §1.
 **Acceptance:** gates green; mock draw fixture test vs app; counter
 verified cross-platform by Anusha (use the free mock on web test account →
 app shows it consumed).
 
-### M6 [STANDARD] — Visual/voice polish pass
+### M7 [STANDARD] — Visual/voice polish pass
 Homepage per the design document; empty/error/loading states; keyboard
 operation; 375/1440 sweep; Anusha's voice pass replaces WORKING copy;
 E-1/E-2 prompts run on all public copy. **Acceptance:** screenshot set +
 copy diff for Anusha.
 
-### M7 [SENSITIVE] — Razorpay checkout (HIGH RISK — the strictest review)
+### M8 [SENSITIVE] — Razorpay checkout (HIGH RISK — the strictest review)
 **Where:** the Cloud Functions live in the APP repo's `functions/`
 workspace (one repo for all entitlement writers), region `asia-south1`.
 **Flow:** `/app/upgrade` → CF `createRazorpayOrder` (verifies auth, binds
@@ -305,7 +340,7 @@ in the review protocol §5 line by line.
 replay, tampered signature rejected — each evidenced); Codex security
 review with ZERO open blockers; Anusha approves live keys separately.
 
-### M8 [STANDARD + ANUSHA] — Preview, release review, cutover
+### M9 [STANDARD + ANUSHA] — Preview, release review, cutover
 Full gates; deploy to the approval-gated Firebase preview channel (runbook
 already in repo); Anusha device pass (phone + laptop); Codex release
 review; the Play "Payments" policy re-read side by side with the app's
@@ -350,6 +385,6 @@ explicit go, as its own approval.
   were removed in the 13 Jul repo reset (recoverable at
   `pre-reset-snapshot`); §2 of this manual replaces them.
 - Razorpay is APPROVED for integration (13 Jul) — "checkout coming soon"
-  copy is required only until M7 ships.
+  copy is required only until M8 ships.
 
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*
