@@ -2,34 +2,40 @@
 
 **Status:** Approved by Anusha, 13 Jul 2026. This document is the CANONICAL
 execution plan for the website. Where it disagrees with CLAUDE.md, the PRD,
-the IA doc, or the old next-work-plan, THIS FILE WINS. It was written by
-Fable as a handoff: the executing model (Sonnet/Opus) follows it exactly and
-does not re-litigate decisions recorded here.
+the IA doc, or the old next-work-plan, THIS FILE WINS. It was written as a
+handoff: the executing agent follows it exactly and does not re-litigate
+decisions recorded here. This manual names NO models — Anusha chooses the
+agents per milestone from whatever is best available at the time.
 
-**Who does what** (execution model updated by Anusha, 2026-07-16 — supersedes
-the original "Sonnet executes [SONNET] milestones directly" split):
+**Who does what** (ROLES, not models — Anusha chooses which agent fills each
+role, per milestone; updated 2026-07-16):
 
-> **Why the change:** M0 and M1 were handed to Sonnet directly and produced a
-> heavy defect load (M1 alone cost a full day of remediation). M2 ran under
-> Opus orchestration with Sonnet subagents and Opus-led remediation, and went
-> far cleaner. Anusha's decision: Opus orchestrates every milestone; Sonnet is
-> never handed a whole milestone directly again.
+> **Why this shape:** M0 and M1 were each handed wholesale to a single executor
+> and produced a heavy defect load (M1 alone cost a full day of remediation).
+> M2 ran under an orchestrator that decomposed the work, drove executor
+> subagents one atomic step at a time, and reviewed every diff — and went far
+> cleaner. No milestone is ever handed wholesale to an executor again.
 
-- **Opus orchestrates EVERY milestone** — owns the plan, the decomposition into
+- **Orchestrator** — owns EVERY milestone: the plan, the decomposition into
   atomic decision-free steps, the per-step diff review, and the §0.11 gates.
-- **[SONNET] milestones** (wiring, pages, components): Opus orchestrates and
-  delegates the mechanical build to **Sonnet SUBAGENTS**, one atomic step per
-  subagent, reviewing each diff and re-running the gates before releasing the
-  next. Sonnet never receives a whole milestone.
-- **[OPUS] milestones** (auth/entitlement M3, progress parity M4, Razorpay M7):
-  Opus executes directly; its orchestrator layer decides per task whether to
-  hand mechanical sub-parts to Sonnet subagents or work single-threaded. The
-  sensitive core — entitlement, payment, Firestore write-shapes — stays in
-  Opus's own hands.
-- The `[SONNET]`/`[OPUS]` tags on the milestones below now denote execution
-  STYLE under this model, not a direct hand-off to that model.
-- **Codex** reviews every milestone per `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md`.
-- **Anusha** approves each milestone, owns voice/copy, secrets, deploys.
+  Anusha assigns the strongest available agent to this role.
+- **Executor subagents** — do the mechanical build, one atomic step each, never
+  a whole milestone. Every step is diff-reviewed and re-gated by the
+  orchestrator before the next is released.
+- **Reviewer** — reviews every milestone adversarially per
+  `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md`.
+- **Anusha** — approves each milestone, owns voice/copy, secrets, deploys, and
+  chooses the agents behind every role above.
+
+**Milestone tags** (execution style and risk — never a model name):
+- **[STANDARD]** — wiring, pages, components. The orchestrator delegates the
+  build to executor subagents, step by reviewed step.
+- **[SENSITIVE]** — auth/entitlement, progress parity, payments. The
+  orchestrator executes the core ITSELF and decides per task whether to
+  delegate mechanical sub-parts. Entitlement, payment, and Firestore
+  write-shapes never leave the orchestrator's hands.
+- **[+ ANUSHA]** — the milestone has a required Anusha action (console
+  registration, secrets, device pass) before or during execution.
 
 ---
 
@@ -146,7 +152,7 @@ kept in the tree as-is and are load-bearing: `scripts/export-content.mjs`
 (Firestore → build-time content export) and `scripts/check-paid-leak.mjs`
 (the leak gate).
 
-### M0 [SONNET] — Fresh scaffold
+### M0 [STANDARD] — Fresh scaffold
 **Goal:** a clean Next.js foundation the later milestones build on.
 **Steps:**
 1. Scaffold Next.js (App Router) + TypeScript + Tailwind, configured for
@@ -169,7 +175,7 @@ kept in the tree as-is and are load-bearing: `scripts/export-content.mjs`
 builds; leak gate runs and passes; screenshots of the base layout at 375px
 and 1440px.
 
-### M1 [SONNET] — Public content layer
+### M1 [STANDARD] — Public content layer
 **Goal:** chapter hubs + subtopic spokes live on the static build.
 **Steps:**
 1. Extend the Firestore build-time fetch to read `chNN_teaching` docs
@@ -196,7 +202,7 @@ and 1440px.
 cards/chapter and zero question text (paste the leak-gate output);
 screenshots of one hub + one spoke at 375px and 1440px.
 
-### M2 [SONNET] — Nudge component + free-gate wiring in the client product
+### M2 [STANDARD] — Nudge component + free-gate wiring in the client product
 
 > **Scope amendment (Anusha, 2026-07-15, resolving M2 Codex finding M2-B1):**
 > M2 delivers the nudge/gate MACHINERY only — the `<PremiumNudge>` and
@@ -229,7 +235,7 @@ screenshots of one hub + one spoke at 375px and 1440px.
 **Acceptance:** gates green; fixture tests vs app values committed;
 screenshots of all four nudge points + the wall.
 
-### M3 [ANUSHA + OPUS] — Firebase Web App + auth/entitlement integration
+### M3 [SENSITIVE + ANUSHA] — Firebase Web App + auth/entitlement integration
 
 > **Scope amendment (Anusha, 2026-07-15):** M3 additionally owns the live
 > `/app` wiring re-sequenced from M2 — render the M2 machinery at real render
@@ -242,7 +248,7 @@ screenshots of all four nudge points + the wall.
 
 **Anusha first:** register the Firebase Web App in the console (same
 project as the app), hand the config to the session. No rules changes.
-**Opus then:** wire Google sign-in end-to-end; entitlement store mirroring
+**Then:** wire Google sign-in end-to-end; entitlement store mirroring
 the app's `entitlementStore` (read-only `isPaid` listener); the three
 cancellable sign-in prompts; signed-out `/app` states. Integration-test
 against the real project with a throwaway Google account: sign-in,
@@ -250,7 +256,7 @@ cancel-path, isPaid read for a known-paid test uid, sign-out.
 **Acceptance:** recorded test matrix (sign-in/cancel/paid-read/sign-out ×
 desktop/mobile); no `firestore.rules` diff; Codex security review passed.
 
-### M4 [OPUS] — Progress parity port (the single-write-site problem)
+### M4 [SENSITIVE] — Progress parity port (the single-write-site problem)
 **Goal:** web writes progress/sessions/mistakes documents BYTE-IDENTICAL to
 the app's `progressService.recordExamSession` / `recordPracticeSession` /
 `recordFlashcardSession`.
@@ -265,7 +271,7 @@ rounding, timestamps semantics, or mistakes-hook behavior.
 Codex diff-review of the two services side by side; one real end-to-end
 session on the test account verified in Firestore console by Anusha.
 
-### M5 [SONNET] — Free mock + mistakes + progress surfaces
+### M5 [STANDARD] — Free mock + mistakes + progress surfaces
 **Goal:** wire `/app/mock` (assembly ported from app `mockService.js` with
 fixture tests; one-free-ever counter read/write through the M4 service
 only), `/app/mistakes`, `/app/progress` to live data.
@@ -273,13 +279,13 @@ only), `/app/mistakes`, `/app/progress` to live data.
 verified cross-platform by Anusha (use the free mock on web test account →
 app shows it consumed).
 
-### M6 [SONNET] — Visual/voice polish pass
+### M6 [STANDARD] — Visual/voice polish pass
 Homepage per the design document; empty/error/loading states; keyboard
 operation; 375/1440 sweep; Anusha's voice pass replaces WORKING copy;
 E-1/E-2 prompts run on all public copy. **Acceptance:** screenshot set +
 copy diff for Anusha.
 
-### M7 [OPUS] — Razorpay checkout (HIGH RISK — the strictest review)
+### M7 [SENSITIVE] — Razorpay checkout (HIGH RISK — the strictest review)
 **Where:** the Cloud Functions live in the APP repo's `functions/`
 workspace (one repo for all entitlement writers), region `asia-south1`.
 **Flow:** `/app/upgrade` → CF `createRazorpayOrder` (verifies auth, binds
@@ -299,7 +305,7 @@ in the review protocol §5 line by line.
 replay, tampered signature rejected — each evidenced); Codex security
 review with ZERO open blockers; Anusha approves live keys separately.
 
-### M8 [SONNET + ANUSHA] — Preview, release review, cutover
+### M8 [STANDARD + ANUSHA] — Preview, release review, cutover
 Full gates; deploy to the approval-gated Firebase preview channel (runbook
 already in repo); Anusha device pass (phone + laptop); Codex release
 review; the Play "Payments" policy re-read side by side with the app's
@@ -310,12 +316,12 @@ explicit go, as its own approval.
 
 ## 3. Session prompts for Anusha (paste verbatim)
 
-**Milestone session (Opus orchestrator; paste to start a milestone):**
+**Milestone session (orchestrator; paste to start a milestone):**
 > Read `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` in full, then CLAUDE.md
-> and the design document. Orchestrate Milestone M<n> per the "Who does what" model: for a [SONNET]
-> milestone drive Sonnet SUBAGENTS one atomic step at a time, reviewing each
-> diff and re-running the §0.11 gates before the next; for an [OPUS] milestone
-> execute directly, delegating mechanical sub-parts to subagents at your
+> and the design document. Orchestrate Milestone M<n> per the "Who does what" model: for a [STANDARD]
+> milestone drive executor SUBAGENTS one atomic step at a time, reviewing each
+> diff and re-running the §0.11 gates before the next; for a [SENSITIVE] milestone
+> execute the core directly, delegating mechanical sub-parts at your
 > discretion and keeping the sensitive core in your own hands, following the
 > milestone spec exactly —
 > respect every global rule in §0, especially the stop conditions. When
@@ -326,7 +332,7 @@ explicit go, as its own approval.
 
 **Codex review session:** see the review protocol §1 for its paste-prompt.
 
-**Remediation session (Opus orchestrator, after Codex review):**
+**Remediation session (orchestrator, after Codex review):**
 > Read the manual, then `docs/review-packets/M<n>_PACKET.md` and the Codex
 > findings I paste below. Fix every finding marked BLOCKER and SHOULD-FIX
 > exactly as scoped; do not expand scope. Re-run all gates, amend the

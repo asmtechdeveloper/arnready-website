@@ -95,22 +95,26 @@ copy ships WORKING until her voice pass; public copy passes the E-1 and
 E-2 reviews (`docs/ARNREADY_WEBSITE_PROMPT_LIBRARY.md`). Every public page:
 exactly one primary CTA + the footer disclaimer.
 
-## Working arrangement (updated 16 Jul 2026 — Opus orchestrates every milestone)
+## Working arrangement (updated 16 Jul 2026 — orchestrated execution)
 
-- **Opus orchestrates EVERY milestone.** No milestone is handed to Sonnet
-  directly (that model produced too many defects across M0/M1). For **[SONNET]**
-  milestones Opus decomposes the work into atomic steps and drives Sonnet
-  SUBAGENTS one step at a time, reviewing each diff and re-running the gates
-  before the next. For **[OPUS]** milestones (auth/entitlement M3, progress-
-  parity M4, Razorpay M7) Opus executes directly and decides per task whether to
-  delegate mechanical sub-parts to subagents; the sensitive core stays in Opus's
-  hands. High-stakes work must land before 6 Aug 2026 (subscription end).
+- **One orchestrator owns EVERY milestone** — the plan, the decomposition into
+  atomic steps, the per-step diff review, and the gates. No milestone is ever
+  handed wholesale to an executor agent (that produced a heavy defect load
+  across M0/M1). **Anusha chooses which agent fills each role, per milestone**,
+  from whatever is best available — the manual deliberately names no models.
+- **[STANDARD]** milestones: the orchestrator delegates the mechanical build to
+  executor SUBAGENTS, one atomic step at a time, reviewing each diff and
+  re-running the gates before releasing the next.
+- **[SENSITIVE]** milestones (auth/entitlement M3, progress parity M4, payments
+  M7): the orchestrator executes the core itself; entitlement, payment, and
+  Firestore write-shapes never leave its hands. High-stakes work must land
+  before 6 Aug 2026 (subscription end).
 - **Codex reviews every milestone** per the review protocol; the orchestrator
-  (Opus) produces the evidence packet in `docs/review-packets/`.
+  produces the evidence packet in `docs/review-packets/`.
 - **Anusha** owns approvals, voice, secrets, deploys, and all product
   decisions. Ask her before anything architectural the manual doesn't
   already decide.
-- Fable access ended 19 Jul 2026; "Opus moment" remains a SEVERITY label —
+- "Opus moment" in older docs is a SEVERITY label —
   dedicated review plus Anusha's explicit sign-off — not a model booking.
 
 ## The Jeeves Protocol (mirrored from the app repo)
