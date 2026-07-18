@@ -49,9 +49,12 @@ tree. **That change is not mine** — it predates this session and is Codex-owne
 
 ### Changed files — app repo (`ARNReady-App`)
 
-Per Anusha's 2026-07-19 decision ("branch, don't commit"), these live on the
-branch `m4-progress-parity-fixtures` and are **left uncommitted** for her review.
-Nothing was committed to the app repo, and nothing touched its `main`.
+These live on the branch `m4-progress-parity-fixtures`, committed as **`bd68212`**
+on Anusha's explicit instruction (2026-07-19; her initial call was "branch,
+don't commit", superseded once the work was verified). The app repo's `main` is
+untouched, still at `19bcee9`. The commit is test-only — no service, screen, or
+`functions/` code is touched — and the app's full suite passes at it
+(48 suites / 795 tests).
 
 | File | What |
 |---|---|
@@ -473,13 +476,20 @@ true.
 
 ## 8. Known limitations and deferred items
 
-1. **Anusha's Firestore-console verification is outstanding.** The manual's M4
-   acceptance requires her to inspect the written documents herself. The harness
-   has produced them and printed their paths (§4); the human step is not done.
-2. **The app-repo fixtures are uncommitted.** Per her "branch, don't commit"
-   decision they sit on `m4-progress-parity-fixtures` in the app repo as
-   untracked files. Untracked files follow a `git checkout`, so they are visible
-   from any branch until she commits or removes them.
+1. **Anusha's Firestore-console verification is COMPLETE** (2026-07-19). She
+   walked all four document sets — `chapterProgress/12`, the six session
+   documents, the eight mistakes-deck entries, and the user document — and
+   confirmed each. Two checks are worth recording because they are live
+   evidence rather than test evidence: `sampleLastTotal: 10` beside the session
+   log's `served: 20` (the locked free denominator holding while the immutable
+   session record keeps the true served count), and `createdAt` on the user
+   document remaining ~12 minutes older than `sampleLastDate` — proof that the
+   second live run's `ensureUserDocument` correctly wrote nothing to an existing
+   document, which is the §7 P2 defect demonstrated fixed on real data.
+2. **The app-repo fixtures are committed** at `bd68212` on
+   `m4-progress-parity-fixtures`. Merging that branch is Anusha's call; until it
+   merges, the app repo's `main` asserts nothing about parity, so a change to
+   its services would be caught only by the website's suite.
 3. **`getAllChapterProgress` and `getSessionsSince` are not ported.** Both are
    read-only conveniences with no consumer until the progress surfaces land.
    Deferred to **M6**, which owns `/app/progress`.
