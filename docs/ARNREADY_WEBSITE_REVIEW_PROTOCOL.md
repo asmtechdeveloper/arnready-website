@@ -10,19 +10,10 @@ summarize what it did.
 
 ## 1. Anusha's paste-prompt for a Codex review
 
-> You are reviewing milestone M<n> of the ARNReady website
-> (`web-product` branch). Read, in order:
-> `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` (the canon — §0 global rules,
-> §1 product model, and the M<n> spec), `docs/ARNREADY_WEBSITE_REVIEW_
-> PROTOCOL.md` (this file — §3 generic checks and the M<n> checklist in §4),
-> and `docs/review-packets/M<n>_PACKET.md`. Then review `git diff main...
-> web-product -- <changed files listed in the packet>` (or the milestone
-> commit) against the spec. Independently re-run the §3 verification
-> commands — do NOT trust the packet's pasted outputs. Report findings as:
-> BLOCKER (violates a §0 rule, a locked formula, security, or the milestone
-> spec), SHOULD-FIX (correctness/robustness), NIT. For each: file:line, the
-> defect, a concrete failure scenario, and the fix. End with a verdict:
-> APPROVE / APPROVE AFTER FIXES / REJECT. Do not edit any file.
+The paste-prompt now lives in the execution manual §3 ("Session prompts for
+Anusha"), beside the milestone and remediation prompts, so all three Anusha
+pastes are in one place. It is deliberately NOT duplicated here — manual §3 is
+the single canonical copy. The obligation below still binds every review.
 
 Immediately after returning the verdict, Codex records the complete finding
 list in `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` before any remediation begins.

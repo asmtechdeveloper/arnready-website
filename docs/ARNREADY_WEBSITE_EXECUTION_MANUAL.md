@@ -390,7 +390,19 @@ milestone; nothing in it changes but the number.**
 > `docs/review-packets/M<n>_PACKET.md`. Do NOT edit
 > `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` — Codex owns it.
 
-**Codex review session:** see the review protocol §1 for its paste-prompt.
+**Codex review session (paste to start a review):**
+> You are reviewing milestone M<n> of the ARNReady website (`web-product`
+> branch). Read, in order: `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` (the
+> canon — §0 global rules, §1 product model, and the M<n> spec),
+> `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md` (§3 generic checks and the M<n>
+> checklist in §4), and `docs/review-packets/M<n>_PACKET.md`. Then review
+> `git diff main...web-product -- <changed files listed in the packet>` (or the
+> milestone commit) against the spec. Independently re-run the §3 verification
+> commands — do NOT trust the packet's pasted outputs. Report findings as:
+> BLOCKER (violates a §0 rule, a locked formula, security, or the milestone
+> spec), SHOULD-FIX (correctness/robustness), NIT. For each: file:line, the
+> defect, a concrete failure scenario, and the fix. End with a verdict:
+> APPROVE / APPROVE AFTER FIXES / REJECT. Do not edit any file.
 
 **Remediation session (orchestrator, after Codex review):**
 > Read the manual, then `docs/review-packets/M<n>_PACKET.md` and the Codex
