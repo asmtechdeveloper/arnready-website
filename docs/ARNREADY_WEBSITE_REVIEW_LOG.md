@@ -59,6 +59,11 @@ may mark an item RESOLVED only after re-verification.
 | 2026-07-14 | M1-B10 targeted remediation verification (packet follow-up) | working tree on `web-product` | APPROVE | The packet now accurately records the primary clean pre-build result (136 passed, 6 skipped across three named non-sitemap files), confirms all 8 deterministic sitemap tests run without `content/`, and separately labels the content-present 142/142 run as supplementary evidence. The sitemap fixture asserts the exact 46-route output and the clean focused/full gates were independently reproduced. M1-B10 is RESOLVED. |
 | 2026-07-14 | M1 final remediation re-review | `c16f953` | APPROVE | Verified the multi-pattern leak scan, crash-safe generation publication and bootstrap recovery, lint, typecheck, 177 tests, and live 195-page build with passing pre/postbuild leak gates. |
 | 2026-07-14 | M1 owner sign-off | `c16f953` | SIGNED OFF | Anusha explicitly authorized transition to M2. |
+| 2026-07-15 | M2 initial review | `b34f341` | REJECT | Three BLOCKERs returned in order: required runtime wiring is absent, the mandatory full build did not reproduce, and the new surfaces violate the non-white background rule. |
+| 2026-07-18 | M2 final remediation re-review | `a16480c` | APPROVE | M2-B2/B3 and M2-R1 are independently verified RESOLVED. M2-B1 remains an explicitly authorized deferral; the 2026-07-16 canon amendment supersedes its original M3 target, assigning study-surface gate/wall wiring to M5 and the mock-results pitch to M6. |
+| 2026-07-18 | M2 owner sign-off | `a16480c` | SIGNED OFF | Anusha explicitly signed off M2 and authorized transition to M3. M2-B1 remains visible as a DEFERRED M5/M6 obligation. |
+| 2026-07-18 | M3 security review | `e01a4ed` | APPROVE | No findings. Independent lint, typecheck, 1,102-test suite, credentialed static build, standalone leak gate, static-export inspection, scope check, and isPaid-discipline review passed. No Firestore rules or client Firestore mutation diff exists. |
+| 2026-07-18 | M3 owner sign-off | `e01a4ed` | SIGNED OFF | Anusha explicitly signed off M3 and authorized transition to M4. M3-D1 remains explicitly deferred to M9. |
 
 ## Findings and explicitly retained items
 
@@ -111,6 +116,27 @@ their original order. M1 cannot pass while any BLOCKER or SHOULD-FIX is OPEN.
 | M1-N1 | NIT | Terminal breadcrumb crumbs lack `aria-current="page"`, so screen readers are not told which crumb is active. | hub breadcrumb; spoke breadcrumb | RESOLVED | Verified active terminal breadcrumbs. |
 | M1-R1 | BLOCKER | Remediation-time finding: paid fingerprints were globally excluded when overlapping the full raw flashcard deck, removing protection in `out/` for text matching cards beyond the public sampler. | `scripts/export-content.mjs:153-193`; `scripts/check-paid-leak.mjs:66-116`; `test/check-paid-leak.test.ts:138-191` | RESOLVED | Independently verified separate content/public fingerprint scopes, card-11 regression, focused/full tests, live build, and postbuild scan. The live manifest retained 314 public-only fingerprints; sampled entries matched non-public cards. |
 
+### M2 review tracker
+
+The M2 initial review is REJECTED. These findings are recorded in the exact
+order returned. M2 cannot pass while any BLOCKER remains OPEN.
+
+| ID | Severity | Item | Location | Status | Verification / next action |
+|---|---|---|---|---|---|
+| M2-B1 | BLOCKER | M2's required client-product wiring is absent. The packet reframes the milestone as machinery rather than live `/app` practice, exam, and flashcard flows, but the canon requires those flows, the Q21+ wall, and the mock-results premium pitch. There are no `/app/*` routes or render sites for the new components. | `docs/review-packets/M2_PACKET.md:11-15`; `src/lib/nudgeGates.ts:48-143`; absent `/app/*` route tree | DEFERRED | **Anusha decision, 2026-07-18:** the 2026-07-16 M3 scope amendment supersedes the original M3 target. M5 must consume the M2 machinery verbatim for practice Q11, exam pre-start, flashcard 15/30/45, the free Q21+ deep-link wall, and no-nudge invariants; M6 owns the mock-results premium pitch. |
+| M2-B2 | BLOCKER | The mandatory `npm run build` gate is not reproducible. The packet admits it was not run; independent execution reached `prebuild → export-content` but could not complete in this checkout without the Firestore credential, so the final static export and postbuild gate are unverified. | `docs/review-packets/M2_PACKET.md:119-128`; `scripts/export-content.mjs:27-40` | RESOLVED | Independently reproduced on `b68e5b2` using the documented default service-account key: live export of 240 free questions/732 flashcards, pre/postbuild 1,927-artifact leak checks passed, and Next generated 195 static pages. Lint, typecheck, and all 996 tests also pass. |
+| M2-B3 | BLOCKER | New nudge and wall surfaces use `bg-white`, violating the canon's locked background rule (`#F5F5F0`, never white). | `src/components/PremiumNudge.tsx:36`; `src/components/UpgradeWall.tsx:16` | RESOLVED | The finding’s interpretation was overbroad. The design document explicitly permits white for cards and contained surfaces; its cream/never-white requirement is for the page canvas. Both components use the established `rounded-card bg-white shadow-card` card surface, while `globals.css` applies `bg-bg` to `body`. `test/canvasBackground.test.ts` now pins that canvas rule. |
+| M2-R1 | SHOULD-FIX | The remediation packet calls M2-B1 “RESOLVED by scope re-sequence,” but the authorized and logged outcome is DEFERRED to M3. The packet must not represent a deferred obligation as resolved. | `docs/review-packets/M2_PACKET.md:208-221` | RESOLVED | Independently verified at `a16480c`: the packet says “DEFERRED to M3 — not RESOLVED” and records Anusha’s 2026-07-15 decision, target milestone, rationale, and the named M3 obligations. Documentation-only remediation; lint, typecheck, and all 996 tests pass. |
+
+### M3 review tracker
+
+No M3 BLOCKER, SHOULD-FIX, or NIT was returned. The following owner-authorized
+deployment limitation remains visible for its named later milestone.
+
+| ID | Severity | Item | Location | Status | Verification / next action |
+|---|---|---|---|---|---|
+| M3-D1 | SHOULD-FIX | Google popup cancellation logs Cross-Origin-Opener-Policy console errors because the hosting response header has not yet been configured. Cancellation itself was integration-tested successfully. | `docs/review-packets/M3_PACKET.md:268-286`; `firebase.json` (future M9 change) | DEFERRED | **Anusha decision, 2026-07-18:** add `Cross-Origin-Opener-Policy: same-origin-allow-popups` in M9 with deploy configuration, where it can be verified on hosting. This does not block M3 sign-off. |
+
 ## Decision history
 
 Add one row whenever an item's status changes. Do not rewrite prior decisions.
@@ -148,6 +174,12 @@ Add one row whenever an item's status changes. Do not rewrite prior decisions.
 
 | 2026-07-14 | M0-D1 | DEFERRED | RESOLVED | Codex | Resolved by M1's field-level canonical fingerprint and leak-gate work. |
 | 2026-07-14 | M1-S1–M1-S6, M1-N1 | OPEN | RESOLVED | Codex | Independently verified through the M1 remediation and final re-review passes. |
+| 2026-07-15 | M2-B1 | OPEN | DEFERRED | Anusha; verified by Codex | Anusha explicitly re-sequenced the live `/app` wiring and its tests to M3. Codex independently confirmed the original absence of render sites and the corresponding dated amendments under M2 and M3 in the remediation working tree. |
+| 2026-07-15 | M2-B2 | OPEN | RESOLVED | Codex | Independently reproduced the credentialed full build on `b68e5b2`: live Firestore export (240 free questions, 732 flashcards), pre/postbuild leak gates scanning 1,927 artifacts, and a 195-page static export passed. Lint, typecheck, and the 996-test suite also passed. |
+| 2026-07-15 | M2-B3 | OPEN | RESOLVED | Codex | Re-read the canon with the design document: the cream/never-white constraint applies to the page canvas, and the design document explicitly allows white cards/contained surfaces. The components conform to the established card pattern; the remediation’s canvas regression test is appropriate. |
+| 2026-07-15 | M2-R1 | OPEN | RESOLVED | Codex | Independently verified at `a16480c` that the packet correctly records B1 as DEFERRED to M3—not resolved—with Anusha’s decision date, target, rationale, and named M3 obligations. Lint, typecheck, and all 996 tests pass. |
+| 2026-07-18 | M2-B1 | DEFERRED | DEFERRED | Anusha; recorded by Codex | The 2026-07-16 M3 scope amendment supersedes the prior M3 target: M5 owns the study-surface gate/wall wiring and M6 owns the mock-results pitch. The status remains DEFERRED; only its target is corrected. |
+| 2026-07-18 | M3-D1 | OPEN | DEFERRED | Anusha; recorded by Codex | Owner authorized deferral of the COOP hosting header to M9. M3 cancellation behavior was integration-tested; the header requires deployed-host verification. |
 
 ## Maintenance procedure
 
