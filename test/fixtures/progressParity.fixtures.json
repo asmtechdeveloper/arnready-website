@@ -1,0 +1,5170 @@
+{
+  "meta": {
+    "generatedBy": "__tests__/progressParityFixtures.test.js (ARNReady-App)",
+    "provenance": "Captured from the real services/progressService.js and services/mistakesService.js by running them against a recording Firestore double. Only React Native infrastructure (Firestore, auth, AsyncStorage) is mocked; no service logic is stubbed. These fixtures are never hand-written to match a port.",
+    "sentinels": {
+      "serverTimestamp": {
+        "__sentinel": "serverTimestamp"
+      },
+      "increment": {
+        "__sentinel": "increment",
+        "by": 1
+      }
+    },
+    "caseCount": 14
+  },
+  "cases": [
+    {
+      "id": "exam-sample-fresh",
+      "description": "Free sample exam, no prior history. Denominator is max(10, attempted), never the 20 served.",
+      "call": "recordExamSession",
+      "prior": {
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 1,
+        "correct": 7,
+        "attempted": 10,
+        "served": 20,
+        "scorePct": 70,
+        "examScope": "sample",
+        "endedEarly": true,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "questions": [
+          {
+            "id": "ch01_q001",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q002",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q003",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q004",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q005",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q006",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q007",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q008",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q009",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q010",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q011",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q012",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q013",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q014",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q015",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q016",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q017",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q018",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q019",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q020",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "1",
+            "merge": true,
+            "data": {
+              "sampleLastScore": 7,
+              "sampleLastTotal": 10,
+              "sampleLastAttempted": 10,
+              "sampleLastPct": 70,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch01_q008",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q009",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q010",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 7,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 1,
+              "sampleLastDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "samplePreviousScore": null,
+              "samplePreviousTotal": null
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "sample",
+            "chapter": 1,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 7,
+            "attempted": 10,
+            "served": 20,
+            "scorePct": 70,
+            "endedEarly": true,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch01_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q007",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q008",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q009",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q010",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q011",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q012",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q013",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q014",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q015",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q016",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q017",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q018",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q019",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q020",
+                "picked": null,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch01_q008",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q008",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q009",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q009",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q010",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q010",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": null,
+          "next": {
+            "sample": {
+              "lastScore": 7,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 70,
+              "bestScore": 7,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch01_q008",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q009",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q010",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 7,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 70,
+            "bestScore": 7,
+            "bestTotal": 10,
+            "attempts": 1,
+            "wrong": [
+              {
+                "questionId": "ch01_q008",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q009",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q010",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-sample-fewer-than-floor",
+      "description": "Free sample exam with 4 attempted: the locked floor holds the denominator at 10.",
+      "call": "recordExamSession",
+      "prior": {
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 3,
+        "correct": 3,
+        "attempted": 4,
+        "served": 20,
+        "scorePct": 30,
+        "examScope": "sample",
+        "endedEarly": true,
+        "answers": [
+          0,
+          0,
+          0,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "questions": [
+          {
+            "id": "ch03_q001",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q002",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q003",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q004",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q005",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q006",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q007",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q008",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q009",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q010",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q011",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q012",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q013",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q014",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q015",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q016",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q017",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q018",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q019",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch03_q020",
+            "chapter": 3,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "3",
+            "merge": true,
+            "data": {
+              "sampleLastScore": 3,
+              "sampleLastTotal": 10,
+              "sampleLastAttempted": 4,
+              "sampleLastPct": 30,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch03_q004",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 3,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 1,
+              "sampleLastDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "samplePreviousScore": null,
+              "samplePreviousTotal": null
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "sample",
+            "chapter": 3,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 3,
+            "attempted": 4,
+            "served": 20,
+            "scorePct": 30,
+            "endedEarly": true,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch03_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch03_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch03_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch03_q004",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q005",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q006",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q007",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q008",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q009",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q010",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q011",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q012",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q013",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q014",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q015",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q016",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q017",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q018",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q019",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch03_q020",
+                "picked": null,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch03_q004",
+            "merge": true,
+            "data": {
+              "questionId": "ch03_q004",
+              "chapter": 3,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": null,
+          "next": {
+            "sample": {
+              "lastScore": 3,
+              "lastTotal": 10,
+              "lastAttempted": 4,
+              "lastPercentage": 30,
+              "bestScore": 3,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch03_q004",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 3,
+            "lastTotal": 10,
+            "lastAttempted": 4,
+            "lastPercentage": 30,
+            "bestScore": 3,
+            "bestTotal": 10,
+            "attempts": 1,
+            "wrong": [
+              {
+                "questionId": "ch03_q004",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-sample-over-prior-worse",
+      "description": "Sample exam beating a prior sample attempt: best score/total pair moves to the new attempt.",
+      "call": "recordExamSession",
+      "prior": {
+        "chapterProgress": {
+          "sampleLastScore": 5,
+          "sampleLastTotal": 10,
+          "sampleLastAttempted": 10,
+          "sampleLastPct": 50,
+          "sampleLastWrong": [
+            {
+              "questionId": "ch01_q005",
+              "subtopic": "Asset Allocation"
+            }
+          ],
+          "sampleBestScore": 5,
+          "sampleBestTotal": 10,
+          "sampleAttempts": 1
+        },
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 1,
+        "correct": 9,
+        "attempted": 10,
+        "served": 20,
+        "scorePct": 90,
+        "examScope": "sample",
+        "endedEarly": true,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "questions": [
+          {
+            "id": "ch01_q001",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q002",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q003",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q004",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q005",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q006",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q007",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q008",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q009",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q010",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q011",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q012",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q013",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q014",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q015",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q016",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q017",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q018",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q019",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q020",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "1",
+            "merge": true,
+            "data": {
+              "sampleLastScore": 9,
+              "sampleLastTotal": 10,
+              "sampleLastAttempted": 10,
+              "sampleLastPct": 90,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch01_q010",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 9,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 2,
+              "sampleLastDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "samplePreviousScore": 5,
+              "samplePreviousTotal": 10
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "sample",
+            "chapter": 1,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 9,
+            "attempted": 10,
+            "served": 20,
+            "scorePct": 90,
+            "endedEarly": true,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch01_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q007",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q008",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q009",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q010",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q011",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q012",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q013",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q014",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q015",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q016",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q017",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q018",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q019",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q020",
+                "picked": null,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch01_q010",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q010",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": {
+            "sample": {
+              "lastScore": 5,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 50,
+              "bestScore": 5,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch01_q005",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 5,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 50,
+            "bestScore": 5,
+            "bestTotal": 10,
+            "attempts": 1,
+            "wrong": [
+              {
+                "questionId": "ch01_q005",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          },
+          "next": {
+            "sample": {
+              "lastScore": 9,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 90,
+              "bestScore": 9,
+              "bestTotal": 10,
+              "attempts": 2,
+              "wrong": [
+                {
+                  "questionId": "ch01_q010",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 9,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 90,
+            "bestScore": 9,
+            "bestTotal": 10,
+            "attempts": 2,
+            "wrong": [
+              {
+                "questionId": "ch01_q010",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-sample-under-prior-better",
+      "description": "Sample exam worse than the prior best: the retained best keeps its OWN matched denominator.",
+      "call": "recordExamSession",
+      "prior": {
+        "chapterProgress": {
+          "sampleLastScore": 9,
+          "sampleLastTotal": 10,
+          "sampleLastAttempted": 10,
+          "sampleLastPct": 90,
+          "sampleLastWrong": [],
+          "sampleBestScore": 9,
+          "sampleBestTotal": 10,
+          "sampleAttempts": 2
+        },
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 1,
+        "correct": 4,
+        "attempted": 12,
+        "served": 20,
+        "scorePct": 33,
+        "examScope": "sample",
+        "endedEarly": true,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "questions": [
+          {
+            "id": "ch01_q001",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q002",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q003",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q004",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q005",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q006",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q007",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q008",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q009",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q010",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q011",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q012",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q013",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q014",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q015",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q016",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q017",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q018",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q019",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q020",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "1",
+            "merge": true,
+            "data": {
+              "sampleLastScore": 4,
+              "sampleLastTotal": 12,
+              "sampleLastAttempted": 12,
+              "sampleLastPct": 33,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch01_q005",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q006",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q007",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q008",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q009",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q010",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q011",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q012",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 9,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 3,
+              "sampleLastDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "samplePreviousScore": 9,
+              "samplePreviousTotal": 10
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "sample",
+            "chapter": 1,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 4,
+            "attempted": 12,
+            "served": 20,
+            "scorePct": 33,
+            "endedEarly": true,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch01_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q005",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q006",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q007",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q008",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q009",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q010",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q011",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q012",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q013",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q014",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q015",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q016",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q017",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q018",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q019",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q020",
+                "picked": null,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch01_q005",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q005",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q006",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q006",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q007",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q007",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q008",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q008",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q009",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q009",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q010",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q010",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q011",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q011",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q012",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q012",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": {
+            "sample": {
+              "lastScore": 9,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 90,
+              "bestScore": 9,
+              "bestTotal": 10,
+              "attempts": 2,
+              "wrong": []
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 9,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 90,
+            "bestScore": 9,
+            "bestTotal": 10,
+            "attempts": 2,
+            "wrong": []
+          },
+          "next": {
+            "sample": {
+              "lastScore": 4,
+              "lastTotal": 12,
+              "lastAttempted": 12,
+              "lastPercentage": 33,
+              "bestScore": 9,
+              "bestTotal": 10,
+              "attempts": 3,
+              "wrong": [
+                {
+                  "questionId": "ch01_q005",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q006",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q007",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q008",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q009",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q010",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q011",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q012",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 4,
+            "lastTotal": 12,
+            "lastAttempted": 12,
+            "lastPercentage": 33,
+            "bestScore": 9,
+            "bestTotal": 10,
+            "attempts": 3,
+            "wrong": [
+              {
+                "questionId": "ch01_q005",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q006",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q007",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q008",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q009",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q010",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q011",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q012",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-full-fresh",
+      "description": "Paid full-bank exam, no prior. Full scope stores served as the denominator and feeds the Prepometer.",
+      "call": "recordExamSession",
+      "prior": {
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 7,
+        "correct": 24,
+        "attempted": 30,
+        "served": 30,
+        "scorePct": 80,
+        "examScope": "full",
+        "endedEarly": false,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "questions": [
+          {
+            "id": "ch07_q001",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q002",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q003",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q004",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q005",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q006",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q007",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q008",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q009",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q010",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q011",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q012",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q013",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q014",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q015",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q016",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q017",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q018",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q019",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q020",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q021",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q022",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q023",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q024",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q025",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q026",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q027",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q028",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q029",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q030",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "7",
+            "merge": true,
+            "data": {
+              "lastExamScope": "full",
+              "lastExamScore": 24,
+              "lastExamTotal": 30,
+              "lastExamAttempted": 30,
+              "lastExamPct": 80,
+              "lastExamDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "lastExamWrong": [
+                {
+                  "questionId": "ch07_q025",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q026",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q027",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q028",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q029",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q030",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "previousExamScore": null,
+              "previousExamTotal": null,
+              "bestExamScore": 24,
+              "bestExamTotal": 30,
+              "examAttempts": 1
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "full",
+            "chapter": 7,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 24,
+            "attempted": 30,
+            "served": 30,
+            "scorePct": 80,
+            "endedEarly": false,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch07_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q007",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q008",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q009",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q010",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q011",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q012",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q013",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q014",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q015",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q016",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q017",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q018",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q019",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q020",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q021",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q022",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q023",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q024",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q025",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q026",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q027",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q028",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q029",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q030",
+                "picked": 1,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch07_q025",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q025",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q026",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q026",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q027",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q027",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q028",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q028",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q029",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q029",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q030",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q030",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": null,
+          "next": {
+            "sample": null,
+            "full": {
+              "lastScore": 24,
+              "lastTotal": 30,
+              "lastAttempted": 30,
+              "lastPercentage": 80,
+              "bestScore": 24,
+              "bestTotal": 30,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch07_q025",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q026",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q027",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q028",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q029",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q030",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "practiced": 0,
+            "lastScore": 24,
+            "lastTotal": 30,
+            "lastAttempted": 30,
+            "lastPercentage": 80,
+            "bestScore": 24,
+            "bestTotal": 30,
+            "attempts": 1,
+            "wrong": [
+              {
+                "questionId": "ch07_q025",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q026",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q027",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q028",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q029",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q030",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-full-over-prior-sample",
+      "description": "Full exam on a chapter carrying sample history: the sample fields must survive the lastExam* takeover.",
+      "call": "recordExamSession",
+      "prior": {
+        "chapterProgress": {
+          "sampleLastScore": 6,
+          "sampleLastTotal": 10,
+          "sampleLastAttempted": 10,
+          "sampleLastPct": 60,
+          "sampleLastWrong": [
+            {
+              "questionId": "ch07_q002",
+              "subtopic": "Asset Allocation"
+            }
+          ],
+          "sampleBestScore": 6,
+          "sampleBestTotal": 10,
+          "sampleAttempts": 1
+        },
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 7,
+        "correct": 21,
+        "attempted": 30,
+        "served": 30,
+        "scorePct": 70,
+        "examScope": "full",
+        "endedEarly": false,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "questions": [
+          {
+            "id": "ch07_q001",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q002",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q003",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q004",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q005",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q006",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q007",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q008",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q009",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q010",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q011",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q012",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q013",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q014",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q015",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q016",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q017",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q018",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q019",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q020",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q021",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q022",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q023",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q024",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q025",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q026",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q027",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q028",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q029",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch07_q030",
+            "chapter": 7,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "7",
+            "merge": true,
+            "data": {
+              "lastExamScope": "full",
+              "lastExamScore": 21,
+              "lastExamTotal": 30,
+              "lastExamAttempted": 30,
+              "lastExamPct": 70,
+              "lastExamDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "lastExamWrong": [
+                {
+                  "questionId": "ch07_q022",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q023",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q024",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q025",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q026",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q027",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q028",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q029",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q030",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "previousExamScore": null,
+              "previousExamTotal": null,
+              "bestExamScore": 21,
+              "bestExamTotal": 30,
+              "examAttempts": 1,
+              "sampleLastScore": 6,
+              "sampleLastTotal": 10,
+              "sampleLastAttempted": 10,
+              "sampleLastPct": 60,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch07_q002",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 6,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 1
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "full",
+            "chapter": 7,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 21,
+            "attempted": 30,
+            "served": 30,
+            "scorePct": 70,
+            "endedEarly": false,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch07_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q007",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q008",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q009",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q010",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q011",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q012",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q013",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q014",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q015",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q016",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q017",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q018",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q019",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q020",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q021",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch07_q022",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q023",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q024",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q025",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q026",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q027",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q028",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q029",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch07_q030",
+                "picked": 1,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch07_q022",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q022",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q023",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q023",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q024",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q024",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q025",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q025",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q026",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q026",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q027",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q027",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q028",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q028",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q029",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q029",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch07_q030",
+            "merge": true,
+            "data": {
+              "questionId": "ch07_q030",
+              "chapter": 7,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": {
+            "sample": {
+              "lastScore": 6,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 60,
+              "bestScore": 6,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch07_q002",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 6,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 60,
+            "bestScore": 6,
+            "bestTotal": 10,
+            "attempts": 1,
+            "wrong": [
+              {
+                "questionId": "ch07_q002",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          },
+          "next": {
+            "sample": {
+              "lastScore": 6,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 60,
+              "bestScore": 6,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch07_q002",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": {
+              "lastScore": 21,
+              "lastTotal": 30,
+              "lastAttempted": 30,
+              "lastPercentage": 70,
+              "bestScore": 21,
+              "bestTotal": 30,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch07_q022",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q023",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q024",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q025",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q026",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q027",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q028",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q029",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch07_q030",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "practiced": 0,
+            "lastScore": 21,
+            "lastTotal": 30,
+            "lastAttempted": 30,
+            "lastPercentage": 70,
+            "bestScore": 21,
+            "bestTotal": 30,
+            "attempts": 2,
+            "wrong": [
+              {
+                "questionId": "ch07_q022",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q023",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q024",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q025",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q026",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q027",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q028",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q029",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch07_q030",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-full-over-legacy-unmarked-30",
+      "description": "Legacy unmarked 30-question doc classifies as FULL, so previousExam* carry the legacy attempt.",
+      "call": "recordExamSession",
+      "prior": {
+        "chapterProgress": {
+          "lastExamScore": 18,
+          "lastExamTotal": 30,
+          "lastExamAttempted": 30,
+          "lastExamPct": 60,
+          "lastExamWrong": [],
+          "bestExamScore": 18,
+          "bestExamTotal": 30,
+          "examAttempts": 1
+        },
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 9,
+        "correct": 27,
+        "attempted": 30,
+        "served": 30,
+        "scorePct": 90,
+        "examScope": "full",
+        "endedEarly": false,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "questions": [
+          {
+            "id": "ch09_q001",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q002",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q003",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q004",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q005",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q006",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q007",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q008",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q009",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q010",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q011",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q012",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q013",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q014",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q015",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q016",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q017",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q018",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q019",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q020",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q021",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q022",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q023",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q024",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q025",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q026",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q027",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q028",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q029",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch09_q030",
+            "chapter": 9,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "9",
+            "merge": true,
+            "data": {
+              "lastExamScope": "full",
+              "lastExamScore": 27,
+              "lastExamTotal": 30,
+              "lastExamAttempted": 30,
+              "lastExamPct": 90,
+              "lastExamDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "lastExamWrong": [
+                {
+                  "questionId": "ch09_q028",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch09_q029",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch09_q030",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "previousExamScore": 18,
+              "previousExamTotal": 30,
+              "bestExamScore": 27,
+              "bestExamTotal": 30,
+              "examAttempts": 2
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "full",
+            "chapter": 9,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 27,
+            "attempted": 30,
+            "served": 30,
+            "scorePct": 90,
+            "endedEarly": false,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch09_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q007",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q008",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q009",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q010",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q011",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q012",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q013",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q014",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q015",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q016",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q017",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q018",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q019",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q020",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q021",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q022",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q023",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q024",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q025",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q026",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q027",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch09_q028",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch09_q029",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch09_q030",
+                "picked": 1,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch09_q028",
+            "merge": true,
+            "data": {
+              "questionId": "ch09_q028",
+              "chapter": 9,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch09_q029",
+            "merge": true,
+            "data": {
+              "questionId": "ch09_q029",
+              "chapter": 9,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch09_q030",
+            "merge": true,
+            "data": {
+              "questionId": "ch09_q030",
+              "chapter": 9,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": {
+            "sample": null,
+            "full": {
+              "lastScore": 18,
+              "lastTotal": 30,
+              "lastAttempted": 30,
+              "lastPercentage": 60,
+              "bestScore": 18,
+              "bestTotal": 30,
+              "attempts": 1,
+              "wrong": []
+            },
+            "practiced": 0,
+            "lastScore": 18,
+            "lastTotal": 30,
+            "lastAttempted": 30,
+            "lastPercentage": 60,
+            "bestScore": 18,
+            "bestTotal": 30,
+            "attempts": 1,
+            "wrong": []
+          },
+          "next": {
+            "sample": null,
+            "full": {
+              "lastScore": 27,
+              "lastTotal": 30,
+              "lastAttempted": 30,
+              "lastPercentage": 90,
+              "bestScore": 27,
+              "bestTotal": 30,
+              "attempts": 2,
+              "wrong": [
+                {
+                  "questionId": "ch09_q028",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch09_q029",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch09_q030",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "practiced": 0,
+            "lastScore": 27,
+            "lastTotal": 30,
+            "lastAttempted": 30,
+            "lastPercentage": 90,
+            "bestScore": 27,
+            "bestTotal": 30,
+            "attempts": 2,
+            "wrong": [
+              {
+                "questionId": "ch09_q028",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch09_q029",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch09_q030",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-sample-over-legacy-unmarked-20",
+      "description": "Legacy unmarked 20-question doc classifies as SAMPLE and normalizes its served-count denominator on read.",
+      "call": "recordExamSession",
+      "prior": {
+        "chapterProgress": {
+          "lastExamScore": 7,
+          "lastExamTotal": 20,
+          "lastExamAttempted": 10,
+          "lastExamPct": 70,
+          "lastExamWrong": [],
+          "bestExamScore": 7,
+          "bestExamTotal": 20,
+          "examAttempts": 1
+        },
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 2,
+        "correct": 8,
+        "attempted": 10,
+        "served": 20,
+        "scorePct": 80,
+        "examScope": "sample",
+        "endedEarly": true,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "questions": [
+          {
+            "id": "ch02_q001",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q002",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q003",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q004",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q005",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q006",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q007",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q008",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q009",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q010",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q011",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q012",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q013",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q014",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q015",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q016",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q017",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q018",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q019",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch02_q020",
+            "chapter": 2,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "2",
+            "merge": true,
+            "data": {
+              "sampleLastScore": 8,
+              "sampleLastTotal": 10,
+              "sampleLastAttempted": 10,
+              "sampleLastPct": 80,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch02_q009",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch02_q010",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 8,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 2,
+              "sampleLastDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "samplePreviousScore": 7,
+              "samplePreviousTotal": 10
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "sample",
+            "chapter": 2,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 8,
+            "attempted": 10,
+            "served": 20,
+            "scorePct": 80,
+            "endedEarly": true,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch02_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q007",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q008",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch02_q009",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q010",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q011",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q012",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q013",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q014",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q015",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q016",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q017",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q018",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q019",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch02_q020",
+                "picked": null,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch02_q009",
+            "merge": true,
+            "data": {
+              "questionId": "ch02_q009",
+              "chapter": 2,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch02_q010",
+            "merge": true,
+            "data": {
+              "questionId": "ch02_q010",
+              "chapter": 2,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": {
+            "sample": {
+              "lastScore": 7,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 70,
+              "bestScore": 7,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": []
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 7,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 70,
+            "bestScore": 7,
+            "bestTotal": 10,
+            "attempts": 1,
+            "wrong": []
+          },
+          "next": {
+            "sample": {
+              "lastScore": 8,
+              "lastTotal": 10,
+              "lastAttempted": 10,
+              "lastPercentage": 80,
+              "bestScore": 8,
+              "bestTotal": 10,
+              "attempts": 2,
+              "wrong": [
+                {
+                  "questionId": "ch02_q009",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch02_q010",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 8,
+            "lastTotal": 10,
+            "lastAttempted": 10,
+            "lastPercentage": 80,
+            "bestScore": 8,
+            "bestTotal": 10,
+            "attempts": 2,
+            "wrong": [
+              {
+                "questionId": "ch02_q009",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch02_q010",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "exam-with-mistakes-deck-interaction",
+      "description": "Wrong answers join the deck; a correct answer on an active deck question advances its streak to the retire threshold.",
+      "call": "recordExamSession",
+      "prior": {
+        "activeMistakes": [
+          {
+            "id": "ch01_q001",
+            "correctStreak": 1
+          },
+          {
+            "id": "ch01_q002",
+            "correctStreak": 0
+          }
+        ]
+      },
+      "input": {
+        "chapterNumber": 1,
+        "correct": 2,
+        "attempted": 4,
+        "served": 20,
+        "scorePct": 20,
+        "examScope": "sample",
+        "endedEarly": true,
+        "answers": [
+          0,
+          0,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "questions": [
+          {
+            "id": "ch01_q001",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q002",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q003",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q004",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q005",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q006",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q007",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q008",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q009",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q010",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q011",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q012",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q013",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q014",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q015",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q016",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q017",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q018",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q019",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch01_q020",
+            "chapter": 1,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "1",
+            "merge": true,
+            "data": {
+              "sampleLastScore": 2,
+              "sampleLastTotal": 10,
+              "sampleLastAttempted": 4,
+              "sampleLastPct": 20,
+              "sampleLastWrong": [
+                {
+                  "questionId": "ch01_q003",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q004",
+                  "subtopic": "Asset Allocation"
+                }
+              ],
+              "sampleBestScore": 2,
+              "sampleBestTotal": 10,
+              "sampleAttempts": 1,
+              "sampleLastDate": {
+                "__sentinel": "serverTimestamp"
+              },
+              "samplePreviousScore": null,
+              "samplePreviousTotal": null
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "exam",
+            "source": null,
+            "examScope": "sample",
+            "chapter": 1,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 2,
+            "attempted": 4,
+            "served": 20,
+            "scorePct": 20,
+            "endedEarly": true,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch01_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch01_q003",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q004",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q005",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q006",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q007",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q008",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q009",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q010",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q011",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q012",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q013",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q014",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q015",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q016",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q017",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q018",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q019",
+                "picked": null,
+                "correct": false
+              },
+              {
+                "qId": "ch01_q020",
+                "picked": null,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch01_q001",
+            "merge": true,
+            "data": {
+              "correctStreak": 2,
+              "retired": true,
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q002",
+            "merge": true,
+            "data": {
+              "correctStreak": 1,
+              "retired": false,
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q003",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q003",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch01_q004",
+            "merge": true,
+            "data": {
+              "questionId": "ch01_q004",
+              "chapter": 1,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": {
+          "prev": null,
+          "next": {
+            "sample": {
+              "lastScore": 2,
+              "lastTotal": 10,
+              "lastAttempted": 4,
+              "lastPercentage": 20,
+              "bestScore": 2,
+              "bestTotal": 10,
+              "attempts": 1,
+              "wrong": [
+                {
+                  "questionId": "ch01_q003",
+                  "subtopic": "Asset Allocation"
+                },
+                {
+                  "questionId": "ch01_q004",
+                  "subtopic": "Asset Allocation"
+                }
+              ]
+            },
+            "full": null,
+            "practiced": 0,
+            "lastScore": 2,
+            "lastTotal": 10,
+            "lastAttempted": 4,
+            "lastPercentage": 20,
+            "bestScore": 2,
+            "bestTotal": 10,
+            "attempts": 1,
+            "wrong": [
+              {
+                "questionId": "ch01_q003",
+                "subtopic": "Asset Allocation"
+              },
+              {
+                "questionId": "ch01_q004",
+                "subtopic": "Asset Allocation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "practice-fresh",
+      "description": "Practice run with no prior: practiceAttempted increments and exam fields are never touched.",
+      "call": "recordPracticeSession",
+      "prior": {
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 4,
+        "correct": 6,
+        "attempted": 8,
+        "scorePct": 75,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "questions": [
+          {
+            "id": "ch04_q001",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q002",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q003",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q004",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q005",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q006",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q007",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q008",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ],
+        "source": null
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "4",
+            "merge": true,
+            "data": {
+              "practiceAttempted": {
+                "__sentinel": "increment",
+                "by": 8
+              }
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "practice",
+            "source": null,
+            "examScope": null,
+            "chapter": 4,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 6,
+            "attempted": 8,
+            "served": 8,
+            "scorePct": 75,
+            "endedEarly": false,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch04_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q005",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q006",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q007",
+                "picked": 1,
+                "correct": false
+              },
+              {
+                "qId": "ch04_q008",
+                "picked": 1,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch04_q007",
+            "merge": true,
+            "data": {
+              "questionId": "ch04_q007",
+              "chapter": 4,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch04_q008",
+            "merge": true,
+            "data": {
+              "questionId": "ch04_q008",
+              "chapter": 4,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": null
+      }
+    },
+    {
+      "id": "practice-over-prior",
+      "description": "Practice on a chapter with existing practice and sample history: the increment is additive, history untouched.",
+      "call": "recordPracticeSession",
+      "prior": {
+        "chapterProgress": {
+          "practiceAttempted": 12,
+          "sampleLastScore": 6,
+          "sampleLastTotal": 10,
+          "sampleLastAttempted": 10,
+          "sampleLastPct": 60,
+          "sampleLastWrong": [],
+          "sampleBestScore": 6,
+          "sampleBestTotal": 10,
+          "sampleAttempts": 1
+        },
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 4,
+        "correct": 5,
+        "attempted": 5,
+        "scorePct": 100,
+        "answers": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "questions": [
+          {
+            "id": "ch04_q001",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q002",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q003",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q004",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch04_q005",
+            "chapter": 4,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ],
+        "source": null
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "4",
+            "merge": true,
+            "data": {
+              "practiceAttempted": {
+                "__sentinel": "increment",
+                "by": 5
+              }
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "practice",
+            "source": null,
+            "examScope": null,
+            "chapter": 4,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 5,
+            "attempted": 5,
+            "served": 5,
+            "scorePct": 100,
+            "endedEarly": false,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch04_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q003",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q004",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch04_q005",
+                "picked": 0,
+                "correct": true
+              }
+            ]
+          }
+        ],
+        "mistakes": [],
+        "returned": null
+      }
+    },
+    {
+      "id": "practice-mistakes-reattempt",
+      "description": "A mistakes-deck re-attempt: session source is 'mistakes', and correct answers advance deck streaks.",
+      "call": "recordPracticeSession",
+      "prior": {
+        "activeMistakes": [
+          {
+            "id": "ch05_q001",
+            "correctStreak": 0
+          },
+          {
+            "id": "ch05_q002",
+            "correctStreak": 1
+          }
+        ]
+      },
+      "input": {
+        "chapterNumber": 5,
+        "correct": 2,
+        "attempted": 3,
+        "scorePct": 67,
+        "answers": [
+          0,
+          0,
+          1
+        ],
+        "questions": [
+          {
+            "id": "ch05_q001",
+            "chapter": 5,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch05_q002",
+            "chapter": 5,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          },
+          {
+            "id": "ch05_q003",
+            "chapter": 5,
+            "correctIndex": 0,
+            "subtopic": "Asset Allocation"
+          }
+        ],
+        "source": "mistakes"
+      },
+      "expected": {
+        "chapterProgress": [
+          {
+            "docId": "5",
+            "merge": true,
+            "data": {
+              "practiceAttempted": {
+                "__sentinel": "increment",
+                "by": 3
+              }
+            }
+          }
+        ],
+        "sessions": [
+          {
+            "mode": "practice",
+            "source": "mistakes",
+            "examScope": null,
+            "chapter": 5,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 2,
+            "attempted": 3,
+            "served": 3,
+            "scorePct": 67,
+            "endedEarly": false,
+            "timeTaken": null,
+            "answers": [
+              {
+                "qId": "ch05_q001",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch05_q002",
+                "picked": 0,
+                "correct": true
+              },
+              {
+                "qId": "ch05_q003",
+                "picked": 1,
+                "correct": false
+              }
+            ]
+          }
+        ],
+        "mistakes": [
+          {
+            "docId": "ch05_q001",
+            "merge": true,
+            "data": {
+              "correctStreak": 1,
+              "retired": false,
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch05_q002",
+            "merge": true,
+            "data": {
+              "correctStreak": 2,
+              "retired": true,
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          },
+          {
+            "docId": "ch05_q003",
+            "merge": true,
+            "data": {
+              "questionId": "ch05_q003",
+              "chapter": 5,
+              "subtopic": "Asset Allocation",
+              "correctStreak": 0,
+              "retired": false,
+              "addedAt": {
+                "__sentinel": "serverTimestamp"
+              },
+              "updatedAt": {
+                "__sentinel": "serverTimestamp"
+              }
+            }
+          }
+        ],
+        "returned": null
+      }
+    },
+    {
+      "id": "flashcards-mixed",
+      "description": "Flashcard self-grades: one sessions doc only. Never touches chapterProgress, the Prepometer, or the mistakes deck.",
+      "call": "recordFlashcardSession",
+      "prior": {
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 6,
+        "grades": [
+          {
+            "front": "What is NAV?",
+            "subtopic": "Valuation",
+            "knew": true
+          },
+          {
+            "front": "What is TER?",
+            "subtopic": "Valuation",
+            "knew": false
+          },
+          {
+            "front": "What is an exit load?",
+            "subtopic": null,
+            "knew": true
+          }
+        ]
+      },
+      "expected": {
+        "chapterProgress": [],
+        "sessions": [
+          {
+            "mode": "flashcards",
+            "source": null,
+            "examScope": null,
+            "chapter": 6,
+            "completedAt": {
+              "__sentinel": "serverTimestamp"
+            },
+            "correct": 2,
+            "attempted": 3,
+            "served": 3,
+            "scorePct": 67,
+            "endedEarly": false,
+            "timeTaken": null,
+            "grades": [
+              {
+                "front": "What is NAV?",
+                "subtopic": "Valuation",
+                "knew": true
+              },
+              {
+                "front": "What is TER?",
+                "subtopic": "Valuation",
+                "knew": false
+              },
+              {
+                "front": "What is an exit load?",
+                "subtopic": "General",
+                "knew": true
+              }
+            ]
+          }
+        ],
+        "mistakes": [],
+        "returned": null
+      }
+    },
+    {
+      "id": "flashcards-empty",
+      "description": "A run with no grades writes nothing at all.",
+      "call": "recordFlashcardSession",
+      "prior": {
+        "activeMistakes": []
+      },
+      "input": {
+        "chapterNumber": 6,
+        "grades": []
+      },
+      "expected": {
+        "chapterProgress": [],
+        "sessions": [],
+        "mistakes": [],
+        "returned": null
+      }
+    }
+  ]
+}
