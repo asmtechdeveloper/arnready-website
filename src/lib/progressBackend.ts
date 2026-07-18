@@ -17,9 +17,20 @@
  *
  * SCOPE: the ONLY module in `src/` that may write to `chapterProgress`,
  * `sessions`, or `mistakes`. `test/singleWriteSite.test.ts` pins that.
+ *
+ * NOT IN SCOPE: the `users/{uid}` document itself. An earlier M4 draft included
+ * a ported `ensureUserDocument`, which wrote `isPaid: false` on creation
+ * because the deployed rule `create: … request.resource.data.isPaid == false`
+ * demands it. Codex finding M4-B1 rejected that: manual §0.9 says no client
+ * code path may write `isPaid`, full stop, and a deployed rule requiring the
+ * field does not override the canon — it means client-side creation of that
+ * document is simply not available to the web. Removed in M4-r. Nothing here
+ * needs it: `users/{uid}/{document=**}` grants the subcollection writes below
+ * without the parent document existing, and free question reads (`isFree ==
+ * true`) do not consult it either. See the M4 packet §6.3 for what this leaves
+ * open for M5.
  */
 import {
-  type Firestore,
   addDoc,
   collection,
   doc,
@@ -27,7 +38,6 @@ import {
   getDocs,
   increment,
   query,
-  runTransaction,
   serverTimestamp,
   setDoc,
   where,
@@ -63,22 +73,6 @@ export interface ProgressBackend {
   readActiveMistakes(): Promise<ActiveMistake[]>;
   /** Committed as one batch, mirroring the app. Never called with an empty list. */
   commitMistakes(writes: MistakeWrite[]): Promise<void>;
-  /**
-   * Creates `users/{uid}` if absent, and merges whitelisted profile fields when
-   * it already exists. Transactional so a concurrent server-side entitlement
-   * grant is never overwritten. Ported field-for-field from the app's
-   * `ensureUserDocument`, including its two-field whitelist — which is what
-   * makes `isPaid` unreachable through the profile argument (manual §0.9).
-   *
-   * `user` is passed explicitly rather than read from ambient auth state, as in
-   * the app: the caller has just obtained the user, and re-reading
-   * `currentUser` mid-transaction can resolve to a different account during a
-   * fast sign-in/sign-out flap.
-   */
-  ensureUserDocument(
-    user: { uid: string; displayName?: string | null; email?: string | null },
-    profile?: { displayName?: unknown; newsletterOptIn?: unknown },
-  ): Promise<boolean>;
 }
 
 /**
@@ -90,8 +84,6 @@ export function firestoreBackend(): ProgressBackend | null {
   if (!db) return null;
 
   const currentUid = (): string | null => getAuthClient()?.currentUser?.uid ?? null;
-
-  const userDoc = (db2: Firestore, uid: string) => doc(db2, 'users', uid);
 
   return {
     uid: currentUid,
@@ -139,48 +131,5 @@ export function firestoreBackend(): ProgressBackend | null {
       await batch.commit();
     },
 
-    async ensureUserDocument(user, profile = {}) {
-      if (!user?.uid) return false;
-
-      // Whitelist of client-owned profile fields, ported verbatim from
-      // ../ARNReady-App/services/userDocumentService.js. This is the security
-      // boundary: `isPaid` cannot pass through this helper because only these
-      // two keys, at these two types, are ever copied out of the caller's
-      // object. The spread below is therefore safe — it can only ever spread
-      // these two fields. Only the server-side entitlement chain may grant.
-      const safeProfile: { displayName?: string; newsletterOptIn?: boolean } = {};
-      if (typeof profile.displayName === 'string') safeProfile.displayName = profile.displayName;
-      if (typeof profile.newsletterOptIn === 'boolean') {
-        safeProfile.newsletterOptIn = profile.newsletterOptIn;
-      }
-
-      let created = false;
-      await runTransaction(db, async (transaction) => {
-        const ref = userDoc(db, user.uid);
-        const snap = await transaction.get(ref);
-        if (snap.exists()) {
-          if (Object.keys(safeProfile).length > 0) {
-            transaction.set(ref, safeProfile, { merge: true });
-          }
-          return;
-        }
-
-        // `isPaid: false` is required by the deployed rule
-        // `create: … request.resource.data.isPaid == false`. The `?? ''`
-        // fallbacks are the app's: a Google account with no display name must
-        // store an empty string, never null.
-        transaction.set(ref, {
-          uid: user.uid,
-          displayName: safeProfile.displayName ?? user.displayName ?? '',
-          email: user.email ?? '',
-          createdAt: serverTimestamp(),
-          isPaid: false,
-          freeMockConsumed: false,
-          ...safeProfile,
-        });
-        created = true;
-      });
-      return created;
-    },
   };
 }

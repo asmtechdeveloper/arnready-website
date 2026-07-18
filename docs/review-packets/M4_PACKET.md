@@ -35,13 +35,12 @@ the port necessarily includes the app's read/normalize layer as well
 |---|---|---|
 | `src/lib/progressService.ts` | new (557) | The port. Exam/practice/flashcard write sites + the read/normalize layer. |
 | `src/lib/mistakesService.ts` | new (94) | Port of the app's mistakes-deck hook. |
-| `src/lib/progressBackend.ts` | new (186) | The single Firestore write site + `ensureUserDocument`. |
+| `src/lib/progressBackend.ts` | new (135) | The single Firestore write site. |
 | `test/fixtures/progressParity.fixtures.json` | new | 14 cases, generated from the app services. Byte-identical to the app repo's copy. |
-| `test/progressParity.test.ts` | new (183) | Replays the fixtures through the real web services. |
+| `test/progressParity.test.ts` | new (182) | Replays the fixtures through the real web services. |
 | `test/singleWriteSite.test.ts` | new (109) | Structural containment of the shared collections. |
-| `test/m4LiveSession.test.ts` | new (204) | The live end-to-end session against `arnready-dev`. |
-| `test/ensureUserDocument.test.ts` | new (165) | Behavioural coverage of every user-document branch (§7). |
-| `test/isPaidDiscipline.test.ts` | **modified** (+90/−17) | Narrowed, not relaxed — see §5. |
+| `test/m4LiveSession.test.ts` | new (196) | The live end-to-end session against `arnready-dev`. |
+| `test/isPaidDiscipline.test.ts` | **modified** (+38/−17 net after M4-r) | Narrowed, not relaxed — see §5. |
 
 `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` also shows as modified in the working
 tree. **That change is not mine** — it predates this session and is Codex-owned
@@ -87,36 +86,62 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
 
 ### `npm test`
 ```
- Test Files  37 passed (37)
-      Tests  1149 passed | 5 skipped (1154)
+ Test Files  36 passed (36)
+      Tests  1136 passed | 4 skipped (1140)
 ```
 
-**On the 5 skips.** All five are in `test/m4LiveSession.test.ts` and are the
+**On the 4 skips.** All four are in `test/m4LiveSession.test.ts` and are the
 credential-gated live-Firestore tests, skipped without `ARNREADY_LIVE_E2E=1`
-(§4). No other file in the suite skips. M3's baseline was 1,102 tests; the +52
-is 23 parity + 11 user-document + 8 single-write-site + 6 live-session + 4 net
-new isPaid-discipline assertions.
+(§4). No other file in the suite skips. M3's baseline was 1,102 tests; the +38
+is 23 parity + 8 single-write-site + 5 live-session + 2 net new
+isPaid-discipline assertions.
 
-### `npm run build` (prebuild export + build + postbuild gate)
+### `npm run build` — **DOES NOT REPRODUCE** (Codex M4-B2, still OPEN)
+
+Codex was right and the earlier packet claim is withdrawn. The full build no
+longer completes, and it fails for both of us in the same place:
+
 ```
-Exported 240 free questions across 12 chapters, 732 flashcards, paid manifest:
-21451 content-scope + 21765 public-scope field-level text fingerprints …
-Paid-content leak gate PASSED — 1937 artefact(s) scanned …
-✓ Compiled successfully in 2.8s
-✓ Generating static pages using 9 workers (196/196) in 626ms
+> arnready-website@0.0.0 export-content
+> node scripts/export-content.mjs
+
+export-content failed: 8 RESOURCE_EXHAUSTED: Quota exceeded.
+```
+
+This is the live Firestore read in `prebuild → export-content`, not the build.
+Isolating the stages shows exactly how far it gets:
+
+| Stage | Result |
+|---|---|
+| `prebuild` → `export-content` (live Firestore read) | **FAILS — `8 RESOURCE_EXHAUSTED`** |
+| `next build` on the existing `content/` | PASSES — compiled, 196/196 static pages |
+| `node scripts/check-paid-leak.mjs` on the resulting `out/` | PASSES — 1937 artefacts |
+
+```
+✓ Compiled successfully in 2.7s
+✓ Generating static pages using 9 workers (196/196) in 590ms
+
 Paid-content leak gate PASSED — 1937 artefact(s) scanned against 4596 paid ids
 + 21451 content-scope/21765 public-scope text fingerprints; exported question
 files structurally free-only; zero questions and an exact canonical flashcard
 sampler confirmed in the public export.
 ```
 
-### `node scripts/check-paid-leak.mjs` (standalone)
-```
-Paid-content leak gate PASSED — 1937 artefact(s) scanned against 4596 paid ids
-+ 21451 content-scope/21765 public-scope text fingerprints; exported question
-files structurally free-only; zero questions and an exact canonical flashcard
-sampler confirmed in the public export.
-```
+**Why this is environmental and not an M4 regression:** M4 changes no content,
+export, or build code. `scripts/export-content.mjs`, `scripts/check-paid-leak.mjs`,
+`next.config`, and everything under `src/app/` are untouched by this milestone —
+verifiable from the changed-file list in §1. The failing step reads Firestore
+with the dev service-account key and exhausts a project quota on `arnready-dev`.
+The earlier green output in this packet was real, from before the quota was
+consumed; it is nonetheless **not acceptable evidence**, because a gate that
+cannot be reproduced from the reviewed state is not a passing gate. That is
+precisely M4-B2's point.
+
+**This is not resolvable by the executor.** It needs quota restored on
+`arnready-dev` — either the daily quota resetting, or the project moving off the
+free tier. Flagged to Anusha; see §8.1. The moment it is available, the full
+gate will be re-run and this section replaced with fresh output from the final
+commit.
 
 M4 adds no page, route, or content-export change, so the artefact count is
 unchanged from M3. `scripts/check-paid-leak.mjs` is untouched — diff it.
@@ -285,41 +310,38 @@ Firestore-console verification of these documents. That step is hers and is
 
 `test/isPaidDiscipline.test.ts` is modified. Flagging it prominently, because
 "any pre-existing test modified to pass = investigate" is exactly the right
-instinct here.
+instinct here. This section describes its **final, post-M4-r state**; the
+intermediate state at `a148a57` was more permissive and is what M4-B1 caught.
 
 M3 asserted that **no** `src/` module imports or calls any Firestore write API,
 and recorded in that file why: *"user document creation is M4's, and it will add
-these imports deliberately, in one reviewed service (manual M4: 'the
-single-write-site problem')."* M4 is that milestone, so the assertion had to
-change the moment the product started writing at all.
+these imports deliberately, in one reviewed service."* M4 writes progress,
+sessions and mistakes, so that assertion had to change. M3's note also expected
+M4 to create the user document — M4-B1 established it cannot (§6.3).
 
 It was **narrowed, not relaxed**:
 
 - Every write API is still banned across all of `src/`, with exactly one
   allowlisted file (`WRITE_SITE = 'lib/progressBackend.ts'`). The guarantee moves
   from "nothing writes" to "exactly one reviewed module writes" — the strongest
-  form still available.
+  form available once the product must write at all.
 - The API-call scan gained a negative lookbehind so `backend.increment(...)` (a
   call on the injected seam) is not confused with the SDK's `increment(...)`. A
   bare `increment(` in a service file still fails.
-- `users` collection access is now split: `lib/entitlementStore.ts` may **read**
-  (M3's listener), only the write site may write.
-- **Four assertions were added**, all strictly tightening:
-  - the write site mentions `isPaid` exactly once, as the literal `false`;
-  - it can never raise `isPaid` on any path, and no caller-supplied object may
-    be spread into the user document (the route by which an `isPaid: true` could
-    otherwise smuggle itself in);
-  - `ensureUserDocument` bails out when the document already exists;
-  - it uses a transaction.
+- `users` access is split: `lib/entitlementStore.ts` may **read** (M3's
+  listener); nothing may write the root document.
+- The `isPaid` reader allowlist is **unchanged from M3** —
+  `entitlementStore`, `nudgeGates`, `AppShell`. M4-r restored it after M4-B1;
+  the write site does not appear on it.
+- **Two assertions added**, both strictly tightening:
+  - the write site never names `isPaid` **at all** (not "only writes it as
+    false" — the field is absent from the module entirely);
+  - no `src/` module writes the `users` root document or runs a transaction on
+    it.
 
-Net: 19 assertions → 23. No assertion was deleted or weakened.
-
-One further edit landed during the §7 review: the assertion that no object may be
-spread into the user document was **replaced**, because the faithful port does
-spread `safeProfile` exactly as the app does. It was replaced by a stronger pair
-— that the two `typeof` whitelist guards exist, that `safeProfile` receives
-exactly two keys, and that `...safeProfile` is the only spread in the file —
-backed by the runtime proof in `ensureUserDocument.test.ts`.
+Net: 19 assertions → 21, and the two additions are absence proofs rather than
+constraints on a permitted write. No assertion was deleted or weakened relative
+to M3.
 
 ---
 
@@ -347,32 +369,38 @@ prior state) and the session log does not consult `prev`. `recordExamSession`
 still reads, because its documents *and* its return value genuinely depend on
 `prev`. Documented at the function in a `PORT NOTE`.
 
-**6.3 — `ensureUserDocument` is ported, not narrowed.** Included per Anusha's
-2026-07-19 decision that M4 owns it. An earlier draft deliberately narrowed it
-to create-only and declared that as a deviation here; the adversarial review
-(§7, P2–P5) established that the narrowing was wrong for a parity milestone, and
-it was reverted. **There is now no deviation to declare**: the function is a
-faithful port — the two-field whitelist, the existing-document merge branch, the
-`?? ''` fallbacks, the explicit `user` argument, and the `...safeProfile` spread
-all match the app.
+**6.3 — `ensureUserDocument` is REMOVED (M4-r, Codex M4-B1).** M4 originally
+included a ported `ensureUserDocument`, per Anusha's 2026-07-19 decision that M4
+owns the user-document write shape. Codex rejected it as a manual §0.9
+violation, and the finding is correct: the deployed rule
+`allow create: … request.resource.data.isPaid == false` means a client-side
+create MUST send `isPaid`, while §0.9 says no client code path may write that
+field. Both cannot hold. The packet previously argued the rule *justified* the
+write — that argument was wrong. A rule requiring the field is evidence that
+client-side creation of that document is unavailable to the web, not permission
+to do it.
 
-The one intentional difference is the caller shape: the app passes a
-`FirebaseAuthTypes.User`, the web passes `{ uid, displayName, email }`. Field
-values written are identical.
+Removed entirely in M4-r. `src/lib/progressBackend.ts` now contains no
+`runTransaction`, no `users/{uid}` root write, and **no occurrence of the string
+`isPaid` at all**; `test/isPaidDiscipline.test.ts` is restored to its M3
+allowlist and gains two assertions pinning that absence.
 
-On creation the field set is the app's: `uid`, `displayName`, `email`,
-`createdAt`, `isPaid: false`, `freeMockConsumed: false`, plus any whitelisted
-profile field. `isPaid: false` is required by the deployed rule
-`allow create: … request.resource.data.isPaid == false`, and is pinned to that
-literal by test.
+**Nothing in M4 needed it**, which is why this is a scope reduction rather than
+a redesign:
+- the deployed `users/{uid}/{document=**}` rule grants every progress, session
+  and mistakes write **without** the parent document existing — confirmed by the
+  live session in §4, which wrote all of them successfully;
+- free question reads are gated on `isFree == true`, which does not consult the
+  user document either.
 
-**Note on the spread.** The creation payload spreads `safeProfile`, as the app
-does. The security boundary is not the absence of a spread but the whitelist
-that builds it: only `displayName` (when `typeof === 'string'`) and
-`newsletterOptIn` (when `typeof === 'boolean'`) are ever copied out of the
-caller's object. `ensureUserDocument.test.ts` proves this by calling the function
-with `{ isPaid: true, freeMockConsumed: true, uid: 'someone-else' }` and
-asserting none of it reaches Firestore, on both the create and merge paths.
+**What this leaves open, for M5 to raise rather than assume.** The user document
+IS consulted by the deployed `questions` rule for PAID full-bank reads
+(`exists(users/{uid}) && isPaid == true`). For a paying user that document is
+created server-side by the purchase chain, so the common path is covered. If M5
+or M6 finds a surface that genuinely requires the web to create it, that is a
+canon question for Anusha — either an explicit §0.9 amendment or a Cloud
+Function in the app repo's `functions/` (itself a §0.10 stop condition). It must
+not be re-introduced client-side on an executor's judgement.
 
 ### Not a deviation, but worth stating
 
@@ -414,6 +442,15 @@ All four concern `ensureUserDocument`, which the parity fixtures stub — so, as
 the subagent correctly observed, **none of these was covered by any gate**. That
 gap is closed by the new `test/ensureUserDocument.test.ts` (11 tests, every
 branch).
+
+> **Superseded by M4-r.** P2–P5 all concern `ensureUserDocument`, which Codex
+> M4-B1 has since removed from the milestone entirely (§6.3). They are retained
+> here unedited because they are the record of what the pre-commit review found,
+> and because P2's reasoning error is instructive: I corrected a deliberate
+> narrowing *towards* the app, when the correct move was to remove the function
+> because the website canon forbids it regardless of what the app does. The
+> subagent measured the port against the app; neither of us measured it against
+> §0.9. Codex did.
 
 **P2 — the existing-document merge branch was dropped.** The app writes
 whitelisted profile fields with `{ merge: true }` when the document already
@@ -476,16 +513,40 @@ true.
 
 ## 8. Known limitations and deferred items
 
+### 8.1 — BLOCKING: Firestore quota on `arnready-dev` (Codex M4-B2)
+
+The mandatory `npm run build` gate cannot be reproduced until the
+`8 RESOURCE_EXHAUSTED: Quota exceeded` error clears on the `arnready-dev`
+project (§2). This is an environment/account matter, outside the executor's
+reach and outside the M4 diff. **M4 cannot pass while it stands**, and the
+packet does not ask it to: M4-B2 remains OPEN.
+
+Anusha's options, in the order I would try them: let the daily quota reset and
+re-run; or move `arnready-dev` off the free tier if this recurs, since every
+milestone from here needs a credentialed build. Worth checking the Firebase
+console's usage page first to confirm which quota was hit — the export reads on
+the order of a thousand documents per run, so repeated builds today (mine and
+Codex's) exhausting a daily allowance is the likely explanation, but that should
+be confirmed rather than assumed.
+
+
 1. **Anusha's Firestore-console verification is COMPLETE** (2026-07-19). She
    walked all four document sets — `chapterProgress/12`, the six session
    documents, the eight mistakes-deck entries, and the user document — and
-   confirmed each. Two checks are worth recording because they are live
-   evidence rather than test evidence: `sampleLastTotal: 10` beside the session
-   log's `served: 20` (the locked free denominator holding while the immutable
-   session record keeps the true served count), and `createdAt` on the user
-   document remaining ~12 minutes older than `sampleLastDate` — proof that the
-   second live run's `ensureUserDocument` correctly wrote nothing to an existing
-   document, which is the §7 P2 defect demonstrated fixed on real data.
+   confirmed each. The check worth recording, because it is live evidence
+   rather than test evidence: `sampleLastTotal: 10` beside the session log's
+   `served: 20` — the locked free denominator holding while the immutable
+   session record keeps the true served count.
+
+   **Caveat after M4-r.** That verification was performed against the `a148a57`
+   state, which still created the user document. The `users/{uid}` document
+   Anusha inspected was written by the now-removed `ensureUserDocument`; the web
+   no longer writes it, and that document should be treated as an artefact of
+   the superseded implementation. The progress, session and mistakes documents —
+   everything M4 actually owns — were written by code that M4-r does not change,
+   so her verification of those still stands. The one thing outstanding is a
+   live run against an account with NO user document; see §10, M4-B1
+   verification.
 2. **The app-repo fixtures are committed** at `bd68212` on
    `m4-progress-parity-fixtures`. Merging that branch is Anusha's call; until it
    merges, the app repo's `main` asserts nothing about parity, so a change to
@@ -524,5 +585,97 @@ true.
   already present here, `jest` already present there); no scoring/gate constant
   changed; no deploy command run.
 - **§0.11 Gates** — all five green, §2.
+
+---
+
+## 10. Remediation log — M4-r (2026-07-19)
+
+Codex review of `a148a57`: **REJECT**, two BLOCKERs. Neither is disputed.
+
+### M4-B1 — client write to `users/{uid}.isPaid` — **RESOLVED**
+
+*Finding:* `ensureUserDocument` performed `transaction.set` with `isPaid: false`,
+so a web sign-in would write the entitlement field client-side. Manual §0.9
+prohibits any client write path; the app's matching behaviour and the deployed
+rule's requirement do not override the website canon.
+
+*Assessment:* correct, and the packet's original defence was the error. I argued
+the deployed rule *required* the write. It does — which is exactly why
+client-side creation of that document is not available to the web under §0.9,
+rather than being licensed by it.
+
+*Fix:* removed `ensureUserDocument` from the milestone entirely — a scope
+**reduction** back to the manual's literal M4 spec (progress/sessions/mistakes).
+Codex's other suggested route, a server-controlled path, would mean a Cloud
+Function in the app repo's `functions/`, which is a §0.10 stop condition and not
+an executor's call; the canon-change route is Anusha's. Removal is the only
+option available without either.
+
+*Changes:* `src/lib/progressBackend.ts` — interface method, implementation,
+`runTransaction` import and the `users/{uid}` root helper all removed; the file
+now contains **no occurrence of `isPaid`**. `test/ensureUserDocument.test.ts`
+deleted. `test/isPaidDiscipline.test.ts` — `ALLOWED` restored to its M3 form
+(`entitlementStore`, `nudgeGates`, `AppShell`), the three user-document
+assertions replaced by two stronger ones: the write site never names `isPaid`
+at all, and no `src/` module writes the users root or runs a transaction on it.
+`test/m4LiveSession.test.ts` and `test/progressParity.test.ts` — call sites and
+stub removed.
+
+*Verification, stated precisely.* What is demonstrated: `grep -c isPaid
+src/lib/progressBackend.ts` → 0; no production caller of `ensureUserDocument`
+ever existed (only its own definition and tests — `grep -rn ensureUserDocument
+src test`); lint, typecheck and the full 1136-test suite pass.
+
+What is **not** yet demonstrated, and must not be read as if it were: a live
+session proving the progress/session/mistakes writes still succeed with **no**
+`users/{uid}` document present. The live harness cannot run under the same
+quota exhaustion as M4-B2 (attempted at M4-r; failed with
+`8 RESOURCE_EXHAUSTED`). The §4 evidence predates the removal, and in that run
+`ensureUserDocument` had created the user document first — so it does not settle
+the question either.
+
+The argument that removal is safe is therefore structural, not yet empirical:
+the deployed rule is `match /users/{uid} { match /{document=**} { allow read,
+write: if isOwner(uid) } }`, which grants subcollection writes on ownership
+alone, and Firestore permits documents in a subcollection whose parent document
+does not exist. Sound, and standard Firestore semantics — but it should be
+confirmed on real data before M4 passes. Folded into the M4-B2 re-run (§8.1):
+when quota returns, the live session runs against an account with no user
+document and this section is updated with the result.
+
+*Consequence recorded, not silently absorbed:* see §6.3 for what this leaves
+open for M5, and why it must go to Anusha rather than be re-introduced.
+
+### M4-B2 — build gate does not reproduce — **OPEN, blocked on Anusha**
+
+*Finding:* independent execution of `npm run build` fails at
+`prebuild → export-content` with `8 RESOURCE_EXHAUSTED: Quota exceeded`, so the
+packet's green build output does not reproduce.
+
+*Assessment:* reproduced exactly. The earlier green output was genuine but is
+withdrawn as evidence — a gate that cannot be reproduced from the reviewed state
+is not a passing gate.
+
+*Status:* **not resolved, and not resolvable by the executor.** The failure is
+in a live Firestore read on a project whose quota is exhausted; M4 touches no
+content, export, or build code. §2 now records the honest stage-by-stage result
+(`next build` and the leak gate both pass on existing content; only the live
+export fails) and §8.1 states what Anusha needs to do. Fresh full-gate output
+will be attached the moment quota is available.
+
+### Gates at M4-r
+
+| Gate | Result |
+|---|---|
+| `npm run lint` | PASS |
+| `npm run typecheck` | PASS |
+| `npm test` | PASS — 1136 passed, 4 skipped (36 files) |
+| `npm run build` | **BLOCKED** — M4-B2, see §2 and §8.1 |
+| `node scripts/check-paid-leak.mjs` | PASS — 1937 artefacts |
+
+The suite drops from 1149 to 1136 because the 11 `ensureUserDocument` tests and
+one live-session test were removed with the function, and the isPaid-discipline
+file went from 23 assertions to 21 (three user-document assertions out, two
+stronger absence assertions in).
 
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*

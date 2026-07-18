@@ -65,7 +65,6 @@ function recordingBackend(prior: Prior) {
     commitMistakes: async (writes) => {
       captured.mistakes.push(...writes);
     },
-    ensureUserDocument: async () => false,
   };
 
   return { backend, captured };

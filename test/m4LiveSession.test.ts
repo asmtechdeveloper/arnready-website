@@ -100,14 +100,6 @@ describe.skipIf(!LIVE)('M4 live session against arnready-dev', () => {
   // 7 correct, 3 wrong, 10 unanswered — the canonical free-sample shape.
   const answers = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, ...Array(10).fill(null)];
 
-  it('ensures the user document without ever raising isPaid', async () => {
-    await backend.ensureUserDocument({ uid: TEST_UID, displayName: 'ARNReady Test', email: 'arnreadytest@gmail.com' });
-    const snap = await db.doc(`users/${TEST_UID}`).get();
-    expect(snap.exists).toBe(true);
-    // The account is unpaid; the web must never have moved it.
-    expect(snap.data()?.isPaid).toBe(false);
-  }, 30_000);
-
   it('records a free sample exam with the locked denominator', async () => {
     const { next } = await progress.recordExamSession(backend, {
       chapterNumber: CHAPTER,
