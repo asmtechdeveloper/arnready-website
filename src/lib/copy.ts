@@ -35,7 +35,7 @@ export const footerDisclaimer = {
 
 export const nav = {
   primaryCta: { href: '/pricing', label: 'Get ARNReady' },
-  signIn: { label: 'Sign in — coming soon' },
+  signIn: { label: 'Sign in' },
   menuLabel: 'Menu',
   closeMenuLabel: 'Close menu',
   ariaLabel: 'Primary',
@@ -426,9 +426,9 @@ export const chapters = {
     subtopicsHeading: 'What’s inside this chapter',
     samplerHeading: 'Try 10 flashcards from this chapter',
     signIn: {
-      label: 'Sign in — coming soon',
-      title: 'Google sign-in is coming soon. In the meantime, see pricing or get the app.',
-      body: 'Sign in (coming soon) to unlock every flashcard, 20 practice questions, and your progress for this chapter.',
+      label: 'Sign in with Google — free',
+      title: 'Sign in with Google to unlock the rest of this chapter.',
+      body: 'Sign in to unlock every flashcard, 20 practice questions, and your progress for this chapter. Free, and it takes a moment.',
     },
     pricingLink: { href: '/pricing', label: 'See what sign-in unlocks' },
     /** Metadata description — the only Firestore-derived values allowed in the interpolation are the chapter number and its title. */
@@ -564,3 +564,58 @@ export const upgradeWall = {
   primaryCta: { href: '/pricing', label: 'See premium' },
   backToChapter: 'Back to the chapter', // href built by the caller from returnTo
 };
+
+// ── Auth (M3) ────────────────────────────────────────────────────────────
+// Sign-in is never a nudge: it opens the free tier, so it pitches what
+// signing in ADDS and never implies pressure or scarcity. Cancelling is
+// silent by design — a learner who closes the Google popup is told nothing,
+// because nothing went wrong (manual §1: "always cancellable").
+export const auth = {
+  signIn: 'Sign in',
+  signInWithGoogle: 'Sign in with Google',
+  signingIn: 'Opening Google…',
+  signOut: 'Sign out',
+  /** Header/account label. Falls back to the email, then to a neutral noun. */
+  signedInAs: (name: string | null, email: string | null) =>
+    `Signed in as ${name?.trim() || email?.trim() || 'your account'}`,
+  /** Shown only for a genuine failure — never for a cancelled popup. */
+  error: 'Sign-in didn’t go through. Have another go in a moment.',
+  /** Build has no usable Firebase config: honest, not alarming. */
+  unavailable: 'Sign-in isn’t available right now. Everything free to read stays open.',
+} as const;
+
+// ── /app shell (M3) ──────────────────────────────────────────────────────
+// M3 delivers the auth-side shell ONLY. The study surfaces (practice, exam,
+// flashcards) land in M5; mock, mistakes and progress in M6. This copy says
+// so plainly rather than implying features that aren't there — and it makes
+// no premium pitch, because the shell is not a nudge surface.
+export const appShell = {
+  meta: {
+    title: 'Your study room — ARNReady',
+    description: 'Sign in to ARNReady to study for the NISM Series V-A exam.',
+  },
+  signedOut: {
+    mood: 'waving' as const,
+    title: 'Your study room',
+    body: 'Sign in with Google to open every flashcard, 20 practice questions per chapter, and your progress. It’s free, and your work follows you between the app and the web.',
+    /** Public reading stays open — the honest alternative to signing in. */
+    browseInstead: { href: '/chapters', label: 'Or keep reading the chapters' },
+  },
+  signedIn: {
+    mood: 'working' as const,
+    title: 'You’re in.',
+    body: 'Your study surfaces are being built. Here’s what’s landing, in order:',
+    /** Plain roadmap — no dates promised, nothing dressed up as available. */
+    comingSoon: [
+      'Flashcards, practice, and chapter exams',
+      'Mock tests, your mistakes deck, and progress',
+    ],
+    browse: { href: '/chapters', label: 'Read the chapters' },
+  },
+  loading: 'Checking your account…',
+  unavailable: {
+    title: 'Sign-in isn’t available right now',
+    body: 'Something’s off with our end of the sign-in setup. Everything free to read stays open while we sort it out.',
+    browse: { href: '/chapters', label: 'Read the chapters' },
+  },
+} as const;

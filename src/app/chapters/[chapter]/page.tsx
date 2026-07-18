@@ -5,6 +5,7 @@ import { chapters, syllabus } from '@/lib/copy';
 import { loadChapterContent, publishedSubtopics, TOTAL_CHAPTERS } from '@/lib/content';
 import { TeachingBlocks } from '@/components/TeachingBlocks';
 import { FlashcardSampler } from '@/components/FlashcardSampler';
+import { SignInButton } from '@/components/SignInButton';
 
 // generateStaticParams + dynamicParams for the {chapter} segment live in the
 // sibling layout.tsx — a page.tsx's own generateStaticParams only registers
@@ -91,20 +92,15 @@ export default async function ChapterHubPage({ params }: { params: Promise<{ cha
 
       <div className="mt-12 flex flex-col items-center gap-3 rounded-card bg-purple-soft p-8 text-center">
         <p className="max-w-reading text-[0.95rem] leading-6 text-ink">{chapters.hub.signIn.body}</p>
-        {/* Sign-in is informational only until M3 wires real auth — the
-            page's one functional primary CTA is the pricing link below. */}
-        <button
-          type="button"
-          disabled
-          title={chapters.hub.signIn.title}
-          aria-disabled="true"
-          className="flex min-h-11 items-center rounded-pill border border-line bg-white px-6 text-sm font-bold text-muted"
-        >
-          {chapters.hub.signIn.label}
-        </button>
+        {/* Sign-in prompt #1 of the three in manual §1 ("after the 10th
+            sampler card"), live since M3. This is now the hub's ONE primary
+            CTA, per manual M1 step 2 ("one sign-in CTA") — M1-B8 had made the
+            pricing link primary only because sign-in was a disabled stub, so
+            with auth live the pricing link demotes to a quiet secondary. */}
+        <SignInButton label={chapters.hub.signIn.label} />
         <Link
           href={chapters.hub.pricingLink.href}
-          className="mt-2 flex min-h-11 items-center rounded-pill bg-purple px-6 text-sm font-bold text-white hover:bg-purple-dark"
+          className="mt-1 flex min-h-11 items-center text-sm font-semibold text-purple hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple"
         >
           {chapters.hub.pricingLink.label}
         </Link>

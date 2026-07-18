@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { brand, nav } from '@/lib/copy';
 import { Icon } from '@/components/Icon';
+import { HeaderAuth } from '@/components/HeaderAuth';
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -48,17 +49,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          {/* Sign-in slot: stubbed until M3 wires Google auth + the
-              entitlement store. Disabled, not a dead link. */}
-          <button
-            type="button"
-            disabled
-            title={nav.signIn.label}
-            aria-disabled="true"
-            className="hidden min-h-11 items-center rounded-pill border border-line px-4 text-sm font-semibold text-muted sm:inline-flex"
-          >
-            {nav.signIn.label}
-          </button>
+          {/* Sign-in slot — live since M3 (manual §1 prompt #3, in the
+              header). Auth-state-dependent, so it is a client component. */}
+          <HeaderAuth variant="desktop" />
           <Link
             href={nav.primaryCta.href}
             onClick={closeMenu}
@@ -93,16 +86,8 @@ export function Header() {
                 </Link>
               </li>
             ))}
-            <li>
-              <button
-                type="button"
-                disabled
-                title={nav.signIn.label}
-                aria-disabled="true"
-                className="flex min-h-11 items-center text-base font-semibold text-muted"
-              >
-                {nav.signIn.label}
-              </button>
+            <li className="mt-1">
+              <HeaderAuth variant="mobile" />
             </li>
           </ul>
         </nav>

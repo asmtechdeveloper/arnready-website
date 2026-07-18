@@ -32,3 +32,22 @@ THE SOFTWARE.
 ```
 
 Source: <https://github.com/feathericons/feather/blob/main/LICENSE>
+
+## Firebase JavaScript SDK
+
+`firebase` (Apache License 2.0) — added in M3 for Google sign-in and the
+read-only `users/{uid}.isPaid` entitlement listener. Only the modular
+`firebase/app`, `firebase/auth`, and `firebase/firestore` entry points are
+imported, so the static export tree-shakes the remainder.
+
+Copyright Google LLC. Full licence text:
+<https://github.com/firebase/firebase-js-sdk/blob/master/LICENSE>
+
+## Zustand
+
+`zustand` (MIT License) — added in M3 for the auth and entitlement stores,
+mirroring the app repo's `services/entitlementStore.ts`, which uses the same
+library and the same store shape so the two can be diffed side by side.
+
+Copyright (c) 2019 Paul Henschel. Full licence text:
+<https://github.com/pmndrs/zustand/blob/main/LICENSE>

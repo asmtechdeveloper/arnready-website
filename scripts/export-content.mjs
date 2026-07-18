@@ -12,7 +12,11 @@
  * against every build artefact. See that file for the gate.
  *
  * Credentials: the service account key stays OUTSIDE this repo (app repo's
- * scripts/ workspace). Override with ARNREADY_SA_KEY=/path/to/key.json.
+ * scripts/ workspace). The key is selected by the SAME dev/prod toggle the
+ * web client uses, NEXT_PUBLIC_APP_ENV (Anusha, 2026-07-18) — see
+ * src/lib/firebaseEnv.ts. Override the path with ARNREADY_SA_KEY=/path/to/
+ * key.json for one-offs; the project assertion below still applies, so an
+ * override can never silently pull content from the wrong project.
  */
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -24,9 +28,48 @@ import { computeSamplerManifest } from './lib/samplerManifest.mjs';
 import { EXPORT_BASENAME, ensureReaderLayout, stageGeneration, validateStagedGeneration, publishGeneration } from './lib/atomicExport.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
+
+// ── The dev/prod toggle (Anusha, 2026-07-18) ─────────────────────────────
+// NEXT_PUBLIC_APP_ENV is the single switch for BOTH the web client's Firebase
+// project (src/lib/firebaseEnv.ts) and this build-time content pull, so
+// public content and auth can never come from different projects.
+//
+// This script runs under plain node, which does not load .env.local the way
+// Next.js does — so we read that file ourselves. A real environment variable
+// always wins; .env.local is the fallback source, not an override.
+const EXPECTED_PROJECT_ID = { dev: 'arnready-dev', prod: 'arnready' };
+
+function readAppEnvFromEnvLocal() {
+  try {
+    const raw = readFileSync(path.join(ROOT, '.env.local'), 'utf8');
+    for (const line of raw.split('\n')) {
+      const match = /^\s*NEXT_PUBLIC_APP_ENV\s*=\s*(.*)$/.exec(line);
+      if (!match) continue;
+      // Tolerate quoted values even though the documented format is bare.
+      return match[1].trim().replace(/^["']|["']$/g, '');
+    }
+  } catch {
+    // No .env.local — the explicit-env path below reports it clearly.
+  }
+  return undefined;
+}
+
+const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV?.trim() || readAppEnvFromEnvLocal();
+
+if (APP_ENV !== 'dev' && APP_ENV !== 'prod') {
+  throw new Error(
+    `NEXT_PUBLIC_APP_ENV must be "dev" or "prod" (received ` +
+      `${APP_ENV === undefined ? 'no value' : JSON.stringify(APP_ENV)}). ` +
+      `Set it in .env.local. There is deliberately no default — a guessed ` +
+      `project would silently publish the wrong environment's content.`,
+  );
+}
+
+// Derived from the toggle; ARNREADY_SA_KEY overrides the PATH only, never the
+// project assertion below.
 const KEY_PATH =
   process.env.ARNREADY_SA_KEY ??
-  path.resolve(ROOT, '../ARNReady-App/scripts/serviceAccountKey.json');
+  path.resolve(ROOT, `../ARNReady-App/scripts/serviceAccountKey.${APP_ENV}.json`);
 
 // M1-S6 (re-review hardening): both the content/ SSG source and the
 // .leakcheck/ manifests are published UNDER ONE generation directory and made
@@ -37,6 +80,20 @@ const EXPORT_DIR = path.join(ROOT, EXPORT_BASENAME);
 
 async function main() {
   const key = JSON.parse(readFileSync(KEY_PATH, 'utf8'));
+
+  // The guardrail that closes the ARNREADY_SA_KEY override path: whatever key
+  // we ended up with MUST belong to the project this build's toggle selects.
+  // Without this, a stale override could publish prod content into a dev
+  // build (or, far worse, dev content onto the live site) with no signal.
+  if (key.project_id !== EXPECTED_PROJECT_ID[APP_ENV]) {
+    throw new Error(
+      `Service-account project mismatch. NEXT_PUBLIC_APP_ENV="${APP_ENV}" ` +
+        `requires project "${EXPECTED_PROJECT_ID[APP_ENV]}", but the key at ` +
+        `${KEY_PATH} belongs to "${key.project_id}". Refusing to export — ` +
+        `content and auth must come from the same project.`,
+    );
+  }
+
   initializeApp({ credential: cert(key) });
   const db = getFirestore();
 

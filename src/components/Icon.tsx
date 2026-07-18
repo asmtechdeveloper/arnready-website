@@ -24,6 +24,9 @@ export const PATHS = {
   'check-circle': 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01L9 11.01',
   lock: 'M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2zM7 11V7a5 5 0 0 1 10 0v4',
   award: 'M5 8a7 7 0 1 0 14 0a7 7 0 1 0-14 0M8.21 13.89L7 23L12 20L17 23L15.79 13.88',
+  'log-in': 'M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3',
+  'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+  user: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M16 7a4 4 0 1 1-8 0a4 4 0 1 1 8 0',
 } as const;
 
 export type IconName = keyof typeof PATHS;

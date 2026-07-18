@@ -48,4 +48,17 @@ describe('Icon PATHS pin exact official Feather geometry', () => {
   it('award — <circle cx=12 cy=8 r=7/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>', () => {
     expect(PATHS.award).toBe('M5 8a7 7 0 1 0 14 0a7 7 0 1 0-14 0M8.21 13.89L7 23L12 20L17 23L15.79 13.88');
   });
+
+  // ── M3 additions (auth surfaces) ──────────────────────────────────────
+  it('log-in — <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1=15 y1=12 x2=3 y2=12/>', () => {
+    expect(PATHS['log-in']).toBe('M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3');
+  });
+
+  it('log-out — <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1=21 y1=12 x2=9 y2=12/>', () => {
+    expect(PATHS['log-out']).toBe('M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9');
+  });
+
+  it('user — <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx=12 cy=7 r=4/>', () => {
+    expect(PATHS.user).toBe('M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M16 7a4 4 0 1 1-8 0a4 4 0 1 1 8 0');
+  });
 });
