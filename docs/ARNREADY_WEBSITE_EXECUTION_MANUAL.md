@@ -352,7 +352,7 @@ explicit go, as its own approval.
 ## 3. Session prompts for Anusha (paste verbatim)
 
 **Milestone session (orchestrator) — THE standard prompt. Fire this for every
-milestone; only the inputs block changes.**
+milestone; nothing in it changes but the number.**
 > Read `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` in full, then CLAUDE.md,
 > `docs/ARNREADY_WEBSITE_DESIGN_DOCUMENT.md`, and
 > `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md` (§3 generic checks plus its §4
@@ -372,12 +372,18 @@ milestone; only the inputs block changes.**
 > exactly what Codex will audit. Make no product or design decision the manual
 > does not already decide; stop and ask me instead.
 >
-> **Inputs for this milestone** (write "none" where not applicable):
-> - Config/secrets I am supplying: <...>
-> - Test accounts / uids: <...>
-> - New dependencies pre-approved for this milestone (any other remains a
->   §0.10 stop condition): <...>
-> - Decisions I have made that are not yet written into the manual: <...>
+> **Before you write any code, work out what you need from me, and ask.** From
+> the milestone spec, its amendments, and the §0 stop conditions, determine:
+> config or secrets you need; test accounts, uids, or devices; any new
+> dependency (a §0.10 stop condition until I approve it); any decision the
+> manual does not already make; and any step I must perform myself — Firebase,
+> Play or Razorpay console work, secrets, a device pass, an approval. Put that
+> list to me, then PAUSE.
+>
+> Where I have to do something by hand, walk me through it ONE STEP AT A TIME,
+> wait for me to confirm each step is done, and only resume the build once the
+> prerequisites are genuinely in place. Never guess a value, invent a
+> placeholder, or work around a missing prerequisite.
 >
 > When done, run all §0.11 gates, commit as `M<n>: <summary>` on `web-product`,
 > and produce the evidence packet defined in review protocol §2 as
