@@ -351,19 +351,38 @@ explicit go, as its own approval.
 
 ## 3. Session prompts for Anusha (paste verbatim)
 
-**Milestone session (orchestrator; paste to start a milestone):**
-> Read `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` in full, then CLAUDE.md
-> and the design document. Orchestrate Milestone M<n> per the "Who does what" model: for a [STANDARD]
-> milestone drive executor SUBAGENTS one atomic step at a time, reviewing each
-> diff and re-running the §0.11 gates before the next; for a [SENSITIVE] milestone
-> execute the core directly, delegating mechanical sub-parts at your
-> discretion and keeping the sensitive core in your own hands, following the
-> milestone spec exactly —
-> respect every global rule in §0, especially the stop conditions. When
-> done, run all §0.11 gates, commit as `M<n>: <summary>` on `web-product`,
-> and produce the evidence packet defined in
-> `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md` §2 as
-> `docs/review-packets/M<n>_PACKET.md`.
+**Milestone session (orchestrator) — THE standard prompt. Fire this for every
+milestone; only the inputs block changes.**
+> Read `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md` in full, then CLAUDE.md,
+> `docs/ARNREADY_WEBSITE_DESIGN_DOCUMENT.md`, and
+> `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md` (§3 generic checks plus its §4
+> checklist for THIS milestone). Orchestrate Milestone M<n>.
+>
+> Read the milestone's spec AND any dated scope amendments attached to it
+> before you plan — an amendment overrides the original text.
+>
+> Execution model, per "Who does what": for a [STANDARD] milestone drive
+> executor SUBAGENTS one atomic step at a time, reviewing each diff and
+> re-running the §0.11 gates before releasing the next; for a [SENSITIVE]
+> milestone execute the core yourself, delegating only mechanical sub-parts at
+> your discretion and keeping the sensitive core in your own hands.
+>
+> Respect every §0 global rule, especially the stop conditions. Build to the
+> review protocol's §4 checklist for this milestone line by line — that is
+> exactly what Codex will audit. Make no product or design decision the manual
+> does not already decide; stop and ask me instead.
+>
+> **Inputs for this milestone** (write "none" where not applicable):
+> - Config/secrets I am supplying: <...>
+> - Test accounts / uids: <...>
+> - New dependencies pre-approved for this milestone (any other remains a
+>   §0.10 stop condition): <...>
+> - Decisions I have made that are not yet written into the manual: <...>
+>
+> When done, run all §0.11 gates, commit as `M<n>: <summary>` on `web-product`,
+> and produce the evidence packet defined in review protocol §2 as
+> `docs/review-packets/M<n>_PACKET.md`. Do NOT edit
+> `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` — Codex owns it.
 
 **Codex review session:** see the review protocol §1 for its paste-prompt.
 
