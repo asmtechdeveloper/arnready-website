@@ -1,9 +1,17 @@
 # ARNReady Website — Design Document
 
-**Status:** v1.0 (13 July 2026)  
+**Status:** v1.1 (20 July 2026 — §10 and §11 corrected; see §10's note)  
 **Applies to:** the public website and the browser product under `/app`  
 **Implementation baseline:** `web-product` branch  
-**Owners:** Anusha (product and final voice), Codex (primary builder), Claude (reviewer)
+**Owners:** Anusha (product, voice, and every approval); an orchestrator agent
+builds each milestone; Codex reviews. Roles, never model names — Anusha assigns
+them per milestone (execution manual, "Who does what").
+
+> **This document is the VISUAL and INTERACTION contract only.** It is not the
+> authority on what has been built. `docs/ARNREADY_WEBSITE_EXECUTION_MANUAL.md`
+> §2 is the milestone plan, and the git log is the record of what exists. If
+> this document and the manual disagree, the manual wins (CLAUDE.md canon
+> hierarchy).
 
 This document is the visual and interaction contract for ARNReady on the web.
 The PRD owns product scope, the information architecture owns routes, the copy
@@ -242,15 +250,38 @@ check of the core free-study journey.
 
 ## 10. Current implementation baseline
 
-The `web-product` branch already contains the approved first implementation:
+> **Corrected 20 July 2026.** This section previously described the PRE-RESET
+> product — including `/app` study home, flashcards, practice, exam, mock,
+> mistakes, progress, account and upgrade surfaces. **Those were deleted in the
+> 13 July repo reset** and are preserved read-only at git tag
+> `pre-reset-snapshot`. The stale text caused at least one session to read the
+> branch as unbuilt. Treat the list below as a dated snapshot, not a
+> guarantee; the manual's §2 and the git log are authoritative.
 
-- Next.js App Router with static export;
-- public SEO, exam-guide, chapter, pricing, FAQ, and compliance pages;
-- `/app` study home, flashcards, practice, chapter exam, mock, mistakes,
-  progress, account, and upgrade surfaces;
-- responsive public/product navigation;
-- Nunito, shared colour tokens, Feather icons, and static Arnie scenes; and
-- fixture tests guarding web/app engine parity plus a paid-content leak check.
+State as of **20 July 2026** (`web-product`, milestones M0–M4 signed off):
+
+- Next.js App Router, TypeScript, Tailwind, static export; Nunito, shared
+  colour tokens, Feather icons, static Arnie scenes (M0);
+- public pages — homepage, chapter hubs, subtopic spokes, syllabus, exam guide,
+  pricing, FAQ, about, and the compliance set (M0–M1);
+- sitemap, robots, legacy redirects, and a build-blocking paid-content leak
+  gate (M0–M1);
+- nudge/gate MACHINERY — `src/lib/nudgeGates.ts`, `<PremiumNudge>`,
+  `<UpgradeWall>` — with app-parity fixtures (M2);
+- Google sign-in, the read-only `isPaid` entitlement mirror, and the
+  signed-out/signed-in `/app` shell (M3);
+- `progressService` / `mistakesService` / `progressBackend`, writing progress,
+  session and mistakes documents byte-identical to the app, pinned by fixtures
+  generated from the app's real services (M4).
+
+**What deliberately does NOT exist yet**, and is the most likely source of
+confusion for a new session: there are no study surfaces. `/app` is a shell.
+M2's nudge components and M4's progress service both ship as machinery with no
+callers, by design — M2's render sites were re-sequenced to M5, and M4 is the
+write layer M5 and M6 will call. `/app/practice`, `/app/exam` and
+`/app/flashcards` arrive in **M5**; `/app/mock`, `/app/mistakes` and
+`/app/progress` in **M6**. An empty-looking `/app` at this point is the plan
+working, not a missing build.
 
 This document does not authorise a visual rewrite. New work should first make
 the existing system coherent, accessible, and complete. Any proposed new
@@ -259,19 +290,32 @@ site-wide refactor.
 
 ## 11. Build and review workflow
 
-1. Anusha defines the outcome and owns product, brand, policy, and release
-   decisions.
-2. Codex is the primary website builder: inspect, implement, test, and prepare a
-   bounded handoff.
-3. Claude reviews coherent milestones for regressions, product-rule drift,
-   accessibility, and maintainability. Review should produce prioritised,
-   file-specific findings rather than silently changing the design direction.
-4. Codex remediates accepted findings and re-runs the relevant gates.
-5. Anusha completes the voice/visual decision pass and authorises deployment.
+> **Corrected 20 July 2026.** This section had the build and review roles the
+> wrong way round — it named Codex the primary builder and Claude the reviewer.
+> The 16 July working arrangement inverted that. The execution manual's "Who
+> does what" is canonical; the summary below exists so a reader of this document
+> is not misled, and defers to the manual on any detail.
 
-Do not have Codex and Claude edit the same files concurrently. A review handoff
-must include the intended outcome, changed files, tests run, screenshots for
-visual work, known limitations, and decisions that remain with Anusha.
+1. Anusha defines the outcome and owns product, brand, policy, secrets, and
+   release decisions. She assigns the agent filling each role below, per
+   milestone — these are ROLES, not model names.
+2. An **orchestrator** owns every milestone: the plan, the decomposition into
+   atomic steps, the per-step diff review, and the quality gates. For
+   `[STANDARD]` milestones it delegates the mechanical build to executor
+   subagents one reviewed step at a time; for `[SENSITIVE]` ones (auth,
+   entitlement, progress parity, payments) it writes the core itself.
+3. **Codex** reviews every milestone adversarially against
+   `docs/ARNREADY_WEBSITE_REVIEW_PROTOCOL.md`, and owns
+   `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` — the one file it updates, and the only
+   one.
+4. The orchestrator remediates BLOCKER and SHOULD-FIX findings as scoped and
+   re-runs the gates; Codex re-verifies before anything is marked RESOLVED.
+5. Anusha completes the voice/visual pass and authorises deployment.
+
+The builder and the reviewer must not edit the same files concurrently. Every
+milestone handoff is the evidence packet defined in review protocol §2: intended
+outcome, changed files, gate outputs, screenshots for visual work, known
+limitations, and the decisions that remain with Anusha.
 
 ### Fable budget
 
