@@ -19,7 +19,9 @@ Immediately after returning the verdict, Codex records the complete finding
 list in `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` before any remediation begins.
 The “Do not edit any file” instruction prohibits changes to implementation
 and evidence files during review; it does not prohibit this required update
-to the Codex-owned durable review log.
+to the Codex-owned durable review log. Read the two together as: the review
+log is the one file Codex updates, and Codex updates no other. §6.3 states
+that rule in full.
 
 ## 2. The evidence packet (produced by the executor, per milestone)
 
@@ -213,7 +215,21 @@ approves the milestone and the next one may start.
 
 ### 6.3 Ownership and write protection
 
-Codex also maintains `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` after every review
+**The rule, in one line: `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` is Codex's to
+update, Codex owns it, and it is the ONLY file Codex is meant to update.**
+
+That cuts both ways, and both directions are binding:
+
+- **Codex writes the log, and nothing else.** Every review, verdict, finding,
+  and status change goes there. No implementation file, no evidence packet, no
+  canon document is ever edited by Codex during or after a review. (The single
+  exception is a review-protocol correction in a closeout commit, §6.4 — that
+  is Codex maintaining its own process document, and it is still never bundled
+  with implementation or packet changes.)
+- **Nobody else writes the log.** The implementation executor records proposed
+  log changes in its remediation packet and stops there.
+
+Codex maintains `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` after every review
 and remediation pass. Every unresolved finding is recorded there. An item may
 be marked DEFERRED only when Anusha explicitly names the later milestone, or
 ACCEPTED only when she explicitly decides to retain it; both decisions record
@@ -227,6 +243,18 @@ commit entries on Codex's behalf. The paste-prompt's "Do not edit any file"
 rule applies to implementation and evidence files during the adversarial
 review; it does not prevent Codex from maintaining its own review log after
 the verdict.
+
+Ownership covers the COMMIT, not just the file. A Codex review-log commit is
+never amended, rebased, reworded, or absorbed into another commit by the
+executor. This is easy to breach by accident rather than intent: a review-log
+commit can land between the executor's own commits, so a `git commit --amend`
+issued on the assumption that `HEAD` is still the executor's work will silently
+fold the executor's changes into Codex's commit. (Observed during M4, 2026-07-19
+— caught and reverted, with the packet correction moved to its own commit.)
+Check `git log -1` before amending. If it has already happened, restore Codex's
+commit exactly as written and put the executor's change in a separate commit on
+top; do not rewrite the review-log commit to tidy the history, because that
+rewrites a review artefact the executor does not own.
 
 Where the executor is Claude Code, project-local Claude permissions must deny
 editing `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` while still allowing reads.
