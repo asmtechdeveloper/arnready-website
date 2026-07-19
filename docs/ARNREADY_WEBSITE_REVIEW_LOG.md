@@ -5,12 +5,10 @@ findings, explicit milestone deferrals, and open items Anusha has consciously
 decided to retain. Review packets contain evidence for one implementation
 pass; this log tracks findings and decisions across passes.
 
-**Last reviewed state:** `5316237` (M0 final documentation cleanup). All M0
-findings through M0-R16 are verified RESOLVED, with no OPEN BLOCKER,
-SHOULD-FIX, or NIT. Anusha signed off M0 on 2026-07-14. M0-D1 remains
-explicitly deferred to M1. Other uncommitted or later implementation changes
-do not change an item's status until Codex verifies them in a named review
-pass.
+**Last reviewed state:** `374f5e5` (M4 remediation re-review). M4-B1 and
+M4-B2 are verified RESOLVED; no OPEN M4 BLOCKER or SHOULD-FIX remains. Other
+uncommitted or later implementation changes do not change an item's status
+until Codex verifies them in a named review pass.
 
 ## Status rules
 
@@ -64,6 +62,9 @@ may mark an item RESOLVED only after re-verification.
 | 2026-07-18 | M2 owner sign-off | `a16480c` | SIGNED OFF | Anusha explicitly signed off M2 and authorized transition to M3. M2-B1 remains visible as a DEFERRED M5/M6 obligation. |
 | 2026-07-18 | M3 security review | `e01a4ed` | APPROVE | No findings. Independent lint, typecheck, 1,102-test suite, credentialed static build, standalone leak gate, static-export inspection, scope check, and isPaid-discipline review passed. No Firestore rules or client Firestore mutation diff exists. |
 | 2026-07-18 | M3 owner sign-off | `e01a4ed` | SIGNED OFF | Anusha explicitly signed off M3 and authorized transition to M4. M3-D1 remains explicitly deferred to M9. |
+| 2026-07-19 | M4 progress-parity review | `a148a57` | REJECT | Two BLOCKERs returned in order: client code writes `users/{uid}.isPaid`, violating manual §0.9, and the required build gate did not reproduce because the Firestore export failed with `RESOURCE_EXHAUSTED`. |
+| 2026-07-19 | M4 remediation re-review | `374f5e5` | APPROVE | M4-B1 and M4-B2 independently verified RESOLVED. Live Firestore testing proves all M4 subcollection writes succeed while the entitlement-bearing root document is absent and remains absent. Lint, typecheck, 1,136-passed/5-skipped tests, live export, both leak gates, and 196-page static build pass. |
+| 2026-07-19 | M4 owner sign-off | `374f5e5` | SIGNED OFF | Anusha explicitly signed off M4 and authorized transition to M5. No OPEN M4 BLOCKER or SHOULD-FIX remains. |
 
 ## Findings and explicitly retained items
 
@@ -137,6 +138,16 @@ deployment limitation remains visible for its named later milestone.
 |---|---|---|---|---|---|
 | M3-D1 | SHOULD-FIX | Google popup cancellation logs Cross-Origin-Opener-Policy console errors because the hosting response header has not yet been configured. Cancellation itself was integration-tested successfully. | `docs/review-packets/M3_PACKET.md:268-286`; `firebase.json` (future M9 change) | DEFERRED | **Anusha decision, 2026-07-18:** add `Cross-Origin-Opener-Policy: same-origin-allow-popups` in M9 with deploy configuration, where it can be verified on hosting. This does not block M3 sign-off. |
 
+### M4 review tracker
+
+The M4 review is REJECTED. These findings are recorded in the exact order
+returned. M4 cannot pass while either BLOCKER remains OPEN.
+
+| ID | Severity | Item | Location | Status | Verification / next action |
+|---|---|---|---|---|---|
+| M4-B1 | BLOCKER | The web client writes `users/{uid}.isPaid: false` when creating a user document. Manual §0.9 makes `isPaid` server-write-only and expressly prohibits any client write path. App-side matching behavior and the packet's stated deployed-rule requirement do not override the website canon. | Original: `src/lib/progressBackend.ts:172-180`; remediated `src/lib/progressBackend.ts:21-32,82-134`; `test/m4LiveSession.test.ts:103-110,191-195` | RESOLVED | Verified at `374f5e5`: `ensureUserDocument`, the root write, transaction, and executable `isPaid` reference are removed. The controlled live session passed against `arnready-dev`: the root document was absent before the run, progress/session/mistake writes succeeded, and the root remained absent afterward. |
+| M4-B2 | BLOCKER | The mandatory `npm run build` gate does not reproduce from the reviewed state. The packet reports green output, but independent execution fails during `prebuild → export-content` with `8 RESOURCE_EXHAUSTED: Quota exceeded.` | Original: `docs/review-packets/M4_PACKET.md:70-82`; current packet §2 and §10 | RESOLVED | Independently rerun at `374f5e5`: live export completed (240 free questions, 732 flashcards), prebuild leak gate passed, Next generated 196 static pages, and postbuild leak gate passed over 1,937 artefacts. |
+
 ## Decision history
 
 Add one row whenever an item's status changes. Do not rewrite prior decisions.
@@ -180,6 +191,8 @@ Add one row whenever an item's status changes. Do not rewrite prior decisions.
 | 2026-07-15 | M2-R1 | OPEN | RESOLVED | Codex | Independently verified at `a16480c` that the packet correctly records B1 as DEFERRED to M3—not resolved—with Anusha’s decision date, target, rationale, and named M3 obligations. Lint, typecheck, and all 996 tests pass. |
 | 2026-07-18 | M2-B1 | DEFERRED | DEFERRED | Anusha; recorded by Codex | The 2026-07-16 M3 scope amendment supersedes the prior M3 target: M5 owns the study-surface gate/wall wiring and M6 owns the mock-results pitch. The status remains DEFERRED; only its target is corrected. |
 | 2026-07-18 | M3-D1 | OPEN | DEFERRED | Anusha; recorded by Codex | Owner authorized deferral of the COOP hosting header to M9. M3 cancellation behavior was integration-tested; the header requires deployed-host verification. |
+| 2026-07-19 | M4-B1 | OPEN | RESOLVED | Codex | At `374f5e5`, independently verified removal of the client root-document write and ran the authorized live session: no `users/{uid}` root document before or after successful progress, session, and mistakes writes. The static isPaid-discipline suite also passed. |
+| 2026-07-19 | M4-B2 | OPEN | RESOLVED | Codex | At `374f5e5`, independently reran the complete build after quota recovery: live export, prebuild leak gate, 196-page static generation, and postbuild leak gate all passed. |
 
 ## Maintenance procedure
 
