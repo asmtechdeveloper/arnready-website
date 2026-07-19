@@ -100,6 +100,16 @@ describe.skipIf(!LIVE)('M4 live session against arnready-dev', () => {
   // 7 correct, 3 wrong, 10 unanswered — the canonical free-sample shape.
   const answers = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, ...Array(10).fill(null)];
 
+  it('starts from an account with NO users/{uid} document (M4-B1)', async () => {
+    // The precondition for the whole file after M4-B1: the web no longer
+    // creates the user document, so every write below must succeed without one.
+    // The deployed rule grants users/{uid}/{document=**} on ownership alone,
+    // and Firestore allows documents in a subcollection whose parent does not
+    // exist — this asserts that rather than assuming it.
+    const snap = await db.doc(`users/${TEST_UID}`).get();
+    expect(snap.exists, 'test account must be wiped before this run').toBe(false);
+  }, 30_000);
+
   it('records a free sample exam with the locked denominator', async () => {
     const { next } = await progress.recordExamSession(backend, {
       chapterNumber: CHAPTER,
@@ -177,6 +187,12 @@ describe.skipIf(!LIVE)('M4 live session against arnready-dev', () => {
       expect(d.data().correctStreak).toBe(0);
       expect(d.data().subtopic).toBe('Scheme Selection');
     }
+
+    // The proof that closes M4-B1 empirically: every progress, session and
+    // mistakes document above landed, and no users/{uid} document was created
+    // along the way. The web writes nothing to the entitlement-bearing root.
+    const userDoc = await db.doc(`users/${TEST_UID}`).get();
+    expect(userDoc.exists, 'the web must never create the user document').toBe(false);
 
     // Print the console paths for the manual verification step.
     console.log(`\n[M4 live session] runId=${runId}`);

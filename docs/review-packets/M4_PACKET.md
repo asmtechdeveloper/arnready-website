@@ -87,61 +87,55 @@ Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts.
 ### `npm test`
 ```
  Test Files  36 passed (36)
-      Tests  1136 passed | 4 skipped (1140)
+      Tests  1136 passed | 5 skipped (1141)
 ```
 
-**On the 4 skips.** All four are in `test/m4LiveSession.test.ts` and are the
+**On the 5 skips.** All five are in `test/m4LiveSession.test.ts` and are the
 credential-gated live-Firestore tests, skipped without `ARNREADY_LIVE_E2E=1`
 (§4). No other file in the suite skips. M3's baseline was 1,102 tests; the +38
-is 23 parity + 8 single-write-site + 5 live-session + 2 net new
+is 23 parity + 8 single-write-site + 6 live-session + 2 net new
 isPaid-discipline assertions.
 
-### `npm run build` — **DOES NOT REPRODUCE** (Codex M4-B2, still OPEN)
+### `npm run build` (prebuild live export + build + postbuild gate)
 
-Codex was right and the earlier packet claim is withdrawn. The full build no
-longer completes, and it fails for both of us in the same place:
-
-```
-> arnready-website@0.0.0 export-content
-> node scripts/export-content.mjs
-
-export-content failed: 8 RESOURCE_EXHAUSTED: Quota exceeded.
-```
-
-This is the live Firestore read in `prebuild → export-content`, not the build.
-Isolating the stages shows exactly how far it gets:
-
-| Stage | Result |
-|---|---|
-| `prebuild` → `export-content` (live Firestore read) | **FAILS — `8 RESOURCE_EXHAUSTED`** |
-| `next build` on the existing `content/` | PASSES — compiled, 196/196 static pages |
-| `node scripts/check-paid-leak.mjs` on the resulting `out/` | PASSES — 1937 artefacts |
+Reproduced at M4-r2, once the `arnready-dev` quota recovered. Full chain,
+including the live Firestore read that failed for both Codex and the executor
+at `a148a57`:
 
 ```
-✓ Compiled successfully in 2.7s
-✓ Generating static pages using 9 workers (196/196) in 590ms
+Exported 240 free questions across 12 chapters, 732 flashcards, paid manifest:
+21451 content-scope + 21765 public-scope field-level text fingerprints
+(gitignored); 417 paid field fingerprint(s) indistinguishable from full free
+content (content/ scope), 103 indistinguishable from genuinely public
+teaching/sampler content (out/ scope) — both covered by the ID check only;
+free-question manifest: 1158 field-level text fingerprints (gitignored); 13
+free field fingerprint(s) textually indistinguishable from approved
+teaching/sampler content — covered by the ID check only.
 
+Paid-content leak gate PASSED — 1937 artefact(s) scanned …   [prebuild]
+
+✓ Compiled successfully in 2.4s
+✓ Generating static pages using 9 workers (196/196) in 521ms
+
+> postbuild: node scripts/check-paid-leak.mjs
 Paid-content leak gate PASSED — 1937 artefact(s) scanned against 4596 paid ids
 + 21451 content-scope/21765 public-scope text fingerprints; exported question
 files structurally free-only; zero questions and an exact canonical flashcard
 sampler confirmed in the public export.
 ```
 
-**Why this is environmental and not an M4 regression:** M4 changes no content,
-export, or build code. `scripts/export-content.mjs`, `scripts/check-paid-leak.mjs`,
-`next.config`, and everything under `src/app/` are untouched by this milestone —
-verifiable from the changed-file list in §1. The failing step reads Firestore
-with the dev service-account key and exhausts a project quota on `arnready-dev`.
-The earlier green output in this packet was real, from before the quota was
-consumed; it is nonetheless **not acceptable evidence**, because a gate that
-cannot be reproduced from the reviewed state is not a passing gate. That is
-precisely M4-B2's point.
+The `8 RESOURCE_EXHAUSTED: Quota exceeded` failure was a project quota on
+`arnready-dev`, not an M4 defect — M4 changes no content, export or build code.
+It cleared on the daily reset and the gate now passes end to end. See §10 for
+the full M4-B2 history.
 
-**This is not resolvable by the executor.** It needs quota restored on
-`arnready-dev` — either the daily quota resetting, or the project moving off the
-free tier. Flagged to Anusha; see §8.1. The moment it is available, the full
-gate will be re-run and this section replaced with fresh output from the final
-commit.
+### `node scripts/check-paid-leak.mjs` (standalone)
+```
+Paid-content leak gate PASSED — 1937 artefact(s) scanned against 4596 paid ids
++ 21451 content-scope/21765 public-scope text fingerprints; exported question
+files structurally free-only; zero questions and an exact canonical flashcard
+sampler confirmed in the public export.
+```
 
 M4 adds no page, route, or content-export change, so the artefact count is
 unchanged from M3. `scripts/check-paid-leak.mjs` is untouched — diff it.
@@ -513,22 +507,18 @@ true.
 
 ## 8. Known limitations and deferred items
 
-### 8.1 — BLOCKING: Firestore quota on `arnready-dev` (Codex M4-B2)
+### 8.1 — Firestore quota on `arnready-dev` (was Codex M4-B2) — CLEARED
 
-The mandatory `npm run build` gate cannot be reproduced until the
-`8 RESOURCE_EXHAUSTED: Quota exceeded` error clears on the `arnready-dev`
-project (§2). This is an environment/account matter, outside the executor's
-reach and outside the M4 diff. **M4 cannot pass while it stands**, and the
-packet does not ask it to: M4-B2 remains OPEN.
+The build gate was unreproducible at `a148a57` and M4-r because the
+`arnready-dev` project hit `8 RESOURCE_EXHAUSTED` on its read quota. It cleared
+on the daily reset and all five gates now pass from one state (§2, §10).
 
-Anusha's options, in the order I would try them: let the daily quota reset and
-re-run; or move `arnready-dev` off the free tier if this recurs, since every
-milestone from here needs a credentialed build. Worth checking the Firebase
-console's usage page first to confirm which quota was hit — the export reads on
-the order of a thousand documents per run, so repeated builds today (mine and
-Codex's) exhausting a daily allowance is the likely explanation, but that should
-be confirmed rather than assumed.
-
+Recorded because it will recur, not as an open finding: a day of repeated
+credentialed builds — the executor's plus a reviewer's independent
+verification — is enough to exhaust the project's read allowance, and every
+milestone from M5 onward needs credentialed builds. Whether to move
+`arnready-dev` off the free tier is Anusha's call. The failure mode is at least
+loud and unambiguous rather than silent.
 
 1. **Anusha's Firestore-console verification is COMPLETE** (2026-07-19). She
    walked all four document sets — `chapterProgress/12`, the six session
@@ -538,15 +528,15 @@ be confirmed rather than assumed.
    `served: 20` — the locked free denominator holding while the immutable
    session record keeps the true served count.
 
-   **Caveat after M4-r.** That verification was performed against the `a148a57`
-   state, which still created the user document. The `users/{uid}` document
-   Anusha inspected was written by the now-removed `ensureUserDocument`; the web
-   no longer writes it, and that document should be treated as an artefact of
-   the superseded implementation. The progress, session and mistakes documents —
-   everything M4 actually owns — were written by code that M4-r does not change,
-   so her verification of those still stands. The one thing outstanding is a
-   live run against an account with NO user document; see §10, M4-B1
-   verification.
+   **What changed after M4-r/M4-r2.** That verification ran against the
+   `a148a57` state, which still created the user document. The progress, session
+   and mistakes documents she inspected were written by code M4-r does not
+   change, so those observations stand. The `users/{uid}` document she saw was
+   an artefact of the removed `ensureUserDocument`; on her authorization the
+   whole test-account tree (23 documents) was deleted at M4-r2, and the live
+   session re-run against the clean account — which is now also the empirical
+   proof for M4-B1 (§10). The account currently holds only the M4-r2 run's
+   documents and, correctly, **no** `users/{uid}` root document.
 2. **The app-repo fixtures are committed** at `bd68212` on
    `m4-progress-parity-fixtures`. Merging that branch is Anusha's call; until it
    merges, the app repo's `main` asserts nothing about parity, so a change to
@@ -621,56 +611,70 @@ at all, and no `src/` module writes the users root or runs a transaction on it.
 `test/m4LiveSession.test.ts` and `test/progressParity.test.ts` — call sites and
 stub removed.
 
-*Verification, stated precisely.* What is demonstrated: `grep -c isPaid
-src/lib/progressBackend.ts` → 0; no production caller of `ensureUserDocument`
-ever existed (only its own definition and tests — `grep -rn ensureUserDocument
-src test`); lint, typecheck and the full 1136-test suite pass.
+*Verification.* Static: `grep -c isPaid src/lib/progressBackend.ts` → 0; no
+production caller of `ensureUserDocument` ever existed (only its own definition
+and tests); lint, typecheck and the full suite pass.
 
-What is **not** yet demonstrated, and must not be read as if it were: a live
-session proving the progress/session/mistakes writes still succeed with **no**
-`users/{uid}` document present. The live harness cannot run under the same
-quota exhaustion as M4-B2 (attempted at M4-r; failed with
-`8 RESOURCE_EXHAUSTED`). The §4 evidence predates the removal, and in that run
-`ensureUserDocument` had created the user document first — so it does not settle
-the question either.
+**Empirical, added at M4-r2.** The M4-r packet was explicit that removal was
+argued from the deployed rule text and Firestore semantics but had *not* been
+demonstrated on live data, because the harness could not run under the quota
+exhaustion. That gap is now closed. Anusha authorized wiping the test account's
+Firestore tree (2026-07-19); 23 documents were deleted, leaving
+`users/FKmOTJdC2sTjoqQHM811cR515vz1` with no root document and three empty
+subcollections. The live session was then re-run against that clean account:
 
-The argument that removal is safe is therefore structural, not yet empirical:
-the deployed rule is `match /users/{uid} { match /{document=**} { allow read,
-write: if isOwner(uid) } }`, which grants subcollection writes on ownership
-alone, and Firestore permits documents in a subcollection whose parent document
-does not exist. Sound, and standard Firestore semantics — but it should be
-confirmed on real data before M4 passes. Folded into the M4-B2 re-run (§8.1):
-when quota returns, the live session runs against an account with no user
-document and this section is updated with the result.
+```
+✓ starts from an account with NO users/{uid} document (M4-B1)   383ms
+✓ records a free sample exam with the locked denominator        767ms
+✓ records a practice run and a flashcard run                    431ms
+✓ writes exactly three session documents for this run
+✓ collects the wrong answers into the mistakes deck
+      Tests  6 passed (6)
+```
+
+Two assertions in that file now bracket the whole run: the account has **no**
+`users/{uid}` document before it starts, and still has none after every
+progress, session and mistakes document has been written. So the claim is no
+longer structural — the web demonstrably writes its full document set without
+the entitlement-bearing root document existing, and never creates it.
 
 *Consequence recorded, not silently absorbed:* see §6.3 for what this leaves
 open for M5, and why it must go to Anusha rather than be re-introduced.
 
-### M4-B2 — build gate does not reproduce — **OPEN, blocked on Anusha**
+### M4-B2 — build gate does not reproduce — **RESOLVED at M4-r2**
 
 *Finding:* independent execution of `npm run build` fails at
 `prebuild → export-content` with `8 RESOURCE_EXHAUSTED: Quota exceeded`, so the
 packet's green build output does not reproduce.
 
-*Assessment:* reproduced exactly. The earlier green output was genuine but is
-withdrawn as evidence — a gate that cannot be reproduced from the reviewed state
-is not a passing gate.
+*Assessment:* reproduced exactly, and the earlier green output was withdrawn as
+evidence at M4-r — a gate that cannot be reproduced from the reviewed state is
+not a passing gate, regardless of the cause.
 
-*Status:* **not resolved, and not resolvable by the executor.** The failure is
-in a live Firestore read on a project whose quota is exhausted; M4 touches no
-content, export, or build code. §2 now records the honest stage-by-stage result
-(`next build` and the leak gate both pass on existing content; only the live
-export fails) and §8.1 states what Anusha needs to do. Fresh full-gate output
-will be attached the moment quota is available.
+*Cause:* a project read quota on `arnready-dev`, exhausted by repeated live
+exports during the M4 session and Codex's independent verification runs. Not an
+M4 defect: the milestone changes no content, export or build code, and the
+stage isolation recorded at M4-r showed `next build` and the leak gate both
+passing on existing content while only the live Firestore read failed.
 
-### Gates at M4-r
+*Resolution:* the quota recovered on its daily reset. The full chain now runs
+end to end — live export of 240 free questions and 732 flashcards, prebuild
+leak gate, 196/196 static pages, postbuild leak gate over 1937 artefacts. Fresh
+output is in §2.
+
+*Standing risk, not a finding:* `arnready-dev` is quota-limited enough that a
+day of repeated credentialed builds can exhaust it, and every milestone from M5
+needs those builds. Raised with Anusha; her call whether to move the project off
+the free tier.
+
+### Gates at M4-r2 — all five green, from one state
 
 | Gate | Result |
 |---|---|
 | `npm run lint` | PASS |
 | `npm run typecheck` | PASS |
-| `npm test` | PASS — 1136 passed, 4 skipped (36 files) |
-| `npm run build` | **BLOCKED** — M4-B2, see §2 and §8.1 |
+| `npm test` | PASS — 1136 passed, 5 skipped (36 files) |
+| `npm run build` | PASS — live export, 196/196 pages, pre/postbuild leak gates |
 | `node scripts/check-paid-leak.mjs` | PASS — 1937 artefacts |
 
 The suite drops from 1149 to 1136 because the 11 `ensureUserDocument` tests and
