@@ -402,13 +402,26 @@ milestone; nothing in it changes but the number.**
 > BLOCKER (violates a §0 rule, a locked formula, security, or the milestone
 > spec), SHOULD-FIX (correctness/robustness), NIT. For each: file:line, the
 > defect, a concrete failure scenario, and the fix. End with a verdict:
-> APPROVE / APPROVE AFTER FIXES / REJECT. Do not edit any file.
+> APPROVE / APPROVE AFTER FIXES / REJECT.
+>
+> Edit no file while reviewing. `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` is the
+> one file you write, you own it, and it is the only file you ever update —
+> never an implementation file, an evidence packet, or a canon document.
+> Immediately after returning the verdict, record the complete finding list
+> there, in the order returned, before any remediation begins; then commit that
+> log yourself (review protocol §6.1, §6.3, §6.4).
 
 **Remediation session (orchestrator, after Codex review):**
 > Read the manual, then `docs/review-packets/M<n>_PACKET.md` and the Codex
 > findings I paste below. Fix every finding marked BLOCKER and SHOULD-FIX
 > exactly as scoped; do not expand scope. Re-run all gates, amend the
 > packet with a remediation log, commit as `M<n>-r: remediation`.
+>
+> Do NOT edit `docs/ARNREADY_WEBSITE_REVIEW_LOG.md` — Codex owns it and marks
+> findings RESOLVED itself, after re-verifying them. Record what you fixed in
+> the packet's remediation log instead. If a Codex review-log commit has landed
+> since your last commit, do not amend it or fold your work into it: check
+> `git log -1` before any `git commit --amend`.
 
 ---
 
