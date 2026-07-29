@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { startAuthSync } from '@/lib/authStore';
+import { installDevAuthHook } from '@/lib/firebaseClient';
 
 /**
  * Mounts the auth listener ONCE for the whole site (M3).
@@ -16,6 +17,11 @@ import { startAuthSync } from '@/lib/authStore';
  * listener and re-enter the "not yet known" state on every render.
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => startAuthSync(), []);
+  useEffect(() => {
+    // Dev-only screenshot sign-in hook (M5 D13); a no-op in the production
+    // static export, where it is dead-code eliminated.
+    installDevAuthHook();
+    return startAuthSync();
+  }, []);
   return <>{children}</>;
 }

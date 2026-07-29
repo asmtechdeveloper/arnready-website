@@ -67,6 +67,67 @@ function firestoreImports(code: string): string[] {
  * the two cannot both be satisfied. The root document stays server-owned. The
  * two assertions at the end of this file pin that absence.
  */
+/**
+ * Every module permitted to NAME `isPaid`, classified by HOW it is allowed to
+ * (M5). Entitlement has exactly one source; everything else consumes it, and
+ * each category below is pinned by a proof appropriate to its kind. Adding a
+ * file here without the matching guarantee is what the per-category tests
+ * exist to prevent — the categories are the point, not the list.
+ */
+/** The ONE source of truth: reads the Firestore field, strictly. */
+const ENTITLEMENT_SOURCE = ['lib/entitlementStore.ts'];
+
+/** Pure decision layers: `isPaid` is a caller-supplied parameter. No Firestore at all. */
+const PURE_PARAMETER_CONSUMERS = ['lib/nudgeGates.ts', 'lib/quizEngine.ts'];
+
+/**
+ * Delivery: legitimately imports Firestore (it issues the reads) and takes
+ * `isPaid` as a parameter to choose WHICH query — but must never read the
+ * field off a document, query it, or import the store.
+ */
+const DELIVERY_CONSUMERS = ['lib/questionDelivery.ts'];
+
+/**
+ * Store-connected UI: obtains entitlement ONLY from `useEntitlement`. These are
+ * the ONLY files permitted to pass `isPaid` down as a prop (pinned below), so
+ * entitlement always enters the component tree at a store-connected root.
+ */
+const UI_CONSUMERS = [
+  'components/AppShell.tsx',
+  'components/PracticeSurface.tsx',
+  'components/ExamSurface.tsx',
+  'components/FlashcardsSurface.tsx',
+];
+
+/**
+ * Presentational players that RECEIVE `isPaid` as a prop from a store-connected
+ * parent above and forward it straight into the pinned gate functions.
+ *
+ * Why this is a category rather than a hole: the danger of a prop is that paid
+ * state could enter from anywhere. That is closed by the companion test below,
+ * which asserts the only files that ever PASS `isPaid` as a prop are the
+ * store-connected UI_CONSUMERS. Entitlement therefore still has exactly one
+ * entry point into the tree, and a player that re-renders on sign-out or an
+ * account switch does so because the store reset its parent.
+ *
+ * The alternative — hoisting gate calls into the surfaces to keep players free
+ * of the name — would make the surfaces into players and is worse design, not
+ * better discipline.
+ */
+const PROP_GATE_CONSUMERS = [
+  'components/PracticePlayer.tsx',
+  'components/ExamPlayer.tsx',
+  'components/FlashcardPlayer.tsx',
+];
+
+const ALLOWED = [
+  ...ENTITLEMENT_SOURCE,
+  ...PURE_PARAMETER_CONSUMERS,
+  ...DELIVERY_CONSUMERS,
+  ...UI_CONSUMERS,
+  ...PROP_GATE_CONSUMERS,
+];
+
 const WRITE_SITE = 'lib/progressBackend.ts';
 const FIRESTORE_WRITE_APIS = [
   'setDoc',
@@ -109,23 +170,116 @@ describe('isPaid is server-write-only (manual §0.9)', () => {
     expect(offenders, `${api}() called in: ${offenders.join(', ')}`).toEqual([]);
   });
 
+  /**
+   * Shared proof for every module allowed to NAME `isPaid`: each occurrence is
+   * a caller-supplied parameter or a destructure of one — never an assignment,
+   * a default, or a local derivation of entitlement.
+   */
+  function expectNeverDerivesEntitlement(code: string): void {
+    for (const line of code.match(/^.*isPaid.*$/gm) ?? []) {
+      expect(line).not.toMatch(/isPaid\s*[:=]\s*true/);
+      expect(line).not.toMatch(/isPaid\s*\?\?/);
+      expect(line).not.toMatch(/isPaid\s*\|\|/);
+      expect(line).not.toMatch(/isPaid\s*\+\+/);
+    }
+  }
+
   it('the entitlement store is the only module that reads the isPaid FIELD', () => {
-    // nudgeGates.ts takes `isPaid` as a pure function PARAMETER (the M2
-    // decision layer) — it never touches Firestore, so it is not a second
-    // source of truth. Anything else naming the field in code is.
-    // M4-r restores this list to its M3 form. An M4 draft added
-    // lib/progressBackend.ts, because a ported `ensureUserDocument` wrote
-    // `isPaid: false` on creation. Codex M4-B1 rejected that as a §0.9
-    // violation and it was removed, so the write site names the field nowhere.
-    const ALLOWED = ['lib/entitlementStore.ts', 'lib/nudgeGates.ts', 'components/AppShell.tsx'];
+    // Historical note worth keeping: an M4 draft added lib/progressBackend.ts
+    // here, because a ported `ensureUserDocument` wrote `isPaid: false` on
+    // creation. Codex M4-B1 rejected that as a §0.9 violation and it was
+    // removed, so the write site names the field nowhere at all.
+    //
+    // M5 groups the list BY CATEGORY (see the constants above the suite). The
+    // list stays exhaustive — a new file naming `isPaid` still fails here until
+    // someone consciously classifies it — but each category now carries the
+    // proof that fits it, so the list cannot be widened without also earning
+    // the matching guarantee.
     const mentions = FILES.filter((f) => /isPaid/.test(f.code)).map((f) => f.rel);
     expect(mentions.sort()).toEqual([...ALLOWED].sort());
   });
 
-  it('nudgeGates receives isPaid as a parameter and never imports Firestore', () => {
-    const gates = FILES.find((f) => f.rel === 'lib/nudgeGates.ts')!;
-    expect(gates.code).not.toMatch(/from\s*['"]firebase/);
-    expect(firestoreImports(gates.code)).toEqual([]);
+  it.each(PURE_PARAMETER_CONSUMERS)(
+    '%s receives isPaid as a pure parameter and imports no Firestore at all',
+    (rel) => {
+      const mod = FILES.find((f) => f.rel === rel)!;
+      expect(mod.code).not.toMatch(/from\s*['"]firebase/);
+      expect(firestoreImports(mod.code)).toEqual([]);
+      expectNeverDerivesEntitlement(mod.code);
+    },
+  );
+
+  it.each(DELIVERY_CONSUMERS)(
+    '%s consumes isPaid but can never become a source of it (M5)',
+    (rel) => {
+      const mod = FILES.find((f) => f.rel === rel)!;
+
+      // It legitimately imports Firestore — it issues the reads. What it must
+      // never do is take entitlement FROM Firestore or from the store.
+      expect(mod.code).not.toMatch(/entitlementStore/);
+      expect(mod.code).not.toMatch(/useEntitlement/);
+
+      // Never reads the field off a document, and never queries it.
+      expect(mod.code).not.toMatch(/\.isPaid\b/);
+      expect(mod.code).not.toMatch(/isPaid['"]/);
+      expect(mod.code).not.toMatch(/where\(\s*['"]isPaid['"]/);
+
+      expectNeverDerivesEntitlement(mod.code);
+    },
+  );
+
+  it.each(PROP_GATE_CONSUMERS)(
+    '%s only forwards a prop isPaid into the pinned gates (M5)',
+    (rel) => {
+      const mod = FILES.find((f) => f.rel === rel)!;
+
+      // It must not source entitlement itself — not from Firestore, not from
+      // the store. Its only legitimate isPaid is the one handed down to it.
+      expect(firestoreImports(mod.code)).toEqual([]);
+      expect(mod.code).not.toMatch(/entitlementStore/);
+      expect(mod.code).not.toMatch(/useEntitlement/);
+
+      expectNeverDerivesEntitlement(mod.code);
+    },
+  );
+
+  it('entitlement enters the component tree ONLY at a store-connected root (M5)', () => {
+    // This is what makes PROP_GATE_CONSUMERS safe rather than a loophole. If any
+    // file outside UI_CONSUMERS could pass isPaid={...} down, a player could be
+    // handed `true` by something that never consulted the store — and would keep
+    // it across a sign-out, because no reset reaches a hard-coded prop.
+    const passers = FILES.filter((f) => /isPaid=\{/.test(f.code)).map((f) => f.rel);
+    expect(passers.sort()).toEqual(passers.filter((p) => UI_CONSUMERS.includes(p)).sort());
+  });
+
+  it.each(UI_CONSUMERS)(
+    '%s takes entitlement ONLY from the store, never from Firestore (M5)',
+    (rel) => {
+      const mod = FILES.find((f) => f.rel === rel)!;
+
+      // The single sanctioned route into a component.
+      expect(mod.code).toMatch(/useEntitlement/);
+
+      // A surface must never reach past the store to Firestore for entitlement,
+      // nor accept it as a prop or route parameter — either would let paid
+      // state travel a path the store cannot reset on sign-out or an account
+      // switch, which is the cross-account bleed the epoch guard exists to stop.
+      expect(firestoreImports(mod.code)).toEqual([]);
+      expect(mod.code).not.toMatch(/isPaid\s*[?]?:\s*boolean/);
+
+      expectNeverDerivesEntitlement(mod.code);
+    },
+  );
+
+  it('the free-tier query keeps the isFree filter that enforces the paywall (M5)', () => {
+    // Defense in depth, and the reason this lives beside the isPaid rules:
+    // the deployed Firestore rules let an unpaid user read `questions` ONLY
+    // because their query is provably restricted to isFree == true. Drop that
+    // filter and the read is either denied outright or — for a paid user's
+    // rule branch — becomes a paywall bypass. A regression here is silent in
+    // the UI, so it is pinned in source.
+    const delivery = FILES.find((f) => f.rel === 'lib/questionDelivery.ts')!;
+    expect(delivery.code).toMatch(/where\(\s*['"]isFree['"]\s*,\s*['"]==['"]\s*,\s*true\s*\)/);
   });
 
   it('entitlementStore reads isPaid ONLY via strict === true equality', () => {

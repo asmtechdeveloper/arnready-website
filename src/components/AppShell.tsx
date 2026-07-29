@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 
-import { appShell, auth as authCopy } from '@/lib/copy';
+import { appShell, auth as authCopy, studyLauncher } from '@/lib/copy';
 import { useAuth } from '@/lib/authStore';
 import { useEntitlement } from '@/lib/entitlementStore';
 import { isFirebaseConfigured } from '@/lib/firebaseClient';
 import { Arnie } from '@/components/Arnie';
+import { ChapterModeLauncher } from '@/components/ChapterModeLauncher';
 import { Icon } from '@/components/Icon';
 import { SignInButton, SignOutButton } from '@/components/SignInButton';
 
@@ -91,52 +92,63 @@ export function AppShell() {
   }
 
   return (
-    <div className={wrapper}>
-      <div className={card}>
-        <Arnie mood={appShell.signedIn.mood} size={140} className="mx-auto" />
-        <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-purple sm:text-3xl">
-          {appShell.signedIn.title}
-        </h1>
-        <p className="mt-2 text-sm text-muted">{authCopy.signedInAs(user.displayName, user.email)}</p>
+    <div className="mx-auto max-w-content px-gutter-mobile py-12 sm:px-gutter-desktop">
+      <div className="mx-auto max-w-reading">
+        <div className={card}>
+          <Arnie mood={appShell.signedIn.mood} size={140} className="mx-auto" />
+          <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-purple sm:text-3xl">
+            {appShell.signedIn.title}
+          </h1>
+          <p className="mt-2 text-sm text-muted">{authCopy.signedInAs(user.displayName, user.email)}</p>
 
-        <p className="mx-auto mt-6 text-[0.95rem] leading-7 text-muted">
-          {appShell.signedIn.body}
-        </p>
-        <ul className="mx-auto mt-4 flex max-w-sm flex-col gap-2 text-left">
-          {appShell.signedIn.comingSoon.map((item) => (
-            <li key={item} className="flex items-start gap-2 text-[0.95rem] leading-7 text-muted">
-              <span className="mt-1.5 text-purple">
-                <Icon name="chevron-right" size={16} />
-              </span>
-              {item}
-            </li>
-          ))}
-        </ul>
+          <p className="mx-auto mt-6 text-[0.95rem] leading-7 text-muted">
+            {appShell.signedIn.body}
+          </p>
+          <ul className="mx-auto mt-4 flex max-w-sm flex-col gap-2 text-left">
+            {appShell.signedIn.comingSoon.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-[0.95rem] leading-7 text-muted">
+                <span className="mt-1.5 text-purple">
+                  <Icon name="chevron-right" size={16} />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
 
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <Link
-            href={appShell.signedIn.browse.href}
-            className="flex min-h-11 items-center rounded-pill bg-purple px-6 text-sm font-bold text-white hover:bg-purple-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-dark"
-          >
-            {appShell.signedIn.browse.label}
-          </Link>
-          <SignOutButton />
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <Link
+              href={appShell.signedIn.browse.href}
+              className="flex min-h-11 items-center rounded-pill bg-purple px-6 text-sm font-bold text-white hover:bg-purple-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-dark"
+            >
+              {appShell.signedIn.browse.label}
+            </Link>
+            <SignOutButton />
+          </div>
+
+          {/*
+            Entitlement is read and rendered ONLY as a machine-readable marker
+            here — the launcher below is identical for paid and free users;
+            entitlement is enforced inside the study surfaces themselves
+            (M5 D7/D8). It is emitted so the integration matrix can observe
+            the listener flipping live when isPaid changes server-side.
+          */}
+          <span
+            hidden
+            data-testid="entitlement-state"
+            data-known={String(known)}
+            data-is-paid={String(isPaid)}
+          />
         </div>
-
-        {/*
-          Entitlement is read and rendered ONLY as a machine-readable marker in
-          M3 — there is no paid/free UI to drive until the study surfaces exist
-          (M5/M6). It is emitted so the integration matrix can observe the
-          listener flipping live when isPaid changes server-side, without
-          inventing a premium badge the manual never specified.
-        */}
-        <span
-          hidden
-          data-testid="entitlement-state"
-          data-known={String(known)}
-          data-is-paid={String(isPaid)}
-        />
       </div>
+
+      {/* D2: 12 chapters × practice/exam/flashcards. No progress, resume, or
+          Prepometer data — that is M6. */}
+      <section className="mt-10">
+        <h2 className="text-lg font-bold text-ink">{studyLauncher.heading}</h2>
+        <div className="mt-4">
+          <ChapterModeLauncher />
+        </div>
+      </section>
     </div>
   );
 }

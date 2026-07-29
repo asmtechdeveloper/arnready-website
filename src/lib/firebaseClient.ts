@@ -90,6 +90,36 @@ export function isFirebaseConfigured(): boolean {
   return getFirebaseConfig().ok;
 }
 
+/**
+ * DEV-ONLY test sign-in hook (M5 plan D13, step S9).
+ *
+ * Exposes `window.__arnreadyDevAuth` so the local dev browser can sign in as a
+ * throwaway test account with a custom token MINTED LOCALLY from the dev
+ * service-account key (exactly as `test/m4LiveSession.test.ts` mints one) — for
+ * capturing the authenticated M5 screenshots the milestone requires. No
+ * password is ever handled, typed, or stored.
+ *
+ * The ENTIRE body is behind `process.env.NODE_ENV !== 'production'`. Next
+ * inlines that to `false` for `next build`, so the affordance is dead-code
+ * eliminated from the static export — `out/` never contains the string
+ * `__arnreadyDevAuth`, which `test/devAuthHookAbsent.test.ts` and the packet
+ * both verify against the real build. It is a DECLARED DEVIATION recorded in
+ * the M5 packet, not silent test scaffolding.
+ */
+export function installDevAuthHook(): void {
+  if (process.env.NODE_ENV === 'production') return;
+  if (!isBrowser()) return;
+  const auth = getAuthClient();
+  if (!auth) return;
+  (window as unknown as Record<string, unknown>).__arnreadyDevAuth = {
+    signInWithCustomToken: (token: string) =>
+      import('firebase/auth').then(({ signInWithCustomToken }) =>
+        signInWithCustomToken(auth, token),
+      ),
+    signOut: () => auth.signOut(),
+  };
+}
+
 /** Test-only: drops the memoised handles between tests. */
 export function resetFirebaseClientForTests(): void {
   appInstance = null;

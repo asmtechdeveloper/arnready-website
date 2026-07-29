@@ -604,12 +604,11 @@ export const appShell = {
   signedIn: {
     mood: 'working' as const,
     title: 'You’re in.',
-    body: 'Your study surfaces are being built. Here’s what’s landing, in order:',
-    /** Plain roadmap — no dates promised, nothing dressed up as available. */
-    comingSoon: [
-      'Flashcards, practice, and chapter exams',
-      'Mock tests, your mistakes deck, and progress',
-    ],
+    body: 'Pick a chapter below to start practising, sit a chapter exam, or work through flashcards.',
+    /** Plain roadmap — no dates promised, nothing dressed up as available.
+     * Practice/exam/flashcards moved out of this list in M5 (they now have a
+     * launcher, below); only the genuinely-still-coming M6 surfaces remain. */
+    comingSoon: ['Mock tests, your mistakes deck, and progress'],
     browse: { href: '/chapters', label: 'Read the chapters' },
   },
   loading: 'Checking your account…',
@@ -617,5 +616,157 @@ export const appShell = {
     title: 'Sign-in isn’t available right now',
     body: 'Something’s off with our end of the sign-in setup. Everything free to read stays open while we sort it out.',
     browse: { href: '/chapters', label: 'Read the chapters' },
+  },
+} as const;
+
+// ── Chapter × mode launcher (M5 D2) ──────────────────────────────────────
+// Shared by the `/app` signed-in launcher and by `StudySurface`'s
+// invalid-chapter picker (`ChapterModeLauncher`, one grid, two entry points).
+export const studyLauncher = {
+  heading: 'Choose a chapter to begin',
+  modes: {
+    practice: 'Practice',
+    exam: 'Exam',
+    flashcards: 'Flashcards',
+  },
+} as const;
+
+// ── /app/practice, /app/exam, /app/flashcards — shared surface chrome ────
+// (M5 S3, D1/D3/D11). Auth/param/loading/error states common to all three
+// signed-in study routes, ahead of the players themselves (S4–S6). WORKING
+// until Anusha's voice pass, same voice as the rest of the /app shell.
+export const studySurface = {
+  practice: {
+    meta: {
+      title: 'Practice — ARNReady',
+      description: 'Sign in to practise NISM Series V-A questions, chapter by chapter.',
+    },
+  },
+  exam: {
+    meta: {
+      title: 'Chapter exam — ARNReady',
+      description: 'Sign in to sit a chapter exam for the NISM Series V-A syllabus.',
+    },
+  },
+  flashcards: {
+    meta: {
+      title: 'Flashcards — ARNReady',
+      description: 'Sign in to work through every flashcard for a NISM Series V-A chapter.',
+    },
+  },
+  /** Invalid/missing `?chapter=` — the picker, never a guess at chapter 1. */
+  pickChapter: {
+    title: 'Pick a chapter to begin',
+    body: 'This link is missing a valid chapter, so here’s the full list instead.',
+  },
+  loading: {
+    practice: 'Loading your practice questions…',
+    exam: 'Loading your exam…',
+    flashcards: 'Loading your flashcards…',
+  },
+  /** A failed read is an error, never an empty surface (M5 plan D3). */
+  error: {
+    title: 'That didn’t load',
+    body: 'Something went wrong fetching this chapter. Have another go.',
+    retry: 'Try again',
+  },
+  /** Temporary — replaced by the real players in S4–S6. */
+  comingSoon: {
+    practice: 'The practice player lands next.',
+    exam: 'The exam player lands next.',
+    flashcards: 'The flashcard player lands next.',
+  },
+} as const;
+
+// ── Practice player (M5 S4, D7/D11) ──────────────────────────────────────
+// The Q1–Q20 (free) / full-bank (paid) question-by-question player mounted
+// into `PracticeSurface`'s slot. No score or premium pitch lives here — the
+// wall and nudge copy are `upgradeWall` and `nudge.practice` (M2), reused
+// verbatim; this object only covers the question UI itself. WORKING until
+// Anusha's voice pass.
+export const practicePlayer = {
+  /** "Q {current} of {total}" — 1-based for display, never the raw index. */
+  counter: (current: number, total: number) => `Q ${current} of ${total}`,
+  optionsLabel: 'Answer options',
+  correct: 'Correct',
+  incorrect: 'Incorrect',
+  next: 'Next question',
+  /** Shown once the last question in the set is answered, alongside the
+   * "See results" action that opens the S7 results screen. */
+  setComplete: 'That’s the last question in this practice set.',
+  seeResults: 'See results',
+} as const;
+
+// ── Flashcard player (M5 S6, D9/D11) ─────────────────────────────────────
+// The canonical-order, distinct-reveal-tracked deck player mounted into
+// `FlashcardsSurface`'s slot. The 15/30/45 nudge copy is `nudge.flashcard`
+// (M2), reused verbatim; this object only covers the card UI itself —
+// reveal, self-grade, and forward/back navigation. No score or premium
+// pitch lives here — the results screen is S7's scope. WORKING until
+// Anusha's voice pass.
+export const flashcardPlayer = {
+  /** "Card {current} of {total}" — 1-based for display, never the raw index. */
+  counter: (current: number, total: number) => `Card ${current} of ${total}`,
+  reveal: 'Reveal the back',
+  /** Forward-advance actions once a card is revealed — "I knew it" is the
+   * default/primary grade (knew:true), "Didn’t know it" the explicit
+   * override (knew:false). Both move the deck forward. */
+  knew: 'I knew it',
+  didntKnow: 'Didn’t know it',
+  prev: 'Previous card',
+  /** Shown once every card in the deck has been graded — no score, no
+   * premium pitch: the results screen is S7's scope. */
+  deckComplete: 'That’s every card in this chapter’s deck.',
+} as const;
+
+// ── Exam player (M5 S5, D8/D11) ──────────────────────────────────────────
+// The untimed, single-sitting chapter exam mounted into `ExamSurface`'s
+// slot. Unlike the practice player, an answer is never revealed as right or
+// wrong and carries no explanation — "no peeking" until the run ends (S7's
+// results screen). The pre-start nudge copy is `nudge.exam` (M2), reused
+// verbatim; this object only covers the running exam UI itself. WORKING
+// until Anusha's voice pass.
+export const examPlayer = {
+  badge: 'Exam mode — no peeking',
+  /** "Q {current} of {total}" — 1-based for display, never the raw index. */
+  counter: (current: number, total: number) => `Q ${current} of ${total}`,
+  optionsLabel: 'Answer options',
+  next: 'Next question',
+  submit: 'Submit exam',
+  /** Shown as the results detail line once the exam is submitted. */
+  complete: 'Exam submitted.',
+} as const;
+
+// ── End-of-run results (M5 S7, D10/D11) ──────────────────────────────────
+// The minimal per-mode results screens: a score/summary line and one onward
+// action. No premium pitch (the mock-results pitch is M6; practice/exam/
+// flashcard results carry no nudge — they are post-run surfaces). Free and
+// paid exam scores are shown per the LOCKED formulas and never side by side
+// (manual §1). Score-gated Arnie celebration is deferred to M7 — the mood
+// here is calm by intent. WORKING until Anusha's voice pass.
+export const results = {
+  practice: {
+    mood: 'checks-in' as const,
+    title: 'Practice run done.',
+    /** "You got {correct} of {attempted} right — {pct}%" */
+    headline: (correct: number, attempted: number, pct: number) =>
+      `You got ${correct} of ${attempted} right — ${pct}%`,
+    action: { href: '/app', label: 'Back to study' },
+  },
+  exam: {
+    mood: 'checks-in' as const,
+    title: 'Exam done.',
+    /** Percentage only — the honest locked figure. Never a raw correct/served
+     * fraction, which for a free sample would read as the misleading "7/20". */
+    headline: (pct: number) => `Your score: ${pct}%`,
+    action: { href: '/app', label: 'Back to study' },
+  },
+  flashcards: {
+    mood: 'makes-it-stick' as const,
+    title: 'Deck done.',
+    /** Self-graded study data, NOT a readiness score — a plain count, no
+     * percentage, no Prepometer language. */
+    headline: (knew: number, total: number) => `You knew ${knew} of ${total} cards`,
+    action: { href: '/app', label: 'Back to study' },
   },
 } as const;
