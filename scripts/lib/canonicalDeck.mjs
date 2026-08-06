@@ -82,15 +82,37 @@ function isCardPublic(card) {
 /**
  * Builds the canonical chapter deck from raw Firestore section docs. Total
  * function: never throws on malformed input, mirroring the app boundary.
+ *
+ * TWO BOUNDARIES, one ordering (M5-B1). The canonical order + `cardId`
+ * assignment is shared and identical everywhere; only the VISIBILITY filter
+ * differs by caller:
+ *
+ *   - PUBLIC export / sampler (default, `includeNonPublic: false`): drops
+ *     draft/`isFree:false` sections and `isFree:false` cards, so the static
+ *     site and the leak gate only ever see genuinely public content (M1-B5).
+ *   - SIGNED-IN runtime (`includeNonPublic: true`): retains every
+ *     non-metadata section and card, matching the app's own
+ *     `buildCanonicalDeck` (which excludes ONLY `docType` metadata). Manual §1
+ *     locks flashcards as ALL cards for any signed-in user — free or paid —
+ *     and the flashcards collection is read-allowed to every signed-in user
+ *     by the deployed rules, so this deck never reaches `out/` and is not a
+ *     leak. Only `src/lib/questionDelivery.ts` passes this flag.
+ *
+ * `cardId` is `chapter:slug:rawIndex` in BOTH modes, so a card that appears in
+ * both has an identical id — the runtime deck simply carries the extra
+ * non-public cards the public deck omitted. Only `canonicalIndex` (deck
+ * position) differs between modes, which is ordering, not identity.
  */
-export function buildCanonicalDeck(rawSections, chapterNumber) {
+export function buildCanonicalDeck(rawSections, chapterNumber, options = {}) {
+  const includeNonPublic = options?.includeNonPublic === true;
   // Any doc carrying a docType is teaching-layer metadata (Phase B) — it
-  // must never become a section or a card. Guard against prototype-pollution
-  // keys ('constructor', '__proto__', etc.) reaching subtopicSlug/string
-  // concatenation by requiring an own, non-null docType-less plain doc.
+  // must never become a section or a card, in EITHER mode. Guard against
+  // prototype-pollution keys ('constructor', '__proto__', etc.) reaching
+  // subtopicSlug/string concatenation by requiring an own, non-null
+  // docType-less plain doc.
   const sectionDocs = (Array.isArray(rawSections) ? rawSections : []).filter((doc) => {
     if (doc == null || typeof doc !== 'object' || doc.docType != null) return false;
-    if (!isSectionPublic(doc)) {
+    if (!includeNonPublic && !isSectionPublic(doc)) {
       console.warn(
         `[canonicalDeck] chapter ${chapterNumber}: excluding subtopic '${safeString(doc.subtopic)}' — not public (status/isFree)`,
       );
@@ -115,7 +137,7 @@ export function buildCanonicalDeck(rawSections, chapterNumber) {
     const cards = rawCards
       .map((card, rawIndex) => ({ card, rawIndex }))
       .filter(({ card, rawIndex }) => {
-        if (isCardPublic(card)) return true;
+        if (includeNonPublic || isCardPublic(card)) return true;
         console.warn(`[canonicalDeck] chapter ${chapterNumber} subtopic '${subtopic}': excluding card ${rawIndex} — isFree:false`);
         return false;
       })

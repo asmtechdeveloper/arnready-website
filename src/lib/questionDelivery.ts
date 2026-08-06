@@ -158,10 +158,19 @@ export async function fetchExamQuestions(
 
 /**
  * Flashcard deck for a chapter, both tiers. Ported query shape:
- * ../ARNReady-App/services/flashcardDeck.js:104-107. The canonical
- * ordering/entitlement-exclusion logic is `buildCanonicalDeck` (imported from
- * `./flashcardDeck`, itself a thin typed re-export of
- * `scripts/lib/canonicalDeck.mjs`) — never re-implemented here.
+ * ../ARNReady-App/services/flashcardDeck.js:104-107. Canonical ordering/cardId
+ * come from `buildCanonicalDeck` (a thin typed re-export of
+ * `scripts/lib/canonicalDeck.mjs`), never re-implemented here.
+ *
+ * `includeNonPublic: true` (M5-B1): this is the SIGNED-IN runtime deck, so it
+ * must retain EVERY non-metadata section and card — manual §1 gives any
+ * signed-in user (free or paid) ALL cards, and the app's own
+ * `buildCanonicalDeck` excludes only `docType` metadata. The default (public)
+ * mode's draft/`isFree:false` exclusion is for the STATIC export only and would
+ * silently drop paid-only cards from a signed-in learner's deck. This deck is
+ * fetched live from Firestore and never written to `out/`, so retaining
+ * non-public cards here is not a leak (the flashcards collection is
+ * read-allowed to every signed-in user by the deployed rules).
  */
 export async function fetchFlashcardDeck(chapter: number): Promise<DeckResult> {
   const db = getDb();
@@ -169,7 +178,7 @@ export async function fetchFlashcardDeck(chapter: number): Promise<DeckResult> {
   try {
     const snap = await getDocs(query(collection(db, 'flashcards'), where('chapter', '==', chapter)));
     const rawDocs = snap.docs.map((d) => d.data() as RawSectionDoc);
-    const deck = buildCanonicalDeck(rawDocs, chapter);
+    const deck = buildCanonicalDeck(rawDocs, chapter, { includeNonPublic: true });
     return { status: 'ok', deck };
   } catch (error) {
     return { status: 'error', reason: describeError(error) };

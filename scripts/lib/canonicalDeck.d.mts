@@ -7,4 +7,5 @@ type DeckSection = { subtopic: string; cards: DeckCard[] };
 export declare function buildCanonicalDeck(
   rawSections: unknown,
   chapterNumber: number,
+  options?: { includeNonPublic?: boolean },
 ): { chapterNumber: number; sections: DeckSection[]; cards: DeckCard[]; totalCards: number };

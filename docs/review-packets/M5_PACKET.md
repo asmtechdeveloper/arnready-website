@@ -165,9 +165,10 @@ completed, so no session/progress/mistakes document was written; sign-in itself
 creates no `users/{uid}` doc (M3/M4 discipline). `arnready-dev` is unchanged.
 
 Each surface was rendered live with real Firestore free-tier data and captured
-at **1440px and 375px**. Screenshots were taken in-session (visible to Anusha in
-the orchestration transcript); their page-text is transcribed below as durable
-evidence, matching the M3 precedent where some captures were Anusha's.
+at **1440px and 375px**. The eight PNGs are committed under
+`docs/review-packets/screenshots/M5/` (see the inventory in §12.2, added in
+M5-r after Codex M5-B2); their page-text is transcribed below as an
+independently-greppable record.
 
 | Surface | URL (chapter 1) | Rendered (verbatim page text) |
 |---|---|---|
@@ -362,5 +363,91 @@ Everything else follows the manual and plan exactly.
 - §0.10 Stop conditions: no `firestore.rules` diff, nothing in app `functions/`,
   no new dependency, no scoring/gate constant changed, no deploy.
 - §0.11 Gates: all five green (§2).
+
+---
+
+## 12. Remediation log — M5-r (2026-08-06)
+
+Codex REJECTED the initial M5 review at `0022eed` with two BLOCKERs. Both are
+fixed below, exactly as scoped; no scope was expanded. Codex owns
+`docs/ARNREADY_WEBSITE_REVIEW_LOG.md` and marks these RESOLVED itself after
+re-verifying — this section only records what changed.
+
+### 12.1 — M5-B1 (BLOCKER) — signed-in flashcard deck dropped `isFree:false` cards — **FIXED**
+
+**The defect.** `fetchFlashcardDeck` called `buildCanonicalDeck` in its default
+(public-sampler) mode, which excludes draft/`isFree:false` sections and
+`isFree:false` cards (M1-B5). That filter is correct for the STATIC export but
+wrong for signed-in delivery: manual §1 gives any signed-in user — free or paid —
+ALL cards, and the app's own `buildCanonicalDeck` excludes only `docType`
+metadata. A signed-in learner was silently losing paid-only cards.
+
+**The fix (boundary split, not a second implementation).** `buildCanonicalDeck`
+gains an optional third argument `{ includeNonPublic }`:
+- default `false` → unchanged public behaviour (the draft/`isFree:false`
+  exclusion), so `content.ts`, `freeManifestExclusion.mjs`, `samplerManifest.mjs`
+  and the leak gate are byte-for-byte unaffected and M1-B5 stands;
+- `true` → retains every non-metadata section/card (docType still excluded),
+  matching the app. ONLY `questionDelivery.fetchFlashcardDeck` passes it.
+
+Shared ordering and `cardId` (`chapter:slug:rawIndex`) are identical in both
+modes, so a card present in both keeps the same id; the runtime deck simply
+carries the extra non-public cards. Only `canonicalIndex` (deck position)
+differs, which is ordering, not identity, and the distinct-reveal counter keys
+on `cardId`.
+
+**Not a leak.** The runtime deck is fetched live from Firestore and never
+written to `out/`; the flashcards collection is read-allowed to every signed-in
+user by the deployed rules. The leak gate re-ran green with the identical 1968
+artefacts / fingerprint counts as before the fix — the public export did not
+change.
+
+**Files:** `scripts/lib/canonicalDeck.mjs`, `scripts/lib/canonicalDeck.d.mts`,
+`src/lib/flashcardDeck.ts`, `src/lib/questionDelivery.ts`.
+
+**Regression coverage (Codex's requested fixture).**
+`test/flashcardRuntimeDeck.test.ts` builds a chapter with an `isFree:false` card,
+an `isFree:false` section, a draft section and a `docType` doc, and asserts the
+PUBLIC build drops the non-public content while the SIGNED-IN
+(`includeNonPublic`) build retains it and drops only the metadata; it also pins
+`cardId` identity across modes, and asserts `fetchFlashcardDeck` returns an
+`isFree:false` card. Mutation-verified: reverting the delivery flag fails the
+suite; restored byte-identical. One pre-existing `questionDelivery.test.ts`
+assertion had encoded the buggy behaviour ("excludes a section marked
+isFree:false") — it is updated to assert the corrected behaviour while keeping
+its "the real builder ran" intent via the still-valid docType exclusion.
+
+### 12.2 — M5-B2 (BLOCKER) — screenshots transcribed but not committed — **FIXED**
+
+Eight real PNGs are now committed under
+`docs/review-packets/screenshots/M5/`, captured live signed-in as the test
+account against `arnready-dev` (the §4 run) via headless Chrome + the Chrome
+DevTools Protocol over Node's built-in WebSocket (a throwaway `capture.tmp.mjs`,
+deleted after the run — no npm dependency added). Each was taken only after its
+expected nudge/wall text was present in the DOM, with a paint delay so the
+lazy-loaded Arnie is fully rendered.
+
+| File | Logical | Pixels (2×) | State |
+|---|---|---:|---|
+| `practice-q11-nudge-1440.png` / `-375.png` | 1440 / 375 | 2880×1800 / 750×1624 | Practice Q11 nudge |
+| `practice-q21-wall-1440.png` / `-375.png` | 1440 / 375 | 2880×1800 / 750×1624 | Q21 upgrade wall (no question content) |
+| `exam-prestart-nudge-1440.png` / `-375.png` | 1440 / 375 | 2880×1800 / 750×1624 | Exam pre-start nudge |
+| `flashcard-15-nudge-1440.png` / `-375.png` | 1440 / 375 | 2880×1800 / 750×1624 | Flashcard 15-reveal nudge (rotation 0) |
+
+All eight show the signed-in header, one Arnie, the correct primary action, the
+dual/single CTA, and the footer disclaimer. The §4 "Arnie lazy-load" caveat no
+longer applies — the capture waits for paint, and every committed image shows
+the full panda.
+
+### 12.3 — Re-run gates (M5-r, final)
+
+- `npm run lint` — clean, raw-hex guard passed.
+- `npm run typecheck` — clean.
+- `npm test` — **47 files, 1303 passed, 5 skipped** (baseline at `0022eed` was
+  46 / 1299; +4 from `flashcardRuntimeDeck.test.ts`).
+- `npm run build` — static export succeeds.
+- `node scripts/check-paid-leak.mjs` — PASSED, 1968 artefacts, zero question
+  text in `out/` (unchanged from `0022eed`, confirming the B1 fix did not alter
+  the public export).
 
 *ARNReady · ASM Tech · arnready.com — Knowledge is free. Mastery is earned.*

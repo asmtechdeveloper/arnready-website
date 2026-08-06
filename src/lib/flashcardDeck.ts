@@ -52,4 +52,15 @@ export type CanonicalDeck = {
 
 export const orderSections: (rawSections: RawSectionDoc[], chapterNumber: number) => RawSectionDoc[] = orderSectionsImpl;
 
-export const buildCanonicalDeck: (rawSections: unknown, chapterNumber: number) => CanonicalDeck = buildCanonicalDeckImpl;
+/**
+ * `includeNonPublic: true` retains every non-metadata section/card for the
+ * SIGNED-IN runtime deck (manual §1: all cards); the default (public) mode
+ * keeps the M1-B5 draft/`isFree:false` exclusion for the static export. Only
+ * `questionDelivery.fetchFlashcardDeck` passes the flag — see canonicalDeck.mjs.
+ */
+export type BuildDeckOptions = { includeNonPublic?: boolean };
+export const buildCanonicalDeck: (
+  rawSections: unknown,
+  chapterNumber: number,
+  options?: BuildDeckOptions,
+) => CanonicalDeck = buildCanonicalDeckImpl;

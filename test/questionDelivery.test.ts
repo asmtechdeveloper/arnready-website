@@ -280,15 +280,22 @@ describe('flashcards return a canonical deck built by buildCanonicalDeck', () =>
     }
   });
 
-  it('excludes a section explicitly marked isFree:false — proof the real function ran, not raw docs', async () => {
+  it('RETAINS an isFree:false section for the signed-in deck, but still drops docType metadata (M5-B1)', async () => {
+    // Manual §1: any signed-in user gets ALL cards. The runtime deck must
+    // include an isFree:false section that the PUBLIC export drops — that is
+    // the M5-B1 fix. `docType` metadata is still excluded in both modes, which
+    // is the remaining proof that the real buildCanonicalDeck ran (a raw
+    // pass-through would have surfaced the metadata doc as a section).
     mockDocs = [
       { subtopic: 'Public', cards: [{ front: 'p', back: 'p' }] },
       { subtopic: 'PaidOnly', isFree: false, cards: [{ front: 'q', back: 'q' }] },
+      { docType: 'chapterTeaching', chapter: 7, blocks: [] },
     ];
     const result = await fetchFlashcardDeck(7);
     expect(result.status).toBe('ok');
     if (result.status === 'ok') {
-      expect(result.deck.sections.map((s) => s.subtopic)).toEqual(['Public']);
+      expect(result.deck.sections.map((s) => s.subtopic).sort()).toEqual(['PaidOnly', 'Public']);
+      expect(result.deck.totalCards).toBe(2); // both cards, metadata excluded
     }
   });
 });
