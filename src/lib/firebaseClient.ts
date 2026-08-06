@@ -20,6 +20,7 @@
 import { type FirebaseApp, getApp, getApps, initializeApp } from 'firebase/app';
 import { type Auth, browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth';
 import { type Firestore, getFirestore } from 'firebase/firestore';
+import { type Functions, getFunctions } from 'firebase/functions';
 
 import { getFirebaseConfig } from './firebaseEnv';
 
@@ -85,6 +86,27 @@ export function getDb(): Firestore | null {
   return dbInstance;
 }
 
+/**
+ * Cloud Functions region — mirrors app `CONFIG.FUNCTIONS_REGION`
+ * (../ARNReady-App/config.js: asia-south1 = Mumbai, same as Firestore). The
+ * callables live in the APP repo's functions/ workspace; calling one from the
+ * wrong region fails with not-found, silently breaking the flows that need it.
+ */
+export const FUNCTIONS_REGION = 'asia-south1';
+
+let functionsInstance: Functions | null = null;
+
+export function getFunctionsClient(): Functions | null {
+  if (!isBrowser()) return null;
+  if (functionsInstance) return functionsInstance;
+
+  const app = getFirebaseApp();
+  if (!app) return null;
+
+  functionsInstance = getFunctions(app, FUNCTIONS_REGION);
+  return functionsInstance;
+}
+
 /** True when this build has a usable Firebase config — drives the UI state. */
 export function isFirebaseConfigured(): boolean {
   return getFirebaseConfig().ok;
@@ -125,6 +147,7 @@ export function resetFirebaseClientForTests(): void {
   appInstance = null;
   authInstance = null;
   dbInstance = null;
+  functionsInstance = null;
   if (getApps().some((a) => a.name === APP_NAME)) {
     // Leaves the SDK's registry clean so a later test can re-initialise.
     void getApp(APP_NAME);

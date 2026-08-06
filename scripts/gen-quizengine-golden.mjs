@@ -66,6 +66,9 @@ async function main() {
     drawExamSet,
     computeExamScorePct,
     computePracticePct,
+    assembleMock,
+    tallyWeakSubtopics,
+    tallyWeakChapters,
   } = app;
 
   const cases = [];
@@ -291,6 +294,234 @@ async function main() {
       expected: computePracticePct(c.input.correct, c.input.attempted),
     });
   }
+
+  // ─── assembleMock ──────────────────────────────────────────────────────
+  // Weighted basic: 3 chapters, 6 distinct-seed questions each, weights
+  // {1:2, 2:3, 3:1} — each chapter contributes exactly its weight.
+  const mockBasicPool = [1, 2, 3].flatMap(ch =>
+    Array.from({ length: 6 }, (_, i) =>
+      q({ id: `m${ch}-${i + 1}`, chapter: ch, seedId: `m${ch}-${i + 1}` }),
+    ),
+  );
+
+  {
+    const seed = 201;
+    const weights = { 1: 2, 2: 3, 3: 1 };
+    cases.push({
+      id: 'assembleMock-weighted-basic',
+      fn: 'assembleMock',
+      description:
+        'three chapters of 6 distinct-seed questions, weights {1:2, 2:3, 3:1} -> ' +
+        'per-chapter picks respect the weights (6 questions total), final order shuffled',
+      input: { questions: mockBasicPool, weights },
+      seed,
+      expected: assembleMock(mockBasicPool, weights, makeSeededRng(seed)),
+    });
+  }
+
+  // Narrow chapter below its weight: 2 seed groups, weight 5 — takes all 2,
+  // never pads or repeats.
+  const mockNarrowPool = [
+    q({ id: 'mn1', chapter: 4, seedId: 'mn1' }),
+    q({ id: 'mn2', chapter: 4, seedId: 'mn2' }),
+  ];
+
+  {
+    const seed = 202;
+    const weights = { 4: 5 };
+    cases.push({
+      id: 'assembleMock-narrow-chapter-below-weight',
+      fn: 'assembleMock',
+      description:
+        'chapter with only 2 seed groups but weight 5 -> takes all 2, no repetition ' +
+        '(min(weight, picks.length))',
+      input: { questions: mockNarrowPool, weights },
+      seed,
+      expected: assembleMock(mockNarrowPool, weights, makeSeededRng(seed)),
+    });
+  }
+
+  // Seed groups: 3 groups of 3 variations each (9 questions) with weight 5 —
+  // one pick per seedId caps the chapter at 3, never a seed AND its variation.
+  const mockSeedGroupPool = [1, 2, 3].flatMap(g => [
+    q({ id: `mg${g}a`, chapter: 5, seedId: `mg${g}` }),
+    q({ id: `mg${g}b`, chapter: 5, seedId: `mg${g}` }),
+    q({ id: `mg${g}c`, chapter: 5, seedId: `mg${g}` }),
+  ]);
+
+  {
+    const seed = 203;
+    const weights = { 5: 5 };
+    cases.push({
+      id: 'assembleMock-seed-groups-one-per-mock',
+      fn: 'assembleMock',
+      description:
+        '9 questions in 3 seedId groups, weight 5 -> one pick per group (3 out), ' +
+        'never two members of the same group in one mock',
+      input: { questions: mockSeedGroupPool, weights },
+      seed,
+      expected: assembleMock(mockSeedGroupPool, weights, makeSeededRng(seed)),
+    });
+  }
+
+  // Zero-weight and empty-pool chapters both contribute nothing.
+  const mockSkipPool = [
+    q({ id: 'mz1', chapter: 6, seedId: 'mz1' }),
+    q({ id: 'mz2', chapter: 6, seedId: 'mz2' }),
+    q({ id: 'mz3', chapter: 6, seedId: 'mz3' }),
+    q({ id: 'mz4', chapter: 7, seedId: 'mz4' }),
+    q({ id: 'mz5', chapter: 7, seedId: 'mz5' }),
+  ];
+
+  {
+    const seed = 204;
+    // Chapter 7 has weight 0; chapter 8 has a weight but no pool questions.
+    const weights = { 6: 2, 7: 0, 8: 4 };
+    cases.push({
+      id: 'assembleMock-zero-and-missing-weight-chapters-skipped',
+      fn: 'assembleMock',
+      description:
+        'weight 0 (chapter 7) and a weighted chapter with no pool questions (chapter 8) ' +
+        'both contribute nothing -> only chapter 6 appears',
+      input: { questions: mockSkipPool, weights },
+      seed,
+      expected: assembleMock(mockSkipPool, weights, makeSeededRng(seed)),
+    });
+  }
+
+  // Full NISM weightage: 12 chapters, each with weight+3 distinct-seed
+  // questions, real MOCK_CHAPTER_WEIGHTS -> exactly 100 questions out.
+  const nismWeights = {
+    1: 8, 2: 6, 3: 4, 4: 10, 5: 10, 6: 6, 7: 8, 8: 4, 9: 15, 10: 7, 11: 7, 12: 15,
+  };
+  const mockFullPool = Object.entries(nismWeights).flatMap(([chStr, w]) => {
+    const ch = Number(chStr);
+    return Array.from({ length: w + 3 }, (_, i) =>
+      q({ id: `full${ch}-${i + 1}`, chapter: ch, seedId: `full${ch}-${i + 1}` }),
+    );
+  });
+
+  {
+    const seed = 205;
+    cases.push({
+      id: 'assembleMock-full-nism-weights',
+      fn: 'assembleMock',
+      description:
+        'the real NISM V-A weights over a 12-chapter pool (each chapter weight+3 ' +
+        'distinct seeds) -> a full 100-question mock',
+      input: { questions: mockFullPool, weights: nismWeights },
+      seed,
+      expected: assembleMock(mockFullPool, nismWeights, makeSeededRng(seed)),
+    });
+  }
+
+  // ─── tallyWeakSubtopics ────────────────────────────────────────────────
+  // Deterministic — no rng anywhere in the function, so no seed recorded.
+  // NOTE on "unanswered": null survives JSON round-tripping; undefined is
+  // exercised by an `answers` array SHORTER than `questions`, so both the
+  // recording call and the replay read a true undefined at the missing index.
+  const weakSubRunQuestions = [
+    q({ id: 'ws1', subtopic: 'KYC', correctIndex: 0 }),
+    q({ id: 'ws2', subtopic: 'KYC', correctIndex: 0 }),
+    q({ id: 'ws3', subtopic: 'SIP', correctIndex: 1 }),
+    q({ id: 'ws4', subtopic: 'NAV', correctIndex: 2 }),
+  ];
+
+  cases.push({
+    id: 'tallyWeakSubtopics-unanswered-never-counts-wrong',
+    fn: 'tallyWeakSubtopics',
+    description:
+      'null (ws2) and missing-tail undefined (ws4) never count as wrong; a correct ' +
+      'pick (ws3) never counts either -> only KYC tallies',
+    input: { questions: weakSubRunQuestions, answers: [1, null, 1] },
+    expected: tallyWeakSubtopics(weakSubRunQuestions, [1, null, 1]),
+  });
+
+  const weakSubTieQuestions = [
+    q({ id: 'wt1', subtopic: 'KYC', correctIndex: 0 }),
+    q({ id: 'wt2', subtopic: 'SIP', correctIndex: 0 }),
+    q({ id: 'wt3', subtopic: 'NAV', correctIndex: 0 }),
+    q({ id: 'wt4', subtopic: 'SWP', correctIndex: 0 }),
+  ];
+
+  cases.push({
+    id: 'tallyWeakSubtopics-four-way-tie-default-limit',
+    fn: 'tallyWeakSubtopics',
+    description:
+      'four subtopics all wrong once, default limit 3 -> ties broken by Map ' +
+      'insertion order (recorded from the app, whatever it returns)',
+    input: { questions: weakSubTieQuestions, answers: [1, 1, 1, 1] },
+    expected: tallyWeakSubtopics(weakSubTieQuestions, [1, 1, 1, 1]),
+  });
+
+  const weakSubLimitQuestions = [
+    q({ id: 'wl1', subtopic: 'KYC', correctIndex: 0 }),
+    q({ id: 'wl2', subtopic: 'KYC', correctIndex: 0 }),
+    q({ id: 'wl3', subtopic: 'SIP', correctIndex: 0 }),
+    q({ id: 'wl4', subtopic: 'NAV', correctIndex: 0 }),
+  ];
+
+  cases.push({
+    id: 'tallyWeakSubtopics-explicit-limit',
+    fn: 'tallyWeakSubtopics',
+    description:
+      'explicit limit 2 truncates the count-sorted list: KYC (2 wrong) then the ' +
+      'first 1-wrong subtopic in insertion order',
+    input: { questions: weakSubLimitQuestions, answers: [1, 2, 3, 1], limit: 2 },
+    expected: tallyWeakSubtopics(weakSubLimitQuestions, [1, 2, 3, 1], 2),
+  });
+
+  const weakSubGeneralQuestions = [
+    q({ id: 'wg1', subtopic: undefined, correctIndex: 0 }), // missing -> 'General'
+    q({ id: 'wg2', subtopic: undefined, correctIndex: 0 }),
+    q({ id: 'wg3', subtopic: 'KYC', correctIndex: 0 }),
+  ];
+
+  cases.push({
+    id: 'tallyWeakSubtopics-missing-subtopic-buckets-to-general',
+    fn: 'tallyWeakSubtopics',
+    description:
+      'questions with no subtopic bucket to General (2 wrong) ahead of KYC (1 wrong)',
+    input: { questions: weakSubGeneralQuestions, answers: [1, 1, 1] },
+    expected: tallyWeakSubtopics(weakSubGeneralQuestions, [1, 1, 1]),
+  });
+
+  // ─── tallyWeakChapters ─────────────────────────────────────────────────
+  const weakChGuardQuestions = [
+    q({ id: 'wc1', chapter: 0, correctIndex: 0 }), // wrong, but chapter 0 is excluded
+    q({ id: 'wc2', chapter: 2, correctIndex: 0 }),
+    q({ id: 'wc3', chapter: 2, correctIndex: 0 }),
+    q({ id: 'wc4', chapter: 5, correctIndex: 0 }),
+    q({ id: 'wc5', chapter: 7, correctIndex: 0 }),
+  ];
+
+  cases.push({
+    id: 'tallyWeakChapters-chapter-zero-excluded-unanswered-skipped',
+    fn: 'tallyWeakChapters',
+    description:
+      'chapter 0 wrong is excluded by the `q.chapter > 0` guard; unanswered null ' +
+      '(wc4) never counts; default limit 3 -> [2, 7]',
+    input: { questions: weakChGuardQuestions, answers: [1, 1, 1, null, 1] },
+    expected: tallyWeakChapters(weakChGuardQuestions, [1, 1, 1, null, 1]),
+  });
+
+  const weakChTieQuestions = [
+    q({ id: 'wd1', chapter: 1, correctIndex: 0 }),
+    q({ id: 'wd2', chapter: 3, correctIndex: 0 }),
+    q({ id: 'wd3', chapter: 3, correctIndex: 0 }),
+    q({ id: 'wd4', chapter: 4, correctIndex: 0 }),
+    q({ id: 'wd5', chapter: 9, correctIndex: 0 }),
+  ];
+
+  cases.push({
+    id: 'tallyWeakChapters-tie-insertion-order-default-limit',
+    fn: 'tallyWeakChapters',
+    description:
+      'chapter 3 (2 wrong) first, then the 1-wrong tie (1, 4, 9) broken by Map ' +
+      'insertion order and cut at the default limit 3',
+    input: { questions: weakChTieQuestions, answers: [1, 1, 1, 1, 1] },
+    expected: tallyWeakChapters(weakChTieQuestions, [1, 1, 1, 1, 1]),
+  });
 
   const golden = {
     generatedFrom: '../ARNReady-App/services/quizEngine.ts (live cross-repo import)',

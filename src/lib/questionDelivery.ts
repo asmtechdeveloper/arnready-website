@@ -24,6 +24,12 @@
  *   - flashcards:      flashcards where chapter == N
  *                      (../ARNReady-App/services/flashcardDeck.js:104-107)
  *                      then buildCanonicalDeck(rawDocs, N)
+ *   - mock, free:      questions where isFree == true
+ *                      (MockTestScreen.js:84-85) — whole collection, no
+ *                      chapter/isSeed filter and NO per-chapter cap
+ *   - mock, paid:      the whole questions collection
+ *                      (MockTestScreen.js:84-86); assembly is the caller's
+ *                      job (`assembleMock`, exactly as in the app screen)
  *
  * `capFreeQuestionSet` / `orderPracticeSet` / `drawExamSet` are imported from
  * `./quizEngine` (S1) and `FREE_QUESTIONS_PER_CHAPTER` from `./nudgeGates`
@@ -65,7 +71,9 @@
  */
 import {
   collection,
+  doc,
   type Firestore,
+  getDoc,
   getDocs,
   query,
   where,
@@ -153,6 +161,69 @@ export async function fetchExamQuestions(
     return { status: 'ok', questions };
   } catch (error) {
     return { status: 'error', reason: describeError(error) };
+  }
+}
+
+/**
+ * Mock Test question pool, both tiers. Ported query shapes:
+ * ../ARNReady-App/screens/MockTestScreen.js:84-86 — free: the questions
+ * collection `where('isFree','==',true)` (the same isFree filter the
+ * deployed rules require of an unpaid read — see the pin in
+ * test/isPaidDiscipline.test.ts); paid: the whole collection, unfiltered.
+ * Deliberately NO per-chapter cap and no isSeed filter: the deployed rules
+ * police the free pool, and `MOCK_CHAPTER_WEIGHTS` bounds the assembled
+ * paper. Assembly itself (`assembleMock(pool, MOCK_CHAPTER_WEIGHTS)`) is
+ * the caller's job, exactly as in the app screen.
+ */
+export async function fetchMockQuestions(isPaid: boolean): Promise<QuestionsResult> {
+  const db = getDb();
+  if (!db) return { status: 'error', reason: 'firestore-unavailable' };
+  try {
+    const constraints = isPaid ? ([] as const) : ([where('isFree', '==', true)] as const);
+    const questions = await readQuestions(db, constraints);
+    return { status: 'ok', questions };
+  } catch (error) {
+    return { status: 'error', reason: describeError(error) };
+  }
+}
+
+/**
+ * One question document by id — the mistakes deck's read (M6). Ported from
+ * ../ARNReady-App/services/mistakesService.js `loadMistakeQuestions`, whose
+ * rules rationale travels with the read and so lives here, beside the other
+ * `questions` reads:
+ *
+ * PER-DOCUMENT GETS, NOT A LIST QUERY — this is a rules constraint, not a
+ * style choice. Firestore evaluates a LIST query against the questions rule by
+ * asking "could this query return a doc that fails the rule?", so the broad
+ * `.where('id','in',[...])` used in the app previously was DENIED outright for
+ * free users: it does not filter on isFree, so its result set could include
+ * isFree==false docs (firestore.rules, questions match — the free branch). The
+ * deck therefore failed to load for every free user, while working fine for
+ * paid ones, which is why it survived QA until 25 Jul 2026.
+ *
+ * A single-doc get() is evaluated against the rule PER DOCUMENT instead, so an
+ * isFree doc is readable by a free user and the paid branch still allows the
+ * rest. Doc IDs are the question `id`, so no index and no rules change.
+ *
+ * ANY failure — Firestore unavailable, doc missing, read denied — is `null`,
+ * a DELIBERATE exception to this module's "a failed read is an error" policy
+ * (see the header): the app catches each get independently, so one unreadable
+ * question (e.g. a non-free mistake left behind by a lapsed entitlement)
+ * drops that card rather than failing the whole deck. The caller
+ * (`loadMistakeQuestions`, src/lib/mistakesService.ts) skips nulls.
+ *
+ * No `isPaid` parameter on purpose: the deployed rules do the per-document
+ * tier arbitration, exactly as they do for the app.
+ */
+export async function fetchQuestionById(id: string): Promise<Question | null> {
+  const db = getDb();
+  if (!db) return null;
+  try {
+    const snap = await getDoc(doc(db, 'questions', id));
+    return snap.exists() ? (snap.data() as Question) : null;
+  } catch {
+    return null; // unreadable or missing — skip this card, keep the deck
   }
 }
 

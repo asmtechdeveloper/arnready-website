@@ -82,7 +82,7 @@ describe('single write site for progress, sessions and mistakes', () => {
   });
 
   it('the progress services reach Firestore only through the backend seam', () => {
-    for (const rel of ['lib/progressService.ts', 'lib/mistakesService.ts']) {
+    for (const rel of ['lib/progressService.ts', 'lib/mistakesService.ts', 'lib/mockService.ts']) {
       const file = FILES.find((f) => f.rel === rel);
       expect(file, `${rel} is missing`).toBeDefined();
       // No direct SDK import: every Firestore touch is an injected method call,
@@ -105,5 +105,15 @@ describe('single write site for progress, sessions and mistakes', () => {
       (f) => f.rel,
     );
     expect(hooks).toEqual(['lib/mistakesService.ts']);
+  });
+
+  it('the mock write site lives in one module (M6)', () => {
+    // Same containment as the exam/practice/flashcard recorders: the mock
+    // attempt (the one-free-ever counter write) has exactly one definition,
+    // and it lives in the ported service — never restated by a surface.
+    const recorders = FILES.filter((f) =>
+      /export\s+async\s+function\s+(recordMockAttempt|canTakeMock|getMockHistory)/.test(f.code),
+    ).map((f) => f.rel);
+    expect(recorders).toEqual(['lib/mockService.ts']);
   });
 });

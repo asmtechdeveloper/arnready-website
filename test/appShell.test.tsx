@@ -138,15 +138,30 @@ describe('/app shell — M3 scope boundary', () => {
     expect(screen.queryByText(nudge.webSoon.label)).toBeNull();
   });
 
-  it('promises no study surface it does not have', () => {
+});
+
+describe('/app shell — the M6 modes row', () => {
+  it('links the three M6 surfaces with the right hrefs', () => {
     signedIn();
     render(<AppShell />);
-    // The roadmap copy is a plain statement of what is coming, and every
-    // listed item renders as text, not as an actionable control.
-    for (const item of appShell.signedIn.comingSoon) {
-      const node = screen.getByText(item);
-      expect(node.closest('a')).toBeNull();
-      expect(node.closest('button')).toBeNull();
-    }
+    const { modes } = appShell.signedIn;
+    expect(screen.getByRole('link', { name: modes.mock.label })).toHaveAttribute(
+      'href',
+      '/app/mock',
+    );
+    expect(screen.getByRole('link', { name: modes.mistakes.label })).toHaveAttribute(
+      'href',
+      '/app/mistakes',
+    );
+    expect(screen.getByRole('link', { name: modes.progress.label })).toHaveAttribute(
+      'href',
+      '/app/progress',
+    );
+  });
+
+  it('no longer carries the comingSoon roadmap — the surfaces shipped', () => {
+    // The key is gone from the copy module entirely, so nothing can render
+    // a "coming soon" promise for surfaces that exist.
+    expect('comingSoon' in appShell.signedIn).toBe(false);
   });
 });

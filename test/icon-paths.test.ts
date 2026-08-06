@@ -61,4 +61,63 @@ describe('Icon PATHS pin exact official Feather geometry', () => {
   it('user — <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx=12 cy=7 r=4/>', () => {
     expect(PATHS.user).toBe('M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M16 7a4 4 0 1 1-8 0a4 4 0 1 1 8 0');
   });
+
+  // ── M6 additions (mock player) ────────────────────────────────────────
+  it('arrow-left — <line x1=19 y1=12 x2=5 y2=12/><polyline points="12 19 5 12 12 5"/>', () => {
+    expect(PATHS['arrow-left']).toBe('M19 12H5M12 19l-7-7 7-7');
+  });
+
+  it('clock — <circle cx=12 cy=12 r=10/><polyline points="12 6 12 12 16 14"/>', () => {
+    expect(PATHS.clock).toBe('M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 6L12 12L16 14');
+  });
+
+  it('flag — <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1=4 y1=22 x2=4 y2=15/>', () => {
+    expect(PATHS.flag).toBe('M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22V15');
+  });
+
+  // ── M6 additions (mock pre-start surface) ─────────────────────────────
+  it('monitor — <rect x=2 y=3 width=20 height=14 rx=2 ry=2/><line x1=8 y1=21 x2=16 y2=21/><line x1=12 y1=17 x2=12 y2=21/>', () => {
+    expect(PATHS.monitor).toBe(
+      'M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM8 21h8M12 17v4',
+    );
+  });
+
+  // ── M6 additions (mock results) ───────────────────────────────────────
+  it('target — <circle cx=12 cy=12 r=10/><circle cx=12 cy=12 r=6/><circle cx=12 cy=12 r=2/>', () => {
+    expect(PATHS.target).toBe(
+      'M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M6 12a6 6 0 1 0 12 0a6 6 0 1 0-12 0M10 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0',
+    );
+  });
+
+  it('trending-up — <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>', () => {
+    expect(PATHS['trending-up']).toBe('M23 6l-9.5 9.5-5-5L1 18M17 6h6v6');
+  });
+
+  it('trending-down — <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>', () => {
+    expect(PATHS['trending-down']).toBe('M23 18l-9.5-9.5-5 5L1 6M17 18h6v-6');
+  });
+
+  it('bar-chart-2 — <line x1=18 y1=20 x2=18 y2=10/><line x1=12 y1=20 x2=12 y2=4/><line x1=6 y1=20 x2=6 y2=14/>', () => {
+    expect(PATHS['bar-chart-2']).toBe('M18 20V10M12 20V4M6 20v-6');
+  });
+
+  it('repeat — <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>', () => {
+    expect(PATHS.repeat).toBe(
+      'M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3',
+    );
+  });
+
+  it('chevron-up — <polyline points="18 15 12 9 6 15"/>', () => {
+    expect(PATHS['chevron-up']).toBe('M18 15l-6-6-6 6');
+  });
+
+  it('chevron-down — <polyline points="6 9 12 15 18 9"/>', () => {
+    expect(PATHS['chevron-down']).toBe('M6 9l6 6 6-6');
+  });
+
+  it('alert-triangle — <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 y1=9 x2=12 y2=13/><line x1=12 y1=17 x2=12.01 y2=17/>', () => {
+    expect(PATHS['alert-triangle']).toBe(
+      'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01',
+    );
+  });
 });

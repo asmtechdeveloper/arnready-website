@@ -604,11 +604,15 @@ export const appShell = {
   signedIn: {
     mood: 'working' as const,
     title: 'You’re in.',
-    body: 'Pick a chapter below to start practising, sit a chapter exam, or work through flashcards.',
-    /** Plain roadmap — no dates promised, nothing dressed up as available.
-     * Practice/exam/flashcards moved out of this list in M5 (they now have a
-     * launcher, below); only the genuinely-still-coming M6 surfaces remain. */
-    comingSoon: ['Mock tests, your mistakes deck, and progress'],
+    body: 'Pick a chapter below to start practising, sit a chapter exam, or work through flashcards. Your mock test, mistakes deck, and progress live here too.',
+    /** The three M6 surfaces, linked from the shell (the old comingSoon
+     * roadmap retired when they shipped). */
+    modesLabel: 'Mock, mistakes, and progress',
+    modes: {
+      mock: { href: '/app/mock', label: 'Mock test' },
+      mistakes: { href: '/app/mistakes', label: 'Mistakes deck' },
+      progress: { href: '/app/progress', label: 'Progress' },
+    },
     browse: { href: '/chapters', label: 'Read the chapters' },
   },
   loading: 'Checking your account…',
@@ -735,6 +739,285 @@ export const examPlayer = {
   submit: 'Submit exam',
   /** Shown as the results detail line once the exam is submitted. */
   complete: 'Exam submitted.',
+} as const;
+
+// ── Mock player (M6) ─────────────────────────────────────────────────────
+// The 100-question timed mock run mounted by the (next-step) mock surface.
+// Wording adapted from the app's canonical mock copy — MockTestScreen.js's
+// inline strings and appCopy.js's preMock / states / a11y sections — never
+// invented. ZERO premium pitch lives here: the mock run is a zero-nudge
+// surface (manual §1); the mock RESULTS pitch is the next step's scope.
+// WORKING until Anusha's voice pass.
+export const mockPlayer = {
+  badge: 'Mock test',
+  /** "Question {current} of {total}" — 1-based for display, never the raw index. */
+  counter: (current: number, total: number) => `Question ${current} of ${total}`,
+  optionsLabel: 'Answer options',
+  prev: 'Previous',
+  saveNext: 'Save & Next',
+  /** Flag-toggle accessible names (app appCopy.a11y.flagQuestion / flagQuestionOn). */
+  flagOff: 'Flag this question for review',
+  flagOn: 'Remove flag from this question',
+  timerLabel: 'Time remaining',
+  exit: 'Exit',
+  /** Desktop-only discoverability line for the keyboard shortcuts. */
+  keyboardHint: 'Keyboard: 1–4 pick an answer · left/right arrows move · F flags',
+  paletteToggle: 'Question palette',
+  paletteLabel: 'Question palette',
+  /** Palette cell accessible name — the state text keeps the four colours
+   * legible to a screen reader (a11y baseline: never colour alone). */
+  cellLabel: (n: number, state: string) => `Question ${n} — ${state}`,
+  legend: {
+    answered: 'Answered',
+    visited: 'Visited',
+    flagged: 'Flagged',
+    notVisited: 'Not visited',
+  },
+  submit: 'Submit Test',
+  confirmSubmit: {
+    title: 'Submit Test?',
+    allAnswered: 'All questions answered. Ready to see your score?',
+    /** Ported string shape from MockTestScreen.js handleSubmit. */
+    remaining: (unanswered: number, flaggedCount: number) => {
+      const parts: string[] = [];
+      if (unanswered) parts.push(`${unanswered} unanswered`);
+      if (flaggedCount) parts.push(`${flaggedCount} flagged`);
+      return `You have ${parts.join(' and ')} question${
+        unanswered + flaggedCount !== 1 ? 's' : ''
+      } — submit anyway?`;
+    },
+    cancelAllAnswered: 'Not yet',
+    cancelRemaining: 'Review',
+    confirm: 'Submit',
+  },
+  confirmExit: {
+    title: 'Exit Exam?',
+    body: 'Your progress will be lost.',
+    cancel: 'Keep Going',
+    confirm: 'Exit',
+  },
+  /** Zero assembled questions (app appCopy.states.mockEmpty*). */
+  empty: {
+    title: 'The mock paper is not ready yet',
+    body: 'There are not enough questions in the bank to assemble a full mock. Check back soon.',
+  },
+} as const;
+
+// ── Mock results (M6) ────────────────────────────────────────────────────
+// The post-submit block inside the mock run, ported from the app's
+// ResultsScreen mock branch (../ARNReady-App/screens/ResultsScreen.js:371-523,
+// appCopy.results). Wording adapted, never invented; WORKING until Anusha's
+// voice pass. The premium pitch (free users only) obeys the NUDGE LAW: it
+// pitches what premium ADDS — unlimited mocks, a fresh weighted paper — never
+// relief from the one-free-mock limit. Dual CTA until M8 ships web checkout.
+// The app's Prepometer zone label + gauge and its score-banded Arnie ladder
+// are NOT ported here: readiness zones are Prepometer machinery the web has
+// not built, and score-gated celebration is an M7 polish decision (same
+// deferral the M5 packet records for exam results). One calm Arnie instead.
+export const mockResults = {
+  mood: 'checks-in' as const,
+  scoredLabel: 'You scored',
+  /** "{score} / 100" — the mock is always scored over its full paper. */
+  scoreLine: (score: number, total: number) => `${score} / ${total}`,
+  /** Verdict bands (appCopy.results.mockVerdict) — calibration, not
+   * judgement. {pass} is MOCK_PASS_MARK; band edges are pass and
+   * pass + MOCK_PASS_MARGIN. */
+  verdict: {
+    passMargin: (pass: number) => `Passing is ${pass}%. You'd have passed — with margin to build.`,
+    passJust: (pass: number) => `Passing is ${pass}%. You'd have passed — just. Margin is the next job.`,
+    fail: (pass: number) =>
+      `Passing is ${pass}%. Not there yet — but now you know exactly which chapters owe you marks.`,
+  },
+  /** Free-tier pitch block (appCopy.results.unlimitedMocksCta + the nudge
+   * law). Primary CTA mirrors mockSurface.used / nudge.getApp exactly. */
+  pitch: {
+    title: 'Go Premium — Unlimited Mocks',
+    body: 'Premium gets you unlimited mocks with a fresh weighted paper every time, plus the complete question bank — so you can track your readiness all the way to exam day.',
+    cta: { href: '/pricing', label: 'Get the app' }, // [ANUSHA: Play Store listing URL]
+    webSoon: 'Web checkout — coming soon',
+    later: { href: '/app', label: 'Maybe later' },
+  },
+  /** Paid actions: retake is the primary (app takeAnotherMock); back is quiet. */
+  takeAnother: 'Take Another Mock',
+  backToStudy: { href: '/app', label: 'Back to study' },
+  detailsShow: 'View performance details',
+  detailsHide: 'Hide performance details',
+  stats: {
+    attempt: 'Score this attempt',
+    time: 'Time taken',
+    best: 'Best score',
+    lowest: 'Toughest day',
+    average: 'Average score',
+    attempts: 'Mocks attempted',
+    /** "{n} / 100" for the score rows (app dashCard rows). */
+    outOf: (n: number, total: number) => `${n} / ${total}`,
+  },
+  weak: {
+    heading: 'Chapters to revisit',
+    /** appCopy.results.mockWeakChip — weightage-aware chip label. */
+    chip: (ch: number, title: string, weight: number) => `Chapter ${ch} — ${title} · ${weight}% of exam`,
+    /** Low-score framing (< 70%): overall practice beats chapter-chasing. */
+    needsPractice: 'Arnie thinks you need more practice overall.',
+    needsPracticeBody: 'Read the flashcards and work through Practice Mode before your next mock.',
+    needsPracticeLink: { href: '/app', label: 'Read Flashcards' },
+  },
+} as const;
+
+// ── /app/mock — pre-start surface (M6) ───────────────────────────────────
+// PreMock parity: wording adapted from the app's canonical
+// appCopy.preMock and appCopy.states sections — never invented. The
+// used-mock pitch obeys the NUDGE LAW (manual §1): it pitches what premium
+// ADDS (unlimited mocks, a fresh weighted paper every time), never relief
+// from the one-free-mock limit. Dual CTA until M8 ships web checkout.
+// WORKING until Anusha's voice pass.
+export const mockSurface = {
+  meta: {
+    title: 'Mock test — ARNReady',
+    description:
+      'Sign in to sit a full NISM Series V-A mock test — 100 questions, timed like the real exam.',
+  },
+  /** Free users only (app preMock.freeBanner — the one-free-mock framing). */
+  freeBanner: 'This is your one free mock. Make it count.',
+  title: 'Before you begin',
+  deviceAdvice: 'For the closest exam-like experience, take this mock on a laptop or desktop.',
+  /** {questions}/{minutes} are filled from mockConfig at render — the copy
+   * carries placeholders exactly as the app's does, never a second 100/120. */
+  instructions: [
+    '{questions} questions · {minutes} minutes — mirrors the real NISM V-A exam.',
+    'Move freely between questions. Nothing is locked in until you submit.',
+    'Change any answer as many times as you like before submitting.',
+    'Flag a question to come back to it — the flag is just for you.',
+    'Exit before submitting and the attempt is discarded — nothing is recorded.',
+    'After you submit: score + weak chapters only. Mock questions are never shown again — each mock is a fresh simulation, not study material.',
+  ],
+  startButton: 'Start Mock Test',
+  historyTitle: 'Past attempts',
+  historyWeak: (list: string) => `Revisit: ${list}`,
+  historyNoWeak: 'No weak chapters flagged',
+  /** Free user whose one free mock is already taken (app preMock.used*). */
+  used: {
+    mood: 'meditating' as const,
+    title: 'Your free mock is done',
+    /** "{score}/100 · {date}" — the app's usedScoreLine shape. */
+    scoreLine: (score: number, date: string) => `Your mock: ${score}/100 · ${date}`,
+    body: 'You have taken your one free mock — and that score is real. Premium gets you unlimited mocks, a fresh weighted paper every time, so you can track your readiness all the way to exam day.',
+    /** Interim dual CTA until M8: no Play listing URL exists in this repo yet
+     * (see nudge.getApp's identical note) — "Get the app" points at /pricing. */
+    cta: { href: '/pricing', label: 'Get the app' }, // [ANUSHA: Play Store listing URL]
+    webSoon: 'Web checkout — coming soon', // informational, non-functional (pricing.premium.checkoutLabel)
+    later: { href: '/app', label: 'Maybe later' },
+  },
+  /** Shown between Start and the paper mounting (app states.mockAssembling). */
+  assembling: 'Assembling your paper…',
+  /** Failed eligibility/pool read (app states.error*) — with retry, NEVER the
+   * used-mock pitch (ScreenState policy §3). */
+  error: {
+    title: 'Could not load this right now',
+    body: 'Check your connection and try again. Nothing you have done is lost.',
+    retry: 'Try again',
+  },
+} as const;
+
+// ── /app/mistakes — the mistakes deck (M6) ───────────────────────────────
+// ZERO-NUDGE SURFACE (manual §1: the mistakes deck is nudge-free, both
+// tiers) — no premium pitch anywhere in this section, and the deck is
+// identical for free and paid. Wording adapted from the app's canonical
+// appCopy.mistakes — never invented; the badge and retire lines are
+// verbatim. The empty state is EARNED (every collected mistake cleared), so
+// it is celebratory-calm — Arnie proud, not a party. WORKING until Anusha's
+// voice pass.
+export const mistakes = {
+  meta: {
+    title: 'Mistakes deck — ARNReady',
+    description:
+      'Sign in to re-attempt the questions you got wrong. Clear each one twice and it retires from your deck.',
+  },
+  /** App appCopy.mistakes.badge, verbatim. */
+  badge: 'MISTAKES DECK · Your toughest questions',
+  picker: {
+    title: 'Your mistakes deck',
+    /** The deck's own rules, plainly (adapted from app today.body). */
+    body: 'Questions you got wrong, back for another go. Answer one correctly in two separate sessions and it retires for good.',
+    /** Per-chapter count (adapted from app today.title "{n} mistakes are waiting"). */
+    countLabel: (n: number) => (n === 1 ? '1 mistake waiting' : `${n} mistakes waiting`),
+    /** App today.cta, verbatim — the one action per chapter card. */
+    cta: 'Fix your mistakes',
+    gridLabel: 'Chapters with mistakes',
+  },
+  /** All clear — the app's empty string, split into title/body. */
+  empty: {
+    mood: 'proud' as const,
+    title: 'No mistakes waiting here.',
+    body: 'Every question you missed has been cleared — Arnie is impressed.',
+    back: { href: '/app', label: 'Back to study' },
+  },
+  /** One chapter's deck is clear — same earned state, way back to the picker. */
+  emptyChapter: {
+    body: 'Nothing waiting in this chapter’s deck.',
+    back: { href: '/app/mistakes', label: 'Back to your mistakes deck' },
+  },
+  loading: 'Loading your mistakes…',
+  /** App retireDone / retireProgress, verbatim (QuizScreen retire row). */
+  retireDone: 'Nailed it twice. This one leaves your mistakes deck.',
+  retireProgress: 'Got it. Answer it right in one more session and it retires from your deck.',
+  /** Mistakes-specific end-of-set line (the practice one says "practice set"). */
+  setComplete: 'That’s every mistake in this run.',
+  completion: {
+    mood: 'checks-in' as const,
+    title: 'Mistakes run done.',
+    /** Same honest accuracy shape as results.practice — no readiness claim. */
+    headline: (correct: number, attempted: number, pct: number) =>
+      `You got ${correct} of ${attempted} right — ${pct}%`,
+    action: { href: '/app/mistakes', label: 'Back to your mistakes deck' },
+  },
+} as const;
+
+// ── /app/progress — the read-only progress surface (M6) ─────────────────
+// READ-ONLY and nudge-free: this surface records nothing and pitches
+// nothing. THE DISPLAY LAW (app ChapterListScreen.js ChapterRow + manual §1
+// "Never compare the two on one surface"): a chapter's readiness is its
+// FULL-exam last percentage ONLY — a chapter without a full exam earns a
+// NEUTRAL activity line (sample, then practice, then not started), never
+// both on one row. Wording adapted from the app's canonical
+// appCopy.chapters section — never invented. WORKING until Anusha's voice
+// pass.
+export const progress = {
+  meta: {
+    title: 'Your progress — ARNReady',
+    description:
+      'Sign in to see your chapter readiness and mock test history for the NISM Series V-A exam.',
+  },
+  title: 'Your progress',
+  /** Adapted from app chapters.journeyEmpty — readiness moves on full Exam
+   * Mode scores only; activity is acknowledged, never inflated. */
+  intro:
+    'Your 12-chapter road to the ARN. Readiness moves on full Exam Mode scores — sample and practice work is noted, never inflated.',
+  loading: 'Loading your progress…',
+  listLabel: 'Chapter progress',
+  /** App chapters.weightChip, verbatim shape. */
+  weightChip: (w: number) => `${w}% of exam`,
+  /** The honest full-exam figure — no zone label, no claim beyond the pct. */
+  readiness: (pct: number) => `${pct}%`,
+  /** App chapters.sampleActivity — {score}/{total} is the blob's LOCKED
+   * sample lastScore/lastTotal pair (denominator max(10, attempted)), never
+   * the served count. */
+  sampleActivity: (score: number, total: number) => `Free sample: ${score}/${total}`,
+  /** App chapters.practiceActivity, verbatim shape. */
+  practiceActivity: (n: number) => `Practised ${n} questions`,
+  /** App chapters.notStarted, verbatim. */
+  notStarted: 'Not started',
+  /** App chapters.rowA11y, verbatim shape. */
+  rowA11y: (id: number, title: string, weight: number, status: string) =>
+    `Chapter ${id}: ${title}. ${weight}% of exam. ${status}`,
+  mockHistory: {
+    heading: 'Mock test history',
+    /** Adapted from the app's preMock framing — the mock is the full
+     * 100-question rehearsal of the real exam. */
+    empty: {
+      text: 'No mock on record yet. The full 100-question rehearsal is the truest check of your readiness.',
+      link: { href: '/app/mock', label: 'Sit the mock test' },
+    },
+  },
 } as const;
 
 // ── End-of-run results (M5 S7, D10/D11) ──────────────────────────────────

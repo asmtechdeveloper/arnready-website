@@ -23,6 +23,21 @@ export const colors = {
   white: '#FFFFFF',
 } as const;
 
+/**
+ * Mock palette "visited, not answered" colours (M6) — mirrored from the app's
+ * ../ARNReady-App/screens/MockTestScreen.js: cell background '#E0F2FE'
+ * (gridBg, line 40), cell text '#0369A1' (gridFg, line 47), legend swatch
+ * '#7DD3FC' (legend row, line 475). They exist only for the mock question
+ * palette; they are deliberately NOT part of the locked §0.7 brand palette
+ * (test/tokens.test.ts pins `colors` alone), and this file remains the one
+ * permitted hex location (scripts/check-no-raw-hex.mjs).
+ */
+export const paletteVisited = {
+  bg: '#E0F2FE',
+  fg: '#0369A1',
+  legend: '#7DD3FC',
+} as const;
+
 export const radii = {
   card: '20px',
   pill: '9999px',

@@ -28,11 +28,14 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
+  assembleMock,
   capFreeQuestionSet,
   computeExamScorePct,
   computePracticePct,
   drawExamSet,
   orderPracticeSet,
+  tallyWeakChapters,
+  tallyWeakSubtopics,
   type Question,
 } from '@/lib/quizEngine';
 import { makeSeededRng } from '../scripts/lib/seededRng.mjs';
@@ -80,6 +83,24 @@ function runPort(testCase: GoldenCase): unknown {
       );
     case 'computePracticePct':
       return computePracticePct(input.correct as number, input.attempted as number);
+    case 'assembleMock':
+      return assembleMock(
+        input.questions as Question[],
+        input.weights as Record<number, number>,
+        rng,
+      );
+    case 'tallyWeakSubtopics':
+      return tallyWeakSubtopics(
+        input.questions as Question[],
+        input.answers as (number | null | undefined)[],
+        input.limit as number | undefined,
+      );
+    case 'tallyWeakChapters':
+      return tallyWeakChapters(
+        input.questions as Question[],
+        input.answers as (number | null | undefined)[],
+        input.limit as number | undefined,
+      );
     default:
       throw new Error(
         `Unknown fixture fn "${fn}" in case "${testCase.id}". A new function was ` +
@@ -104,9 +125,12 @@ describe('quizEngine web port matches app-generated golden fixtures', () => {
         'drawExamSet',
         'computeExamScorePct',
         'computePracticePct',
+        'assembleMock',
+        'tallyWeakSubtopics',
+        'tallyWeakChapters',
       ]),
     );
-    expect(cases.length).toBeGreaterThanOrEqual(19);
+    expect(cases.length).toBeGreaterThanOrEqual(30);
   });
 
   it.each(cases.map((c) => [c.id, c] as const))('%s', (_id, testCase) => {
@@ -134,6 +158,9 @@ describe.skipIf(!appRepoPresent)('LIVE cross-repo parity: app quizEngine vs web 
       drawExamSet: typeof drawExamSet;
       computeExamScorePct: typeof computeExamScorePct;
       computePracticePct: typeof computePracticePct;
+      assembleMock: typeof assembleMock;
+      tallyWeakSubtopics: typeof tallyWeakSubtopics;
+      tallyWeakChapters: typeof tallyWeakChapters;
     };
 
     for (const testCase of cases) {
@@ -164,6 +191,27 @@ describe.skipIf(!appRepoPresent)('LIVE cross-repo parity: app quizEngine vs web 
           break;
         case 'computePracticePct':
           appResult = app.computePracticePct(input.correct as number, input.attempted as number);
+          break;
+        case 'assembleMock':
+          appResult = app.assembleMock(
+            input.questions as Question[],
+            input.weights as Record<number, number>,
+            appRng,
+          );
+          break;
+        case 'tallyWeakSubtopics':
+          appResult = app.tallyWeakSubtopics(
+            input.questions as Question[],
+            input.answers as (number | null | undefined)[],
+            input.limit as number | undefined,
+          );
+          break;
+        case 'tallyWeakChapters':
+          appResult = app.tallyWeakChapters(
+            input.questions as Question[],
+            input.answers as (number | null | undefined)[],
+            input.limit as number | undefined,
+          );
           break;
         default:
           throw new Error(`Unknown fixture fn "${fn}"`);

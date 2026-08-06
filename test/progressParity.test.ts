@@ -65,6 +65,15 @@ function recordingBackend(prior: Prior) {
     commitMistakes: async (writes) => {
       captured.mistakes.push(...writes);
     },
+    // M6 seam additions, stubbed to fail LOUDLY: the M4 services under test
+    // here must never touch the users root — that is mockService's territory
+    // (test/mockServicePort.test.ts).
+    readUserRoot: async () => {
+      throw new Error('progress services must not read the users root');
+    },
+    appendMockAttempt: async () => {
+      throw new Error('progress services must not write the users root');
+    },
   };
 
   return { backend, captured };

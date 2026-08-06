@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { colors, radii, maxWidth, shadows, spacing } from './src/styles/tokens';
+import { colors, paletteVisited, radii, maxWidth, shadows, spacing } from './src/styles/tokens';
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
@@ -14,6 +14,11 @@ const config: Config = {
         ink: colors.ink,
         muted: colors.muted,
         line: colors.line,
+        'palette-visited': {
+          bg: paletteVisited.bg,
+          fg: paletteVisited.fg,
+          legend: paletteVisited.legend,
+        },
       },
       borderRadius: {
         card: radii.card,

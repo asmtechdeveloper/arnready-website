@@ -2472,6 +2472,5421 @@
         "attempted": 8
       },
       "expected": 100
+    },
+    {
+      "id": "assembleMock-weighted-basic",
+      "fn": "assembleMock",
+      "description": "three chapters of 6 distinct-seed questions, weights {1:2, 2:3, 3:1} -> per-chapter picks respect the weights (6 questions total), final order shuffled",
+      "input": {
+        "questions": [
+          {
+            "id": "m1-1",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m1-1"
+          },
+          {
+            "id": "m1-2",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m1-2"
+          },
+          {
+            "id": "m1-3",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m1-3"
+          },
+          {
+            "id": "m1-4",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m1-4"
+          },
+          {
+            "id": "m1-5",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m1-5"
+          },
+          {
+            "id": "m1-6",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m1-6"
+          },
+          {
+            "id": "m2-1",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m2-1"
+          },
+          {
+            "id": "m2-2",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m2-2"
+          },
+          {
+            "id": "m2-3",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m2-3"
+          },
+          {
+            "id": "m2-4",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m2-4"
+          },
+          {
+            "id": "m2-5",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m2-5"
+          },
+          {
+            "id": "m2-6",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m2-6"
+          },
+          {
+            "id": "m3-1",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m3-1"
+          },
+          {
+            "id": "m3-2",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m3-2"
+          },
+          {
+            "id": "m3-3",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m3-3"
+          },
+          {
+            "id": "m3-4",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m3-4"
+          },
+          {
+            "id": "m3-5",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m3-5"
+          },
+          {
+            "id": "m3-6",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "m3-6"
+          }
+        ],
+        "weights": {
+          "1": 2,
+          "2": 3,
+          "3": 1
+        }
+      },
+      "seed": 201,
+      "expected": [
+        {
+          "id": "m2-6",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "m2-6"
+        },
+        {
+          "id": "m2-5",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "m2-5"
+        },
+        {
+          "id": "m1-1",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "m1-1"
+        },
+        {
+          "id": "m3-6",
+          "chapter": 3,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "m3-6"
+        },
+        {
+          "id": "m2-1",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "m2-1"
+        },
+        {
+          "id": "m1-5",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "m1-5"
+        }
+      ]
+    },
+    {
+      "id": "assembleMock-narrow-chapter-below-weight",
+      "fn": "assembleMock",
+      "description": "chapter with only 2 seed groups but weight 5 -> takes all 2, no repetition (min(weight, picks.length))",
+      "input": {
+        "questions": [
+          {
+            "id": "mn1",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mn1"
+          },
+          {
+            "id": "mn2",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mn2"
+          }
+        ],
+        "weights": {
+          "4": 5
+        }
+      },
+      "seed": 202,
+      "expected": [
+        {
+          "id": "mn1",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mn1"
+        },
+        {
+          "id": "mn2",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mn2"
+        }
+      ]
+    },
+    {
+      "id": "assembleMock-seed-groups-one-per-mock",
+      "fn": "assembleMock",
+      "description": "9 questions in 3 seedId groups, weight 5 -> one pick per group (3 out), never two members of the same group in one mock",
+      "input": {
+        "questions": [
+          {
+            "id": "mg1a",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg1"
+          },
+          {
+            "id": "mg1b",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg1"
+          },
+          {
+            "id": "mg1c",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg1"
+          },
+          {
+            "id": "mg2a",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg2"
+          },
+          {
+            "id": "mg2b",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg2"
+          },
+          {
+            "id": "mg2c",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg2"
+          },
+          {
+            "id": "mg3a",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg3"
+          },
+          {
+            "id": "mg3b",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg3"
+          },
+          {
+            "id": "mg3c",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mg3"
+          }
+        ],
+        "weights": {
+          "5": 5
+        }
+      },
+      "seed": 203,
+      "expected": [
+        {
+          "id": "mg3b",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mg3"
+        },
+        {
+          "id": "mg2a",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mg2"
+        },
+        {
+          "id": "mg1c",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mg1"
+        }
+      ]
+    },
+    {
+      "id": "assembleMock-zero-and-missing-weight-chapters-skipped",
+      "fn": "assembleMock",
+      "description": "weight 0 (chapter 7) and a weighted chapter with no pool questions (chapter 8) both contribute nothing -> only chapter 6 appears",
+      "input": {
+        "questions": [
+          {
+            "id": "mz1",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mz1"
+          },
+          {
+            "id": "mz2",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mz2"
+          },
+          {
+            "id": "mz3",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mz3"
+          },
+          {
+            "id": "mz4",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mz4"
+          },
+          {
+            "id": "mz5",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "mz5"
+          }
+        ],
+        "weights": {
+          "6": 2,
+          "7": 0,
+          "8": 4
+        }
+      },
+      "seed": 204,
+      "expected": [
+        {
+          "id": "mz2",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mz2"
+        },
+        {
+          "id": "mz3",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "mz3"
+        }
+      ]
+    },
+    {
+      "id": "assembleMock-full-nism-weights",
+      "fn": "assembleMock",
+      "description": "the real NISM V-A weights over a 12-chapter pool (each chapter weight+3 distinct seeds) -> a full 100-question mock",
+      "input": {
+        "questions": [
+          {
+            "id": "full1-1",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-1"
+          },
+          {
+            "id": "full1-2",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-2"
+          },
+          {
+            "id": "full1-3",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-3"
+          },
+          {
+            "id": "full1-4",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-4"
+          },
+          {
+            "id": "full1-5",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-5"
+          },
+          {
+            "id": "full1-6",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-6"
+          },
+          {
+            "id": "full1-7",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-7"
+          },
+          {
+            "id": "full1-8",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-8"
+          },
+          {
+            "id": "full1-9",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-9"
+          },
+          {
+            "id": "full1-10",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-10"
+          },
+          {
+            "id": "full1-11",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full1-11"
+          },
+          {
+            "id": "full2-1",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-1"
+          },
+          {
+            "id": "full2-2",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-2"
+          },
+          {
+            "id": "full2-3",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-3"
+          },
+          {
+            "id": "full2-4",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-4"
+          },
+          {
+            "id": "full2-5",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-5"
+          },
+          {
+            "id": "full2-6",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-6"
+          },
+          {
+            "id": "full2-7",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-7"
+          },
+          {
+            "id": "full2-8",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-8"
+          },
+          {
+            "id": "full2-9",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full2-9"
+          },
+          {
+            "id": "full3-1",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-1"
+          },
+          {
+            "id": "full3-2",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-2"
+          },
+          {
+            "id": "full3-3",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-3"
+          },
+          {
+            "id": "full3-4",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-4"
+          },
+          {
+            "id": "full3-5",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-5"
+          },
+          {
+            "id": "full3-6",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-6"
+          },
+          {
+            "id": "full3-7",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full3-7"
+          },
+          {
+            "id": "full4-1",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-1"
+          },
+          {
+            "id": "full4-2",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-2"
+          },
+          {
+            "id": "full4-3",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-3"
+          },
+          {
+            "id": "full4-4",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-4"
+          },
+          {
+            "id": "full4-5",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-5"
+          },
+          {
+            "id": "full4-6",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-6"
+          },
+          {
+            "id": "full4-7",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-7"
+          },
+          {
+            "id": "full4-8",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-8"
+          },
+          {
+            "id": "full4-9",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-9"
+          },
+          {
+            "id": "full4-10",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-10"
+          },
+          {
+            "id": "full4-11",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-11"
+          },
+          {
+            "id": "full4-12",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-12"
+          },
+          {
+            "id": "full4-13",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full4-13"
+          },
+          {
+            "id": "full5-1",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-1"
+          },
+          {
+            "id": "full5-2",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-2"
+          },
+          {
+            "id": "full5-3",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-3"
+          },
+          {
+            "id": "full5-4",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-4"
+          },
+          {
+            "id": "full5-5",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-5"
+          },
+          {
+            "id": "full5-6",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-6"
+          },
+          {
+            "id": "full5-7",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-7"
+          },
+          {
+            "id": "full5-8",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-8"
+          },
+          {
+            "id": "full5-9",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-9"
+          },
+          {
+            "id": "full5-10",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-10"
+          },
+          {
+            "id": "full5-11",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-11"
+          },
+          {
+            "id": "full5-12",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-12"
+          },
+          {
+            "id": "full5-13",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full5-13"
+          },
+          {
+            "id": "full6-1",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-1"
+          },
+          {
+            "id": "full6-2",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-2"
+          },
+          {
+            "id": "full6-3",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-3"
+          },
+          {
+            "id": "full6-4",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-4"
+          },
+          {
+            "id": "full6-5",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-5"
+          },
+          {
+            "id": "full6-6",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-6"
+          },
+          {
+            "id": "full6-7",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-7"
+          },
+          {
+            "id": "full6-8",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-8"
+          },
+          {
+            "id": "full6-9",
+            "chapter": 6,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full6-9"
+          },
+          {
+            "id": "full7-1",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-1"
+          },
+          {
+            "id": "full7-2",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-2"
+          },
+          {
+            "id": "full7-3",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-3"
+          },
+          {
+            "id": "full7-4",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-4"
+          },
+          {
+            "id": "full7-5",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-5"
+          },
+          {
+            "id": "full7-6",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-6"
+          },
+          {
+            "id": "full7-7",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-7"
+          },
+          {
+            "id": "full7-8",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-8"
+          },
+          {
+            "id": "full7-9",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-9"
+          },
+          {
+            "id": "full7-10",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-10"
+          },
+          {
+            "id": "full7-11",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full7-11"
+          },
+          {
+            "id": "full8-1",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-1"
+          },
+          {
+            "id": "full8-2",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-2"
+          },
+          {
+            "id": "full8-3",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-3"
+          },
+          {
+            "id": "full8-4",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-4"
+          },
+          {
+            "id": "full8-5",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-5"
+          },
+          {
+            "id": "full8-6",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-6"
+          },
+          {
+            "id": "full8-7",
+            "chapter": 8,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full8-7"
+          },
+          {
+            "id": "full9-1",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-1"
+          },
+          {
+            "id": "full9-2",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-2"
+          },
+          {
+            "id": "full9-3",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-3"
+          },
+          {
+            "id": "full9-4",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-4"
+          },
+          {
+            "id": "full9-5",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-5"
+          },
+          {
+            "id": "full9-6",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-6"
+          },
+          {
+            "id": "full9-7",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-7"
+          },
+          {
+            "id": "full9-8",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-8"
+          },
+          {
+            "id": "full9-9",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-9"
+          },
+          {
+            "id": "full9-10",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-10"
+          },
+          {
+            "id": "full9-11",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-11"
+          },
+          {
+            "id": "full9-12",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-12"
+          },
+          {
+            "id": "full9-13",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-13"
+          },
+          {
+            "id": "full9-14",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-14"
+          },
+          {
+            "id": "full9-15",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-15"
+          },
+          {
+            "id": "full9-16",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-16"
+          },
+          {
+            "id": "full9-17",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-17"
+          },
+          {
+            "id": "full9-18",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full9-18"
+          },
+          {
+            "id": "full10-1",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-1"
+          },
+          {
+            "id": "full10-2",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-2"
+          },
+          {
+            "id": "full10-3",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-3"
+          },
+          {
+            "id": "full10-4",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-4"
+          },
+          {
+            "id": "full10-5",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-5"
+          },
+          {
+            "id": "full10-6",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-6"
+          },
+          {
+            "id": "full10-7",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-7"
+          },
+          {
+            "id": "full10-8",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-8"
+          },
+          {
+            "id": "full10-9",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-9"
+          },
+          {
+            "id": "full10-10",
+            "chapter": 10,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full10-10"
+          },
+          {
+            "id": "full11-1",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-1"
+          },
+          {
+            "id": "full11-2",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-2"
+          },
+          {
+            "id": "full11-3",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-3"
+          },
+          {
+            "id": "full11-4",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-4"
+          },
+          {
+            "id": "full11-5",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-5"
+          },
+          {
+            "id": "full11-6",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-6"
+          },
+          {
+            "id": "full11-7",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-7"
+          },
+          {
+            "id": "full11-8",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-8"
+          },
+          {
+            "id": "full11-9",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-9"
+          },
+          {
+            "id": "full11-10",
+            "chapter": 11,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full11-10"
+          },
+          {
+            "id": "full12-1",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-1"
+          },
+          {
+            "id": "full12-2",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-2"
+          },
+          {
+            "id": "full12-3",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-3"
+          },
+          {
+            "id": "full12-4",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-4"
+          },
+          {
+            "id": "full12-5",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-5"
+          },
+          {
+            "id": "full12-6",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-6"
+          },
+          {
+            "id": "full12-7",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-7"
+          },
+          {
+            "id": "full12-8",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-8"
+          },
+          {
+            "id": "full12-9",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-9"
+          },
+          {
+            "id": "full12-10",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-10"
+          },
+          {
+            "id": "full12-11",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-11"
+          },
+          {
+            "id": "full12-12",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-12"
+          },
+          {
+            "id": "full12-13",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-13"
+          },
+          {
+            "id": "full12-14",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-14"
+          },
+          {
+            "id": "full12-15",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-15"
+          },
+          {
+            "id": "full12-16",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-16"
+          },
+          {
+            "id": "full12-17",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-17"
+          },
+          {
+            "id": "full12-18",
+            "chapter": 12,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true,
+            "seedId": "full12-18"
+          }
+        ],
+        "weights": {
+          "1": 8,
+          "2": 6,
+          "3": 4,
+          "4": 10,
+          "5": 10,
+          "6": 6,
+          "7": 8,
+          "8": 4,
+          "9": 15,
+          "10": 7,
+          "11": 7,
+          "12": 15
+        }
+      },
+      "seed": 205,
+      "expected": [
+        {
+          "id": "full11-5",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-5"
+        },
+        {
+          "id": "full1-9",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-9"
+        },
+        {
+          "id": "full6-6",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full6-6"
+        },
+        {
+          "id": "full12-3",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-3"
+        },
+        {
+          "id": "full6-7",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full6-7"
+        },
+        {
+          "id": "full12-10",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-10"
+        },
+        {
+          "id": "full10-2",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-2"
+        },
+        {
+          "id": "full9-16",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-16"
+        },
+        {
+          "id": "full5-2",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-2"
+        },
+        {
+          "id": "full7-10",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-10"
+        },
+        {
+          "id": "full9-4",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-4"
+        },
+        {
+          "id": "full5-12",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-12"
+        },
+        {
+          "id": "full4-5",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-5"
+        },
+        {
+          "id": "full7-4",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-4"
+        },
+        {
+          "id": "full6-2",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full6-2"
+        },
+        {
+          "id": "full8-4",
+          "chapter": 8,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full8-4"
+        },
+        {
+          "id": "full9-3",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-3"
+        },
+        {
+          "id": "full12-12",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-12"
+        },
+        {
+          "id": "full8-3",
+          "chapter": 8,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full8-3"
+        },
+        {
+          "id": "full1-2",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-2"
+        },
+        {
+          "id": "full1-4",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-4"
+        },
+        {
+          "id": "full10-10",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-10"
+        },
+        {
+          "id": "full4-13",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-13"
+        },
+        {
+          "id": "full12-9",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-9"
+        },
+        {
+          "id": "full2-1",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full2-1"
+        },
+        {
+          "id": "full9-2",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-2"
+        },
+        {
+          "id": "full5-4",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-4"
+        },
+        {
+          "id": "full5-3",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-3"
+        },
+        {
+          "id": "full12-6",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-6"
+        },
+        {
+          "id": "full3-7",
+          "chapter": 3,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full3-7"
+        },
+        {
+          "id": "full2-6",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full2-6"
+        },
+        {
+          "id": "full12-14",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-14"
+        },
+        {
+          "id": "full10-7",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-7"
+        },
+        {
+          "id": "full4-8",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-8"
+        },
+        {
+          "id": "full3-6",
+          "chapter": 3,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full3-6"
+        },
+        {
+          "id": "full1-1",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-1"
+        },
+        {
+          "id": "full9-5",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-5"
+        },
+        {
+          "id": "full7-1",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-1"
+        },
+        {
+          "id": "full9-14",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-14"
+        },
+        {
+          "id": "full8-7",
+          "chapter": 8,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full8-7"
+        },
+        {
+          "id": "full4-4",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-4"
+        },
+        {
+          "id": "full3-3",
+          "chapter": 3,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full3-3"
+        },
+        {
+          "id": "full8-5",
+          "chapter": 8,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full8-5"
+        },
+        {
+          "id": "full4-12",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-12"
+        },
+        {
+          "id": "full12-5",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-5"
+        },
+        {
+          "id": "full5-7",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-7"
+        },
+        {
+          "id": "full6-9",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full6-9"
+        },
+        {
+          "id": "full10-1",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-1"
+        },
+        {
+          "id": "full2-5",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full2-5"
+        },
+        {
+          "id": "full12-11",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-11"
+        },
+        {
+          "id": "full7-3",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-3"
+        },
+        {
+          "id": "full2-3",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full2-3"
+        },
+        {
+          "id": "full11-7",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-7"
+        },
+        {
+          "id": "full9-10",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-10"
+        },
+        {
+          "id": "full7-9",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-9"
+        },
+        {
+          "id": "full4-9",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-9"
+        },
+        {
+          "id": "full11-10",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-10"
+        },
+        {
+          "id": "full1-8",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-8"
+        },
+        {
+          "id": "full9-18",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-18"
+        },
+        {
+          "id": "full5-8",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-8"
+        },
+        {
+          "id": "full4-7",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-7"
+        },
+        {
+          "id": "full9-1",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-1"
+        },
+        {
+          "id": "full4-10",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-10"
+        },
+        {
+          "id": "full1-11",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-11"
+        },
+        {
+          "id": "full5-10",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-10"
+        },
+        {
+          "id": "full2-4",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full2-4"
+        },
+        {
+          "id": "full9-12",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-12"
+        },
+        {
+          "id": "full7-8",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-8"
+        },
+        {
+          "id": "full4-2",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-2"
+        },
+        {
+          "id": "full5-6",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-6"
+        },
+        {
+          "id": "full10-3",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-3"
+        },
+        {
+          "id": "full10-5",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-5"
+        },
+        {
+          "id": "full9-13",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-13"
+        },
+        {
+          "id": "full12-1",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-1"
+        },
+        {
+          "id": "full11-9",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-9"
+        },
+        {
+          "id": "full5-13",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-13"
+        },
+        {
+          "id": "full11-6",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-6"
+        },
+        {
+          "id": "full12-17",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-17"
+        },
+        {
+          "id": "full4-11",
+          "chapter": 4,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full4-11"
+        },
+        {
+          "id": "full12-18",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-18"
+        },
+        {
+          "id": "full2-7",
+          "chapter": 2,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full2-7"
+        },
+        {
+          "id": "full9-7",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-7"
+        },
+        {
+          "id": "full1-10",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-10"
+        },
+        {
+          "id": "full12-2",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-2"
+        },
+        {
+          "id": "full10-8",
+          "chapter": 10,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full10-8"
+        },
+        {
+          "id": "full5-1",
+          "chapter": 5,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full5-1"
+        },
+        {
+          "id": "full9-17",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-17"
+        },
+        {
+          "id": "full1-7",
+          "chapter": 1,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full1-7"
+        },
+        {
+          "id": "full9-11",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-11"
+        },
+        {
+          "id": "full7-7",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-7"
+        },
+        {
+          "id": "full11-4",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-4"
+        },
+        {
+          "id": "full12-15",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-15"
+        },
+        {
+          "id": "full9-9",
+          "chapter": 9,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full9-9"
+        },
+        {
+          "id": "full12-7",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-7"
+        },
+        {
+          "id": "full6-3",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full6-3"
+        },
+        {
+          "id": "full11-2",
+          "chapter": 11,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full11-2"
+        },
+        {
+          "id": "full6-1",
+          "chapter": 6,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full6-1"
+        },
+        {
+          "id": "full12-8",
+          "chapter": 12,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full12-8"
+        },
+        {
+          "id": "full7-11",
+          "chapter": 7,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full7-11"
+        },
+        {
+          "id": "full3-1",
+          "chapter": 3,
+          "subtopic": "General",
+          "question": "stub question text",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctIndex": 0,
+          "difficulty": "medium",
+          "isFree": true,
+          "isSeed": true,
+          "seedId": "full3-1"
+        }
+      ]
+    },
+    {
+      "id": "tallyWeakSubtopics-unanswered-never-counts-wrong",
+      "fn": "tallyWeakSubtopics",
+      "description": "null (ws2) and missing-tail undefined (ws4) never count as wrong; a correct pick (ws3) never counts either -> only KYC tallies",
+      "input": {
+        "questions": [
+          {
+            "id": "ws1",
+            "chapter": 1,
+            "subtopic": "KYC",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "ws2",
+            "chapter": 1,
+            "subtopic": "KYC",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "ws3",
+            "chapter": 1,
+            "subtopic": "SIP",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 1,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "ws4",
+            "chapter": 1,
+            "subtopic": "NAV",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 2,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          }
+        ],
+        "answers": [
+          1,
+          null,
+          1
+        ]
+      },
+      "expected": [
+        "KYC"
+      ]
+    },
+    {
+      "id": "tallyWeakSubtopics-four-way-tie-default-limit",
+      "fn": "tallyWeakSubtopics",
+      "description": "four subtopics all wrong once, default limit 3 -> ties broken by Map insertion order (recorded from the app, whatever it returns)",
+      "input": {
+        "questions": [
+          {
+            "id": "wt1",
+            "chapter": 1,
+            "subtopic": "KYC",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wt2",
+            "chapter": 1,
+            "subtopic": "SIP",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wt3",
+            "chapter": 1,
+            "subtopic": "NAV",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wt4",
+            "chapter": 1,
+            "subtopic": "SWP",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          }
+        ],
+        "answers": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "expected": [
+        "KYC",
+        "SIP",
+        "NAV"
+      ]
+    },
+    {
+      "id": "tallyWeakSubtopics-explicit-limit",
+      "fn": "tallyWeakSubtopics",
+      "description": "explicit limit 2 truncates the count-sorted list: KYC (2 wrong) then the first 1-wrong subtopic in insertion order",
+      "input": {
+        "questions": [
+          {
+            "id": "wl1",
+            "chapter": 1,
+            "subtopic": "KYC",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wl2",
+            "chapter": 1,
+            "subtopic": "KYC",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wl3",
+            "chapter": 1,
+            "subtopic": "SIP",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wl4",
+            "chapter": 1,
+            "subtopic": "NAV",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          }
+        ],
+        "answers": [
+          1,
+          2,
+          3,
+          1
+        ],
+        "limit": 2
+      },
+      "expected": [
+        "KYC",
+        "SIP"
+      ]
+    },
+    {
+      "id": "tallyWeakSubtopics-missing-subtopic-buckets-to-general",
+      "fn": "tallyWeakSubtopics",
+      "description": "questions with no subtopic bucket to General (2 wrong) ahead of KYC (1 wrong)",
+      "input": {
+        "questions": [
+          {
+            "id": "wg1",
+            "chapter": 1,
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wg2",
+            "chapter": 1,
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wg3",
+            "chapter": 1,
+            "subtopic": "KYC",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          }
+        ],
+        "answers": [
+          1,
+          1,
+          1
+        ]
+      },
+      "expected": [
+        "General",
+        "KYC"
+      ]
+    },
+    {
+      "id": "tallyWeakChapters-chapter-zero-excluded-unanswered-skipped",
+      "fn": "tallyWeakChapters",
+      "description": "chapter 0 wrong is excluded by the `q.chapter > 0` guard; unanswered null (wc4) never counts; default limit 3 -> [2, 7]",
+      "input": {
+        "questions": [
+          {
+            "id": "wc1",
+            "chapter": 0,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wc2",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wc3",
+            "chapter": 2,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wc4",
+            "chapter": 5,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wc5",
+            "chapter": 7,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          }
+        ],
+        "answers": [
+          1,
+          1,
+          1,
+          null,
+          1
+        ]
+      },
+      "expected": [
+        2,
+        7
+      ]
+    },
+    {
+      "id": "tallyWeakChapters-tie-insertion-order-default-limit",
+      "fn": "tallyWeakChapters",
+      "description": "chapter 3 (2 wrong) first, then the 1-wrong tie (1, 4, 9) broken by Map insertion order and cut at the default limit 3",
+      "input": {
+        "questions": [
+          {
+            "id": "wd1",
+            "chapter": 1,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wd2",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wd3",
+            "chapter": 3,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wd4",
+            "chapter": 4,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          },
+          {
+            "id": "wd5",
+            "chapter": 9,
+            "subtopic": "General",
+            "question": "stub question text",
+            "options": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "correctIndex": 0,
+            "difficulty": "medium",
+            "isFree": true,
+            "isSeed": true
+          }
+        ],
+        "answers": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "expected": [
+        3,
+        1,
+        4
+      ]
     }
   ]
 }

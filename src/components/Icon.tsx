@@ -27,6 +27,21 @@ export const PATHS = {
   'log-in': 'M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3',
   'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
   user: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M16 7a4 4 0 1 1-8 0a4 4 0 1 1 8 0',
+  'arrow-left': 'M19 12H5M12 19l-7-7 7-7',
+  clock: 'M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 6L12 12L16 14',
+  flag: 'M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22V15',
+  monitor:
+    'M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM8 21h8M12 17v4',
+  target:
+    'M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M6 12a6 6 0 1 0 12 0a6 6 0 1 0-12 0M10 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0',
+  'trending-up': 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+  'trending-down': 'M23 18l-9.5-9.5-5 5L1 6M17 18h6v-6',
+  'bar-chart-2': 'M18 20V10M12 20V4M6 20v-6',
+  repeat: 'M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3',
+  'chevron-up': 'M18 15l-6-6-6 6',
+  'chevron-down': 'M6 9l6 6 6-6',
+  'alert-triangle':
+    'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01',
 } as const;
 
 export type IconName = keyof typeof PATHS;

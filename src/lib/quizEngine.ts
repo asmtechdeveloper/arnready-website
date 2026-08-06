@@ -6,9 +6,11 @@
  * `orderPracticeSet` (app:119-130) plus its private helpers `groupBySeed`
  * (app:133-142) and `onePerSeedGroup` (app:145-147) and the `DIFFICULTY_ORDER`
  * map (app:112), `drawExamSet` (app:156-164), `computeExamScorePct`
- * (app:52-62) and `computePracticePct` (app:65-68), and the `Question`,
- * `Difficulty` and `Rng` types (app:9-27). If a formula here looks wrong, it
- * is raised with Anusha, never "fixed" in place.
+ * (app:52-62) and `computePracticePct` (app:65-68), `assembleMock`
+ * (app:168-195), `tallyWeakSubtopics` (app:199-220) and `tallyWeakChapters`
+ * (app:222-239), and the `Question`, `Difficulty` and `Rng` types (app:9-27).
+ * If a formula here looks wrong, it is raised with Anusha, never "fixed" in
+ * place.
  *
  * NO CONSTANT IS REDEFINED HERE. `FREE_SCORE_FLOOR` is imported from
  * `./progressService` (M4) and `FREE_QUESTIONS_PER_CHAPTER` is imported
@@ -20,8 +22,9 @@
  *
  * Deliberately NOT ported here: `gateBeforeQuestion` (owned by
  * `src/lib/nudgeGates.ts`, M2 D1 — a second gate definition anywhere in
- * `src/` is a review BLOCKER), `assembleMock`, `tallyWeakSubtopics`,
- * `tallyWeakChapters` (all M6 scope).
+ * `src/` is a review BLOCKER). The M6 trio — `assembleMock`,
+ * `tallyWeakSubtopics`, `tallyWeakChapters` — is now ported below; its
+ * mock constants live in `./mockConfig` (mirrored), never here.
  *
  * Browser-safe: no `node:` imports, no `fs`, no `process`.
  */
@@ -163,4 +166,79 @@ export function drawExamSet(
   if (!isPaid) return shuffle(questions, rng);
   const pool = onePerSeedGroup(questions, rng);
   return shuffle(pool, rng).slice(0, Math.min(examSize, pool.length));
+}
+
+// ─── Mock assembly (LOCKED) ──────────────────────────────────────────────────
+
+/**
+ * Weighted mock assembly. For each chapter: one pick per seedId, then that
+ * chapter's weightage allocation from the picked pool (all of it if the
+ * chapter is narrower than its weight). Result shuffled across chapters.
+ * One concept per mock, max — never a seed and its variation together.
+ */
+export function assembleMock(
+  questions: readonly Question[],
+  weights: Record<number, number>,
+  rng: Rng = Math.random,
+): Question[] {
+  const byChapter = new Map<number, Question[]>();
+  for (const q of questions) {
+    const list = byChapter.get(q.chapter);
+    if (list) list.push(q);
+    else byChapter.set(q.chapter, [q]);
+  }
+
+  const assembled: Question[] = [];
+  for (const [chapterStr, weight] of Object.entries(weights)) {
+    const chapter = Number(chapterStr);
+    const pool = byChapter.get(chapter);
+    if (!pool || weight <= 0) continue;
+    const picks = shuffle(onePerSeedGroup(pool, rng), rng);
+    assembled.push(...picks.slice(0, Math.min(weight, picks.length)));
+  }
+  return shuffle(assembled, rng);
+}
+
+// ─── Weak areas ──────────────────────────────────────────────────────────────
+
+/**
+ * Top weak subtopics from a completed run. `answers` is parallel to
+ * `questions`; unanswered slots are undefined/null and never count as wrong.
+ */
+export function tallyWeakSubtopics(
+  questions: readonly Question[],
+  answers: readonly (number | null | undefined)[],
+  limit = 3,
+): string[] {
+  const tally = new Map<string, number>();
+  questions.forEach((q, i) => {
+    const picked = answers[i];
+    if (picked !== undefined && picked !== null && picked !== q.correctIndex) {
+      const key = q.subtopic ?? 'General';
+      tally.set(key, (tally.get(key) ?? 0) + 1);
+    }
+  });
+  return [...tally.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([sub]) => sub);
+}
+
+/** Top weak chapters from a completed mock. */
+export function tallyWeakChapters(
+  questions: readonly Question[],
+  answers: readonly (number | null | undefined)[],
+  limit = 3,
+): number[] {
+  const tally = new Map<number, number>();
+  questions.forEach((q, i) => {
+    const picked = answers[i];
+    if (picked !== undefined && picked !== null && picked !== q.correctIndex) {
+      if (q.chapter > 0) tally.set(q.chapter, (tally.get(q.chapter) ?? 0) + 1);
+    }
+  });
+  return [...tally.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([ch]) => ch);
 }

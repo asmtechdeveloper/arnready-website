@@ -19,11 +19,14 @@ type Constraint = { field: string; op: string; value: unknown };
 type CapturedQuery = { collectionName: string; constraints: Constraint[] };
 
 let mockDocs: Record<string, unknown>[] = [];
+let mockDocData: Record<string, unknown> | null = null;
 let rejection: Error | null = null;
 const capturedQueries: CapturedQuery[] = [];
+const capturedGets: { collectionName: string; id: string }[] = [];
 
 vi.mock('firebase/firestore', () => ({
   collection: (_db: unknown, name: string) => ({ __collection: name }),
+  doc: (_db: unknown, name: string, id: string) => ({ __doc: { collectionName: name, id } }),
   where: (field: string, op: string, value: unknown) => ({ __where: { field, op, value } }),
   query: (
     col: { __collection: string },
@@ -40,6 +43,11 @@ vi.mock('firebase/firestore', () => ({
     if (rejection) throw rejection;
     return { docs: mockDocs.map((data) => ({ data: () => data })) };
   },
+  getDoc: async (ref: { __doc: { collectionName: string; id: string } }) => {
+    capturedGets.push(ref.__doc);
+    if (rejection) throw rejection;
+    return { exists: () => mockDocData != null, data: () => mockDocData };
+  },
 }));
 
 let dbAvailable = true;
@@ -51,15 +59,18 @@ const {
   fetchExamQuestions,
   fetchFlashcardDeck,
   fetchPracticeQuestions,
+  fetchQuestionById,
 } = await import('@/lib/questionDelivery');
 const { orderPracticeSet } = await import('@/lib/quizEngine');
 
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
   mockDocs = [];
+  mockDocData = null;
   rejection = null;
   dbAvailable = true;
   capturedQueries.length = 0;
+  capturedGets.length = 0;
 });
 
 function question(id: string, extra: Record<string, unknown> = {}) {
@@ -257,6 +268,33 @@ describe('a failed read is an ERROR, never an empty set', () => {
     mockDocs = [];
     const result = await fetchPracticeQuestions(7, false);
     expect(result).toEqual({ status: 'ok', questions: [] });
+  });
+});
+
+describe('fetchQuestionById — the mistakes deck per-document get (M6)', () => {
+  it('a readable doc resolves to the Question, via a single-doc get on questions/{id}', async () => {
+    mockDocData = question('q-77');
+    const result = await fetchQuestionById('q-77');
+    expect(result).toEqual(question('q-77'));
+    // A PER-DOCUMENT GET, never a list query — the Firestore rules constraint
+    // (see the source comment): the get targets questions/{id} directly.
+    expect(capturedGets).toEqual([{ collectionName: 'questions', id: 'q-77' }]);
+    expect(capturedQueries).toEqual([]);
+  });
+
+  it('a missing doc resolves null — the card is dropped, not the deck', async () => {
+    mockDocData = null;
+    expect(await fetchQuestionById('gone')).toBeNull();
+  });
+
+  it('a rejecting get resolves null (independently caught), never throws', async () => {
+    rejection = new Error('permission-denied');
+    await expect(fetchQuestionById('paid-only')).resolves.toBeNull();
+  });
+
+  it('a null getDb resolves null too — the deliberate exception to the error policy', async () => {
+    dbAvailable = false;
+    expect(await fetchQuestionById('q-1')).toBeNull();
   });
 });
 

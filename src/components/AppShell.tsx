@@ -19,13 +19,25 @@ import { SignInButton, SignOutButton } from '@/components/SignInButton';
  *                  free public content stays reachable
  *   loading      → auth not yet known (user === undefined)
  *   signed out   → the sign-in prompt
- *   signed in    → identity, sign-out, and a plain statement of what is
- *                  still being built
+ *   signed in    → identity, sign-out, the M6 modes row (mock / mistakes /
+ *                  progress), and the chapter × mode launcher
  *
  * NO study surfaces and NO nudges live here. The nudge/wall machinery from M2
  * renders at its M5/M6 render sites, not on this shell — a nudge here would
  * fire outside any run, which the nudge law does not sanction.
  */
+
+/** The three M6 surfaces linked from the shell. Labels/hrefs live in copy;
+ * the Feather icon per mode is presentation, so it lives here. */
+const modeLinks = [
+  { ...appShell.signedIn.modes.mock, icon: 'target' as const },
+  { ...appShell.signedIn.modes.mistakes, icon: 'repeat' as const },
+  { ...appShell.signedIn.modes.progress, icon: 'trending-up' as const },
+];
+
+/** The launcher pill idiom (ChapterModeLauncher), plus the leading icon gap. */
+const modePill =
+  'flex min-h-11 min-w-[44px] items-center justify-center gap-2 rounded-pill border border-line px-4 text-sm font-semibold text-ink hover:border-purple hover:text-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple';
 export function AppShell() {
   const user = useAuth((s) => s.user);
   const { isPaid, known } = useEntitlement();
@@ -104,16 +116,22 @@ export function AppShell() {
           <p className="mx-auto mt-6 text-[0.95rem] leading-7 text-muted">
             {appShell.signedIn.body}
           </p>
-          <ul className="mx-auto mt-4 flex max-w-sm flex-col gap-2 text-left">
-            {appShell.signedIn.comingSoon.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-[0.95rem] leading-7 text-muted">
-                <span className="mt-1.5 text-purple">
-                  <Icon name="chevron-right" size={16} />
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
+
+          {/* M6: the mock / mistakes / progress surfaces, linked (this row
+              replaced the comingSoon roadmap when they shipped). Feather
+              icons per the design system; the launcher pill idiom. */}
+          <nav aria-label={appShell.signedIn.modesLabel} className="mt-5">
+            <ul className="flex flex-wrap justify-center gap-2">
+              {modeLinks.map(({ href, label, icon }) => (
+                <li key={href}>
+                  <Link href={href} className={modePill}>
+                    <Icon name={icon} size={16} className="text-purple" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           <div className="mt-8 flex flex-col items-center gap-4">
             <Link

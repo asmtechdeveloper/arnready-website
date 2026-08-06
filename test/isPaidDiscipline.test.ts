@@ -81,6 +81,14 @@ const ENTITLEMENT_SOURCE = ['lib/entitlementStore.ts'];
 const PURE_PARAMETER_CONSUMERS = ['lib/nudgeGates.ts', 'lib/quizEngine.ts'];
 
 /**
+ * Seam-bound services (M6): `isPaid` is a caller-supplied parameter (the app's
+ * own `canTakeMock(isPaid)` signature), and every Firestore touch goes through
+ * the injected ProgressBackend seam — no direct SDK import, so the same proof
+ * as the pure consumers applies, plus `singleWriteSite.test.ts`'s containment.
+ */
+const SEAM_PARAMETER_CONSUMERS = ['lib/mockService.ts'];
+
+/**
  * Delivery: legitimately imports Firestore (it issues the reads) and takes
  * `isPaid` as a parameter to choose WHICH query — but must never read the
  * field off a document, query it, or import the store.
@@ -97,6 +105,10 @@ const UI_CONSUMERS = [
   'components/PracticeSurface.tsx',
   'components/ExamSurface.tsx',
   'components/FlashcardsSurface.tsx',
+  // M6: the mock pre-start surface — same shape as the M5 surfaces: store-
+  // connected root, passes isPaid down (to canTakeMock/fetchMockQuestions/
+  // MockPlayer), never sources or derives it.
+  'components/MockSurface.tsx',
 ];
 
 /**
@@ -120,12 +132,26 @@ const PROP_GATE_CONSUMERS = [
   'components/FlashcardPlayer.tsx',
 ];
 
+/**
+ * Pitch-visibility consumers (M6): the mock run and its results block.
+ * `isPaid` enters as a prop from the store-connected MockSurface and is read
+ * for exactly ONE purpose — whether the post-run results render the premium
+ * pitch (`MockPlayer` only forwards it; `MockResults` branches on it). Never
+ * a gate (the mock run is a zero-nudge surface, pinned by
+ * test/mockPlayer.test.tsx's source scan), never a scoring branch (a mock is
+ * always scored over its paper), never a source: the per-category test below
+ * proves no Firestore import, no store access, and no derivation.
+ */
+const PROP_PITCH_CONSUMERS = ['components/MockPlayer.tsx', 'components/MockResults.tsx'];
+
 const ALLOWED = [
   ...ENTITLEMENT_SOURCE,
   ...PURE_PARAMETER_CONSUMERS,
+  ...SEAM_PARAMETER_CONSUMERS,
   ...DELIVERY_CONSUMERS,
   ...UI_CONSUMERS,
   ...PROP_GATE_CONSUMERS,
+  ...PROP_PITCH_CONSUMERS,
 ];
 
 const WRITE_SITE = 'lib/progressBackend.ts';
@@ -209,6 +235,22 @@ describe('isPaid is server-write-only (manual §0.9)', () => {
     },
   );
 
+  it.each(SEAM_PARAMETER_CONSUMERS)(
+    '%s receives isPaid as a parameter and reaches Firestore only through the seam (M6)',
+    (rel) => {
+      const mod = FILES.find((f) => f.rel === rel)!;
+      // No direct SDK handle — every Firestore touch is an injected method
+      // call, which is what lets the port tests observe them all. Never reads
+      // the field off a document and never consults the store.
+      expect(mod.code).not.toMatch(/from\s*['"]firebase/);
+      expect(firestoreImports(mod.code)).toEqual([]);
+      expect(mod.code).not.toMatch(/entitlementStore/);
+      expect(mod.code).not.toMatch(/useEntitlement/);
+      expect(mod.code).not.toMatch(/\.isPaid\b/);
+      expectNeverDerivesEntitlement(mod.code);
+    },
+  );
+
   it.each(DELIVERY_CONSUMERS)(
     '%s consumes isPaid but can never become a source of it (M5)',
     (rel) => {
@@ -243,13 +285,56 @@ describe('isPaid is server-write-only (manual §0.9)', () => {
     },
   );
 
+  it.each(PROP_PITCH_CONSUMERS)(
+    '%s reads isPaid ONLY as a handed-down prop, never as a source (M6)',
+    (rel) => {
+      const mod = FILES.find((f) => f.rel === rel)!;
+
+      // Same containment as the gate consumers: not from Firestore, not from
+      // the store — the only isPaid it can hold is the one handed down.
+      expect(firestoreImports(mod.code)).toEqual([]);
+      expect(mod.code).not.toMatch(/entitlementStore/);
+      expect(mod.code).not.toMatch(/useEntitlement/);
+
+      expectNeverDerivesEntitlement(mod.code);
+    },
+  );
+
+  it('the mock RUN never branches on entitlement — only the results block may (M6)', () => {
+    // The zero-nudge contract, structurally: strip MockPlayer of its
+    // MockResults hand-off and no isPaid-driven branch may remain. The
+    // player's permitted occurrences are the props type, the destructure,
+    // and the forwarding prop — never a conditional.
+    const player = FILES.find((f) => f.rel === 'components/MockPlayer.tsx')!.code;
+    for (const line of player.match(/^.*isPaid.*$/gm) ?? []) {
+      expect(line).not.toMatch(/isPaid\s*\?/);
+      expect(line).not.toMatch(/if\s*\(.*isPaid/);
+      expect(line).not.toMatch(/!isPaid/);
+    }
+    // The results block branches on it for exactly one thing: the pitch.
+    const results = FILES.find((f) => f.rel === 'components/MockResults.tsx')!.code;
+    expect(results).toMatch(/isPaid\s*\?/);
+  });
+
   it('entitlement enters the component tree ONLY at a store-connected root (M5)', () => {
     // This is what makes PROP_GATE_CONSUMERS safe rather than a loophole. If any
     // file outside UI_CONSUMERS could pass isPaid={...} down, a player could be
     // handed `true` by something that never consulted the store — and would keep
     // it across a sign-out, because no reset reaches a hard-coded prop.
+    //
+    // M6 adds ONE forwarding passer: MockPlayer hands its received prop on to
+    // MockResults. Forwarding preserves the invariant — the player can only
+    // pass what the store-connected MockSurface gave it, and it is itself
+    // pinned (PROP_PITCH_CONSUMERS) as unable to source or derive the value.
+    const FORWARDING_PASSERS = ['components/MockPlayer.tsx'];
+    const allowed = [...UI_CONSUMERS, ...FORWARDING_PASSERS];
     const passers = FILES.filter((f) => /isPaid=\{/.test(f.code)).map((f) => f.rel);
-    expect(passers.sort()).toEqual(passers.filter((p) => UI_CONSUMERS.includes(p)).sort());
+    expect(passers.sort()).toEqual(passers.filter((p) => allowed.includes(p)).sort());
+    // A forwarding passer forwards the identifier it received — never a
+    // literal: `isPaid={true}` anywhere is an immediate failure.
+    for (const f of FILES) {
+      expect(f.code, `${f.rel} hard-codes entitlement`).not.toMatch(/isPaid=\{\s*(true|false)\s*\}/);
+    }
   });
 
   it.each(UI_CONSUMERS)(
@@ -336,17 +421,28 @@ describe('isPaid is server-write-only (manual §0.9)', () => {
     expect(backend.match(/isPaid/g)).toBeNull();
   });
 
-  it('no src/ module writes the users document itself', () => {
-    // Subcollection writes under users/{uid}/... are M4's business; the ROOT
-    // document carries isPaid and belongs to the server. A client create would
-    // have to send `isPaid: false` to satisfy the deployed create rule, which
-    // §0.9 forbids — so the web must not create it at all.
-    const offenders = FILES.filter((f) =>
-      /(setDoc|updateDoc|transaction\.set)\(\s*(doc\(\s*\w+\s*,\s*)?['"`]?users['"`]?\s*,\s*\w+\s*\)/.test(
-        f.code,
-      ),
-    ).map((f) => f.rel);
+  it('the only users-root write anywhere is the mock append, in the write site (M6)', () => {
+    // M4-B1's conclusion stands: the web never CREATES the root document — a
+    // client create must send `isPaid: false`, which §0.9 forbids, so creation
+    // is server-side (the app repo's ensureUserDocument callable). What M6
+    // adds, deliberately and narrowly, is the app's own mock-attempt UPDATE:
+    // `mockHistory` arrayUnion + `freeMockConsumed: true`, merged — the exact
+    // shape the deployed `mockHistoryUpdateIsValid()` rule polices. This test
+    // pins that the write site holds exactly that one root write and nothing
+    // else in src/ holds any.
+    const rootWrite =
+      /(setDoc|updateDoc|transaction\.set)\(\s*(doc\(\s*\w+\s*,\s*)?['"`]?users['"`]?\s*,\s*\w+\s*\)/;
+    const offenders = FILES.filter((f) => f.rel !== WRITE_SITE && rootWrite.test(f.code)).map(
+      (f) => f.rel,
+    );
     expect(offenders).toEqual([]);
+
+    const backend = FILES.find((f) => f.rel === WRITE_SITE)!.code;
+    // The one root write present is the mock append, with exactly the two
+    // rule-policed fields and merge semantics.
+    expect(backend).toMatch(
+      /setDoc\(\s*doc\(db,\s*'users',\s*uid\),\s*\{\s*mockHistory:\s*arrayUnion\(record\),\s*freeMockConsumed:\s*true\s*\},\s*\{\s*merge:\s*true\s*\},?\s*\)/,
+    );
     // And nothing anywhere runs a transaction on the users root.
     const txns = FILES.filter((f) => /runTransaction/.test(f.code)).map((f) => f.rel);
     expect(txns).toEqual([]);
