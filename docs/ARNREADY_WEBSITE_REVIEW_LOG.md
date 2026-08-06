@@ -65,6 +65,8 @@ may mark an item RESOLVED only after re-verification.
 | 2026-07-19 | M4 progress-parity review | `a148a57` | REJECT | Two BLOCKERs returned in order: client code writes `users/{uid}.isPaid`, violating manual §0.9, and the required build gate did not reproduce because the Firestore export failed with `RESOURCE_EXHAUSTED`. |
 | 2026-07-19 | M4 remediation re-review | `374f5e5` | APPROVE | M4-B1 and M4-B2 independently verified RESOLVED. Live Firestore testing proves all M4 subcollection writes succeed while the entitlement-bearing root document is absent and remains absent. Lint, typecheck, 1,136-passed/5-skipped tests, live export, both leak gates, and 196-page static build pass. |
 | 2026-07-19 | M4 owner sign-off | `374f5e5` | SIGNED OFF | Anusha explicitly signed off M4 and authorized transition to M5. No OPEN M4 BLOCKER or SHOULD-FIX remains. |
+| 2026-08-06 | M5 initial review | `0022eed` | REJECT | Two BLOCKERs returned: runtime flashcard delivery applies the public-only entitlement filter and omits paid cards; the required 375px/1440px screenshot artifacts are absent from the evidence packet. Independent lint, typecheck, 1,299-passed/5-skipped tests, build, and standalone leak gate passed. |
+| 2026-08-06 | M5 blocker remediation verification | `4a0b1ef` | APPROVE | M5-B1 and M5-B2 independently verified RESOLVED. Runtime delivery retains non-public cards while public export filtering remains intact; all eight required screenshot artifacts are committed and visually valid. Lint, typecheck, 1,303-passed/5-skipped tests, build, and standalone leak gate pass. |
 
 ## Findings and explicitly retained items
 
@@ -148,6 +150,16 @@ returned. M4 cannot pass while either BLOCKER remains OPEN.
 | M4-B1 | BLOCKER | The web client writes `users/{uid}.isPaid: false` when creating a user document. Manual §0.9 makes `isPaid` server-write-only and expressly prohibits any client write path. App-side matching behavior and the packet's stated deployed-rule requirement do not override the website canon. | Original: `src/lib/progressBackend.ts:172-180`; remediated `src/lib/progressBackend.ts:21-32,82-134`; `test/m4LiveSession.test.ts:103-110,191-195` | RESOLVED | Verified at `374f5e5`: `ensureUserDocument`, the root write, transaction, and executable `isPaid` reference are removed. The controlled live session passed against `arnready-dev`: the root document was absent before the run, progress/session/mistake writes succeeded, and the root remained absent afterward. |
 | M4-B2 | BLOCKER | The mandatory `npm run build` gate does not reproduce from the reviewed state. The packet reports green output, but independent execution fails during `prebuild → export-content` with `8 RESOURCE_EXHAUSTED: Quota exceeded.` | Original: `docs/review-packets/M4_PACKET.md:70-82`; current packet §2 and §10 | RESOLVED | Independently rerun at `374f5e5`: live export completed (240 free questions, 732 flashcards), prebuild leak gate passed, Next generated 196 static pages, and postbuild leak gate passed over 1,937 artefacts. |
 
+### M5 review tracker
+
+The M5 initial review is REJECTED. These findings are recorded in the exact
+order returned. M5 cannot pass while either BLOCKER remains OPEN.
+
+| ID | Severity | Item | Location | Status | Verification / next action |
+|---|---|---|---|---|---|
+| M5-B1 | BLOCKER | The signed-in runtime flashcard path invokes the public-export deck builder, which deliberately drops sections and cards with `isFree:false`. This contradicts the locked product model and M5 step 1: signed-in free and paid users must receive the full flashcard deck. The website's builder therefore differs from the app's `buildCanonicalDeck`, which excludes only `docType` metadata. | Original: `src/lib/questionDelivery.ts:170-172`; remediated `src/lib/questionDelivery.ts:178-179`, `scripts/lib/canonicalDeck.mjs:104-131`, `test/flashcardRuntimeDeck.test.ts` | RESOLVED | Verified at `4a0b1ef`: runtime delivery passes `includeNonPublic:true`, retaining every non-metadata section/card and preserving raw-index card IDs; default public construction still excludes draft/`isFree:false` content. The new four-test regression covers both boundaries and a delivery-level paid-card scenario. |
+| M5-B2 | BLOCKER | The M5 packet supplies transcribed claims of screenshots but no required 375px and 1440px screenshot artifacts. The repository contains screenshot directories only through M3, so the visual acceptance criteria for the nudge points and wall cannot be independently reviewed. | Original: `docs/review-packets/M5_PACKET.md:151-171`; remediated `docs/review-packets/screenshots/M5/` | RESOLVED | Verified at `4a0b1ef`: eight non-empty PNGs cover practice Q11, practice Q21 wall, exam pre-start, and flashcard Q15 at 375px and 1440px (captured at 2× device scale). Visual inspection confirms the stated nudge/wall states, CTA copy, footer, and responsive layouts. |
+
 ## Decision history
 
 Add one row whenever an item's status changes. Do not rewrite prior decisions.
@@ -193,6 +205,8 @@ Add one row whenever an item's status changes. Do not rewrite prior decisions.
 | 2026-07-18 | M3-D1 | OPEN | DEFERRED | Anusha; recorded by Codex | Owner authorized deferral of the COOP hosting header to M9. M3 cancellation behavior was integration-tested; the header requires deployed-host verification. |
 | 2026-07-19 | M4-B1 | OPEN | RESOLVED | Codex | At `374f5e5`, independently verified removal of the client root-document write and ran the authorized live session: no `users/{uid}` root document before or after successful progress, session, and mistakes writes. The static isPaid-discipline suite also passed. |
 | 2026-07-19 | M4-B2 | OPEN | RESOLVED | Codex | At `374f5e5`, independently reran the complete build after quota recovery: live export, prebuild leak gate, 196-page static generation, and postbuild leak gate all passed. |
+| 2026-08-06 | M5-B1 | OPEN | RESOLVED | Codex | At `4a0b1ef`, independently verified separate public/runtime visibility boundaries, preserved canonical IDs, the new four-test regression including delivery-level `isFree:false` retention, and clean full gates. |
+| 2026-08-06 | M5-B2 | OPEN | RESOLVED | Codex | At `4a0b1ef`, independently verified all eight required M5 PNG artifacts, their 2× 375px/1440px dimensions, and representative mobile/desktop nudge/wall rendering. |
 
 ## Maintenance procedure
 
