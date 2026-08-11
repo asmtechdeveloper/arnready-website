@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import { MOCK_DURATION_MIN, MOCK_QUESTIONS } from '@/lib/mockConfig';
 import type { Question } from '@/lib/quizEngine';
@@ -366,5 +366,111 @@ describe('MockSurface — zero nudge machinery (nudge law)', () => {
     while ((m = re.exec(source)) !== null) if (m[1]) specifiers.push(m[1]);
     expect(specifiers.length).toBeGreaterThan(5); // guard is not a stub
     expect(specifiers.filter((s) => /PremiumNudge|UpgradeWall|nudgeGates/.test(s))).toEqual([]);
+  });
+});
+
+describe('MockSurface — entitlement must be KNOWN before the tier is used (M6-B1)', () => {
+  /**
+   * THE DEFECT: the store deliberately starts `{ isPaid: false, known: false }`,
+   * so reading `isPaid` alone reports "free" for EVERY user during the window
+   * before the listener settles. On the M5 surfaces that self-corrects (their
+   * `load` re-runs when entitlement changes). Here it could not: a paid user
+   * who pressed Start inside that window sat a 120-minute paper drawn from the
+   * FREE pool, with the free premium pitch on its results.
+   */
+  it('holds the loading state while a paid user’s listener is pending — no banner, no Start, no reads', async () => {
+    signedIn();
+    useEntitlement.setState({ isPaid: false, known: false });
+    render(<MockSurface />);
+
+    // The loading card, and nothing that could act on the unknown tier.
+    expect(screen.getByText(appShell.loading)).toBeInTheDocument();
+    expect(screen.queryByText(copy.freeBanner)).toBeNull();
+    expect(screen.queryByRole('button', { name: copy.startButton })).toBeNull();
+    expect(screen.queryByText(copy.used.title)).toBeNull();
+
+    // Crucially: no eligibility read is even ISSUED on an unknown tier, so a
+    // free-pool answer can never be cached into the settled state.
+    await Promise.resolve();
+    expect(ensureUserDocument).not.toHaveBeenCalled();
+    expect(canTakeMock).not.toHaveBeenCalled();
+    expect(getMockHistory).not.toHaveBeenCalled();
+    expect(fetchMockQuestions).not.toHaveBeenCalled();
+  });
+
+  it('settles paid → full-bank path, no free banner, and the player gets isPaid true (no pitch)', async () => {
+    signedIn();
+    useEntitlement.setState({ isPaid: false, known: false });
+    fetchMockQuestions.mockResolvedValue({ status: 'ok', questions: makePool(30) });
+    render(<MockSurface />);
+    expect(screen.getByText(appShell.loading)).toBeInTheDocument();
+
+    // The listener returns: paid.
+    useEntitlement.setState({ isPaid: true, known: true });
+
+    await waitFor(() => expect(screen.getByText(copy.title)).toBeInTheDocument());
+    expect(screen.queryByText(copy.freeBanner)).toBeNull();
+    // Eligibility was asked ONCE, with the settled tier — never with false.
+    expect(canTakeMock).toHaveBeenCalledTimes(1);
+    expect(canTakeMock).toHaveBeenCalledWith(STUB_BACKEND, true);
+
+    fireEvent.click(screen.getByRole('button', { name: copy.startButton }));
+    await waitFor(() => expect(screen.getByTestId('mock-player-stub')).toBeInTheDocument());
+
+    // The full bank, and the results pitch suppressed for a paid user.
+    expect(fetchMockQuestions).toHaveBeenCalledWith(true);
+    expect(fetchMockQuestions).not.toHaveBeenCalledWith(false);
+    expect(playerMounts.mock.calls.at(-1)?.[0]).toMatchObject({ isPaid: true });
+  });
+
+  it('a live grant mid-view re-checks under the new tier instead of showing the stale one', async () => {
+    signedIn();
+    render(<MockSurface />); // free, settled
+
+    await waitFor(() => expect(screen.getByText(copy.freeBanner)).toBeInTheDocument());
+    expect(canTakeMock).toHaveBeenLastCalledWith(STUB_BACKEND, false);
+
+    // The grant lands while the pre-start is open.
+    act(() => {
+      useEntitlement.setState({ isPaid: true, known: true });
+    });
+
+    // SYNCHRONOUSLY — not after a waitFor: the ready state built under the old
+    // tier must disappear the moment entitlement changes, not linger until the
+    // re-check resolves. (Without the snapshot match in `current`, the stale
+    // free banner and its Start button stay on screen through that window.)
+    expect(screen.queryByText(copy.freeBanner)).toBeNull();
+    expect(screen.queryByRole('button', { name: copy.startButton })).toBeNull();
+    expect(screen.getByText(appShell.loading)).toBeInTheDocument();
+
+    // The stale free ready state must not persist — the surface re-checks.
+    await waitFor(() => expect(canTakeMock).toHaveBeenLastCalledWith(STUB_BACKEND, true));
+    await waitFor(() => expect(screen.queryByText(copy.freeBanner)).toBeNull());
+    expect(screen.getByRole('button', { name: copy.startButton })).toBeInTheDocument();
+  });
+
+  it('binds the started paper to the snapshot: a flip mid-start cannot change the pool', async () => {
+    signedIn();
+    useEntitlement.setState({ isPaid: true, known: true });
+    // Hold the fetch open so entitlement can change between click and resolve.
+    let releaseFetch!: (v: { status: 'ok'; questions: Question[] }) => void;
+    fetchMockQuestions.mockReturnValue(
+      new Promise((resolve) => {
+        releaseFetch = resolve;
+      }),
+    );
+    render(<MockSurface />);
+
+    await waitFor(() => expect(screen.getByText(copy.title)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole('button', { name: copy.startButton }));
+    expect(fetchMockQuestions).toHaveBeenCalledWith(true);
+
+    // Entitlement is revoked mid-start; the in-flight paper keeps its tier.
+    useEntitlement.setState({ isPaid: false, known: true });
+    releaseFetch({ status: 'ok', questions: makePool(30) });
+
+    await waitFor(() => expect(screen.getByTestId('mock-player-stub')).toBeInTheDocument());
+    expect(fetchMockQuestions).toHaveBeenCalledTimes(1);
+    expect(fetchMockQuestions).not.toHaveBeenCalledWith(false);
   });
 });

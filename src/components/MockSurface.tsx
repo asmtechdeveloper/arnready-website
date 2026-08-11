@@ -26,6 +26,15 @@ import { SignInButton } from '@/components/SignInButton';
  *
  * The check sequence, on mount and on every Retry:
  *
+ *   0. WAIT for entitlement to be KNOWN (M6-B1). The store deliberately
+ *      starts `{ isPaid: false, known: false }`, so an ungated read of
+ *      `isPaid` reports "free" for every user during the window before the
+ *      listener settles. Acting on that is unrecoverable HERE in a way it is
+ *      not on the M5 surfaces (whose `load` re-runs when entitlement
+ *      changes): a paid user could press Start in that window and sit a
+ *      120-minute paper drawn from the FREE pool, with the free premium
+ *      pitch on its results. So no eligibility read is issued and no Start
+ *      control is rendered until `known` is true.
  *   1. `await ensureUserDocument()` — AWAITED, unlike AuthProvider's
  *      fire-and-forget: a free user must never start a 120-minute mock
  *      whose submit write the deployed rules would refuse because
@@ -34,6 +43,13 @@ import { SignInButton } from '@/components/SignInButton';
  *      `canTakeMock` deliberately THROWS on a failed read (ScreenState
  *      policy §3): a failed eligibility check must show the error surface —
  *      NEVER the used-mock paywall pitch it would default to.
+ *
+ * ONE SETTLED ENTITLEMENT SNAPSHOT drives one attempt (M6-B1): the settled
+ * check records the `isPaid` it was computed under, a check whose snapshot
+ * no longer matches the store is not `current` (so a live grant/revoke
+ * re-checks rather than rendering a stale tier), and `start()` binds that
+ * snapshot for the pool fetch — a listener update landing mid-start can
+ * never change the paper a run was begun on.
  *
  * The app refreshes eligibility/history on screen FOCUS (PreMock is a tab
  * root); the web equivalent is re-running the check when `MockPlayer` exits
@@ -57,9 +73,10 @@ function formatDate(iso: string): string {
 }
 
 /** The settled outcome of one eligibility check, tagged with the attempt it
- * answers — a stale result is never mistaken for the current one (the same
- * discipline as `StudySurface`'s `SettledResult`). */
-type SettledCheck = { attempt: number } & (
+ * answers AND the settled entitlement snapshot it was computed under — a
+ * stale result is never mistaken for the current one (the same discipline as
+ * `StudySurface`'s `SettledResult`, extended for entitlement per M6-B1). */
+type SettledCheck = { attempt: number; paidSnapshot: boolean } & (
   | { status: 'eligible'; history: MockHistoryEntry[] }
   | { status: 'used'; history: MockHistoryEntry[] }
   | { status: 'error' }
@@ -75,7 +92,9 @@ type PaperState =
 
 export function MockSurface() {
   const user = useAuth((s) => s.user);
-  const isPaid = useEntitlement((s) => s.isPaid);
+  // `known` is read, not just `isPaid` (M6-B1): see the header — an unknown
+  // entitlement must never be treated as "free" on this surface.
+  const { isPaid, known } = useEntitlement();
 
   const [attempt, setAttempt] = useState(0);
   const [check, setCheck] = useState<SettledCheck | null>(null);
@@ -89,7 +108,13 @@ export function MockSurface() {
   };
 
   useEffect(() => {
-    if (user == null) return;
+    // Step 0 — entitlement must be SETTLED before the tier is used at all
+    // (M6-B1). No read is issued while `known` is false; the surface holds
+    // its loading state below.
+    if (user == null || !known) return;
+    // The snapshot this whole attempt is computed under — captured once here
+    // so the check, its render, and `start()` cannot disagree.
+    const paidSnapshot = isPaid;
     let cancelled = false;
     (async (): Promise<SettledCheck | null> => {
       // Step 1 — the AWAITED user-document gate (see the header comment):
@@ -97,38 +122,59 @@ export function MockSurface() {
       // a silent "eligible" whose submit write the rules would refuse.
       const ensured = await ensureUserDocument();
       if (ensured === 'signed-out') return null; // the signed-out card takes over
-      if (ensured !== 'ensured') return { attempt, status: 'error' };
+      if (ensured !== 'ensured') return { attempt, paidSnapshot, status: 'error' };
 
       const backend = firestoreBackend();
-      if (!backend) return { attempt, status: 'error' };
+      if (!backend) return { attempt, paidSnapshot, status: 'error' };
 
       // Step 2 — eligibility + history. `canTakeMock` THROWS on a failed
       // read (ScreenState policy §3): the catch below maps it to the error
       // state — NEVER the used-mock pitch. Paid users short-circuit true
       // inside the service without a read. `getMockHistory` degrades to [].
       const [eligible, history] = await Promise.all([
-        canTakeMock(backend, isPaid),
+        canTakeMock(backend, paidSnapshot),
         getMockHistory(backend),
       ]);
       // Newest first — the app reverses the stored order ("how am I
       // trending lately", PreMockScreen.js:44-45).
       const newestFirst = [...history].reverse();
-      return { attempt, status: eligible ? 'eligible' : 'used', history: newestFirst };
+      return {
+        attempt,
+        paidSnapshot,
+        status: eligible ? 'eligible' : 'used',
+        history: newestFirst,
+      };
     })()
-      .catch((): SettledCheck => ({ attempt, status: 'error' }))
+      .catch((): SettledCheck => ({ attempt, paidSnapshot, status: 'error' }))
       .then((outcome) => {
         if (!cancelled && outcome !== null) setCheck(outcome);
       });
     return () => {
       cancelled = true;
     };
-  }, [user, isPaid, attempt]);
+  }, [user, known, isPaid, attempt]);
 
-  const current = check !== null && check.attempt === attempt ? check : null;
+  // A check answers the current attempt only if its entitlement snapshot still
+  // matches the store (M6-B1). A live grant/revoke therefore returns the
+  // surface to its loading state while the re-check (triggered by the effect's
+  // `isPaid` dependency) settles — never a ready state showing the old tier.
+  // `known` is part of the condition, not just the effect guard: a uid switch
+  // resets the store to `{ isPaid: false, known: false }` WITHOUT changing
+  // `isPaid`, so a snapshot match alone would keep rendering the previous
+  // account's settled ready state while the new account's entitlement is
+  // still unknown.
+  const current =
+    known && check !== null && check.attempt === attempt && check.paidSnapshot === isPaid ? check : null;
 
-  async function start() {
+  /**
+   * `paidSnapshot` is the settled tier the pre-start was RENDERED under,
+   * bound at click time (M6-B1). The started paper can therefore never be
+   * drawn from the wrong pool because a listener update landed between the
+   * click and the fetch resolving.
+   */
+  async function start(paidSnapshot: boolean) {
     setPaper({ status: 'assembling' });
-    const result = await fetchMockQuestions(isPaid);
+    const result = await fetchMockQuestions(paidSnapshot);
     if (result.status === 'ok') {
       setPaper({
         status: 'running',
@@ -190,6 +236,11 @@ export function MockSurface() {
   }
 
   // ── Paper lifecycle first: a live run is never clobbered by a re-check ───
+  // The player's `isPaid` is deliberately the LIVE store value, not the
+  // paper's bound snapshot: its only use is the results pitch's visibility,
+  // and a user who is paid by the time they see results must never be shown
+  // a premium pitch (review protocol §3.7), even if their paper was drawn
+  // before the grant landed.
   if (paper?.status === 'running') {
     return <MockPlayer questions={paper.questions} isPaid={isPaid} onExit={recheck} />;
   }
@@ -278,7 +329,10 @@ export function MockSurface() {
   return (
     <div className={wrapper}>
       <div className="flex flex-col gap-4">
-        {!isPaid && (
+        {/* The settled snapshot, not the live store read — the banner, the
+            eligibility it reports, and the paper Start draws must all be the
+            one tier (M6-B1). */}
+        {!current.paidSnapshot && (
           <div className="rounded-card border-l-4 border-purple bg-purple-soft px-4 py-3.5">
             <p className="text-center text-[0.95rem] font-bold text-purple">{copy.freeBanner}</p>
           </div>
@@ -305,7 +359,7 @@ export function MockSurface() {
         {/* Exactly ONE primary CTA on this surface — green, per the app. */}
         <button
           type="button"
-          onClick={start}
+          onClick={() => start(current.paidSnapshot)}
           className="mt-1 flex min-h-12 w-full items-center justify-center rounded-pill bg-green px-6 text-base font-bold text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple"
         >
           {copy.startButton}

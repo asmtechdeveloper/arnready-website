@@ -307,11 +307,12 @@ the repo; both new pitch CTAs mirror `nudge.getApp` exactly, with the
    sign the test account into the Android DEV build → PreMock must show the
    used state with the 7/100 web attempt. The web half (refusal after
    consumption) is evidenced in §5.4.
-2. **Paid-path live check pending (optional):** wiring tests pin paid
-   behaviour (unlimited eligibility without a read, full-bank fetch, zero
-   pitch). A live confirmation needs Anusha to flip `isPaid` on the dev test
-   account (the M3 live-grant mechanism) — her console, her call. The M5
-   precedent (paid coverage via wiring tests) applies otherwise.
+2. ~~**Paid-path live check pending (optional)**~~ — **CLOSED in M6-r
+   (§9.1):** verified live on `arnready-dev` with a server-side Admin-SDK
+   grant on the throwaway test account: no free banner, the consumed free-mock
+   counter correctly bypassed, a 100-question paper with 11 of 12 sampled
+   questions `isFree: false` (full bank), exited without recording, and
+   `isPaid` restored to `false` afterwards.
 3. **`ensureUserDocument` is dev-only** until Anusha deploys it to prod —
    REQUIRED before M9 cutover. Until then, prod web sign-ins create no user
    doc (no user-visible impact before cutover).
@@ -350,3 +351,155 @@ the repo; both new pitch CTAs mirror `nudge.getApp` exactly, with the
   for paid users (M5 suites + the paid-results test).
 - **Fence:** web → app links only ("Get the app"); no copy implies the app
   links to web checkout.
+
+---
+
+## 9. Remediation log — M6-r (Codex review 2026-08-10, verdict REJECT)
+
+Both BLOCKERs are fixed exactly as scoped. Nothing else was changed; the two
+observations in §9.3 are raised for Anusha rather than acted on.
+
+### 9.1 — M6-B1 (BLOCKER) — mock flow used `isPaid` before entitlement was known — **FIXED**
+
+**The finding is correct, and the reasoning matters.** `entitlementStore`
+deliberately starts `{ isPaid: false, known: false }`, so reading `isPaid`
+alone reports "free" for EVERY user until the listener settles.
+`MockSurface` read `isPaid` and never `known`.
+
+Why this is a BLOCKER here and not merely untidy: on the M5 surfaces the same
+read self-corrects, because their `load` callback closes over `isPaid` and
+`StudySurface`'s effect re-runs when its identity changes — a mistimed fetch is
+replaced. The mock has no such recovery. Start begins a 120-minute,
+one-per-account paper: a paid user pressing Start inside that window sat a
+paper drawn from the FREE pool (240 of 4,836 questions on dev) and would have
+seen the free premium pitch on its results — a §3.7 violation on top of the
+wrong content.
+
+**The fix** (`src/components/MockSurface.tsx`):
+1. `known` is now read alongside `isPaid`. The check effect returns early
+   while it is false, so **no eligibility read is issued at all** on an
+   unknown tier, and the surface holds its loading state — no free banner, no
+   Start control.
+2. A settled check now carries the entitlement snapshot it was computed
+   under (`paidSnapshot`), and a check whose snapshot no longer matches the
+   store is not `current`. A live grant/revoke therefore returns the surface
+   to loading while the re-check settles, instead of rendering the previous
+   tier's ready state. `known` is part of that condition too: a uid switch
+   resets the store to `{ isPaid: false, known: false }` **without** changing
+   `isPaid`, so a snapshot match alone would have kept the previous account's
+   ready state on screen.
+3. `start(paidSnapshot)` binds the tier at click time and passes it to
+   `fetchMockQuestions`, so a listener update landing between the click and
+   the fetch resolving cannot change the paper.
+4. Deliberately NOT bound: the `isPaid` passed to `MockPlayer`, which is the
+   live store value. Its only use is the results pitch's visibility, and a
+   user who is paid by the time they reach results must never be shown a
+   pitch (§3.7) even if their paper predates the grant. Documented at the
+   call site.
+
+**Naming note for the reviewer:** the snapshot field is `paidSnapshot`, not
+`isPaid`, because `test/isPaidDiscipline.test.ts` forbids a UI consumer from
+declaring `isPaid: boolean` (its "never accept entitlement as a prop" rule).
+The first draft named it `isPaid` and that guard failed — correctly. The guard
+was left untouched and the field renamed.
+
+**Regression coverage** (`test/mockSurface.test.tsx`, +4 tests, 18 total):
+- listener pending for a paid user → loading state, no banner, no Start, and
+  `ensureUserDocument`/`canTakeMock`/`getMockHistory`/`fetchMockQuestions` all
+  un-called;
+- settles paid → eligibility asked ONCE with `true` (never `false` first),
+  Start → `fetchMockQuestions(true)`, player receives `isPaid: true`;
+- a live grant mid-view removes the stale ready state **synchronously** and
+  re-checks under the new tier;
+- a flip mid-start cannot change the started paper's pool.
+
+**Mutation-verified** (the M5 discipline): with the fix reverted,
+**3 of the 4 fail**, and the file was confirmed reverted before the run. The
+fourth (mid-start binding) passes either way — a JS closure already captured
+the value — so it is a forward-guard against a future refactor reading the
+store inside `start()`, not a defect-catcher. Stated plainly rather than
+counted as proof.
+
+**Live evidence, entitled path** (`arnready-dev`, the fixed surface): the
+throwaway test account was granted `isPaid: true` **server-side via the Admin
+SDK** (the same path a purchase takes; the web client wrote nothing), which
+also closes §7.2's open paid-path item. Signed in as that account:
+- pre-start: **no free banner**, **no used-mock block despite
+  `freeMockConsumed: true`** (paid correctly bypasses the counter), Start
+  offered — `screenshots/M6/m6r-paid-prestart-1440.png`;
+- Start assembled a **100-question paper**, and of the first 12 served
+  questions **11 are `isFree: false`** — impossible from the 240-question free
+  pool, so the full bank is confirmed —
+  `screenshots/M6/m6r-paid-player-1440.png`;
+- the run was **exited without submitting**, so nothing was recorded: the
+  account still shows 1 `mockHistory` entry and 2 sessions.
+- `isPaid` was then **restored to `false`**; final state re-read and confirmed.
+
+### 9.2 — M6-B2 (BLOCKER) — lint gate did not reproduce — **FIXED**
+
+Reproduced exactly: `.claude/worktrees/hungry-zhukovsky-5337d4/` (a worktree
+created by an agent task Anusha started after the M6 commit) is a SEPARATE
+checkout of this repo, and the raw-hex walker recursed into it and reported its
+legitimate `src/styles/tokens.ts` as an illegal duplicate. The packet's green
+claim was true when made and false in the reviewed workspace — which is exactly
+the defect: **the mandatory gate depended on unrelated local state.**
+
+**The fix** (`scripts/check-no-raw-hex.mjs`): `.claude` is added to
+`IGNORE_DIRS`, and — belt and braces — the walker skips any nested directory
+containing a `.git` entry, which covers a worktree (`.git` is a FILE) or a
+nested clone (`.git` is a directory) parked anywhere under the root, not only
+under `.claude`. The guard's scope narrows to this working tree; its
+enforcement is unchanged.
+
+**Regression coverage** (`test/check-no-raw-hex.test.ts`, new, 5 tests) runs
+the REAL script against synthetic fixtures in isolated temp directories
+(`check-paid-leak.test.ts`'s idiom): passes with the exact reported
+`.claude/worktrees/<name>` fixture; passes with a nested checkout anywhere;
+handles `.git`-as-file and `.git`-as-directory; **still fails** on a real
+offence in-tree (and reports only that offence, never the worktree's file);
+**still fails** on a genuine second token file. **Mutation-verified:** with the
+fix reverted, 4 of the 5 fail.
+
+Its fixture colours are COMPOSED (`hex('534AB7')`), never literals — this file
+is scanned by the very guard it tests, and `test/tokens.test.ts` set that
+precedent. The first draft used literals and failed the gate itself;
+allowlisting the file would have blunted the guard, so the fixtures changed
+instead.
+
+### 9.3 — Raised, not acted on (scope discipline)
+
+1. **The same `known`-less read exists in the M5 surfaces**
+   (`PracticeSurface`, `ExamSurface`, `FlashcardsSurface`). It is **not** the
+   same severity — as §9.1 explains, they refetch when entitlement changes, so
+   a mistimed free-tier fetch is replaced rather than committed. What remains
+   is a visible window in which a paid user may briefly be served the free
+   set. M5 is signed off and the finding is scoped to M6, so **no M5 file was
+   touched**. Anusha's call whether this becomes a new logged finding for
+   Codex (§6.2 gives Codex the pen) or M7 polish.
+2. **`.claude/worktrees/` is not in `.gitignore`** — it does not need to be for
+   the gate (the fix is independent of ignore state), and nothing was
+   committed from it, but a stray worktree is otherwise untracked-and-visible
+   to any future tree-walking script.
+
+### 9.4 — Gates after remediation (worktree still present, i.e. the reviewed condition)
+
+```
+npm run lint      → exit 0; eslint --max-warnings=0 clean;
+                    "Raw-hex guard PASSED — no hex colour literals outside src/styles/tokens.ts."
+npm run typecheck → exit 0; tsc --noEmit clean
+npm test          → exit 0; Test Files  58 passed (58)
+                    Tests  1462 passed | 5 skipped (1467)   (was 1453; +9 regressions)
+npm run build     → exit 0; static export built; leak gate:
+                    "Paid-content leak gate PASSED — 2000 artefact(s) scanned …"
+```
+
+### 9.5 — Files changed in M6-r
+
+`src/components/MockSurface.tsx` (the entitlement gate + bound snapshot),
+`scripts/check-no-raw-hex.mjs` (walker scope), `test/mockSurface.test.tsx`
+(+4 regressions), `test/check-no-raw-hex.test.ts` (new, 5 regressions),
+`docs/review-packets/M6_PACKET.md` (this log), and two screenshots
+(`m6r-paid-prestart-1440.png`, `m6r-paid-player-1440.png`).
+
+**No proposed review-log edits are made here** — the log is Codex's
+(protocol §6.3). Both findings are believed RESOLVED, for Codex to verify.
